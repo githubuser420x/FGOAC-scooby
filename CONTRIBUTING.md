@@ -37,8 +37,6 @@ the translation must never change. Read it before your first change to `src\`.
 read it first: it says what each colour and each component is for, and a change that contradicts it
 should say so out loud.
 
-`docs\HISTORY.md` records what was done and why, newest last.
-
 ## Report a problem
 
 Open an issue with the bug report template. The two things that make a report usable are the screen
