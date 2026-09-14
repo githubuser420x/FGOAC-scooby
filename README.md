@@ -42,8 +42,8 @@ its own folders, allows the game and the local server through Windows Firewall, 
 **Master** with a full Servant and Craft Essence roster, and sets the display to windowed 1280x720 on
 your main monitor. Later starts go straight to Play.
 
-[`docs/GUIDE_EN.pdf`](docs/GUIDE_EN.pdf) is the full player guide: getting Servants without the
-summon, controls, a sortie step by step, the exchange shops and troubleshooting.
+[`docs/GUIDE_EN.pdf`](docs/GUIDE_EN.pdf) is the full player guide: getting Servants, controls, a
+sortie step by step, the exchange shops and troubleshooting.
 
 ## What works
 
@@ -54,14 +54,14 @@ summon, controls, a sortie step by step, the exchange shops and troubleshooting.
 - **Offline single player, end to end** - the tutorial, solo sorties, the terminal, the exchange
   shops, synthesis, My Room, rankings and the title editor.
 - **The launcher**, all five pages, with the official English card names and Craft Essence effects.
+- **The in-game summon** - it draws from the local server's pool with the weights from the Draw Rates
+  page. You do not need it for a roster: the Account page grants a full one in one click, and the
+  card library holds all 1,384 cards.
 
 ## What does not work
 
 - **No online play.** Everything runs against the local server; there is no matchmaking, and no
   official service left to connect to.
-- **The in-game summon works** - it draws from the local server's pool with the weights from the Draw
-  Rates page - but you do not need it: the Account page grants a full roster in one click, and the
-  card library holds all 1,384 cards.
 - **A few event screens are still Japanese** - the co-op event banners, the co-op result screens and
   the event shops from 0029 on. They are artwork rather than text, and nothing else is affected.
 
@@ -116,8 +116,7 @@ publish.cmd                   self-contained single file, into dist\
 deploy.cmd <install root>     copy the published launcher into an install
 ```
 
-`publish.cmd` writes `dist\FGOAC scooby.exe`. Expect around 165 `CS8632` warnings and zero errors;
-they come from the decompiled source and are not worth silencing one file at a time.
+`publish.cmd` writes `dist\FGOAC scooby.exe`. Expect zero warnings and zero errors.
 
 [`docs/DEVELOPING.md`](docs/DEVELOPING.md) explains where `src\` comes from, the compile fixes the
 decompile needs, what the translation must never change, and how to re-derive the build when the
