@@ -11,111 +11,47 @@ installer that puts them there.
 
 ## [1.1.0] - 2026-09-14
 
-### Added
+First public release, for Cloud23333's FGO Arcade local platform V1.01. Earlier version numbers were
+internal builds and were never published.
 
-- AMD and Intel graphics. The package carries a community OpenGL compatibility layer
-  (`compat\fgoglcompat.dll`) that translates the game's NVIDIA-only extensions. The launcher turns
-  it on by itself on a PC without an NVIDIA card, and a switch on the Display page controls it.
-  On a PC with an NVIDIA card the switch is greyed out: there the layer only produces a white window.
-- Drag and drop in the deck editor. Drag a card from the library into the deck to add one copy,
-  drag a deck card to reorder it, or drag it back into the library to remove it. Double-click
-  still opens the type-and-quantity dialog.
-- An updater. The launcher asks GitHub Releases whether a newer version exists and offers to fetch
-  and apply it, so a player who installed once keeps getting the translation fixes.
+### What is in it
 
-### Changed
-
-- The launcher is called **FGOAC scooby**. It shipped as "FGOA scooby" through 1.0.1; the installer
-  still recognises the old executable name, so it refuses to run while an old build is open and
-  replaces the firewall rules the old name created.
-- The interface is redrawn. The Chinese front end's visual identity is gone - the skewed white
-  header polygon, its purple palette, its flat buttons and tab strip, its icons and its footer
-  notice. In its place is a graphite window with one ice-blue accent, Segoe UI throughout with the
-  cabinet's own face kept for the wordmark and Play, the five sections in a sidebar with their
-  sub-pages as a strip of tabs, and a Check for updates button in the header of every page.
-  `docs/DESIGN.md` is the plan it was built from.
-- The application icon is redrawn at every size from 16 to 256 rather than resampled from one
-  bitmap.
-
-### Fixed
-
-- The updater could check for a release but never install one: a ten-second client timeout also cut off
-  the download of the release zip.
-- Deck changes made while the game was running did not reach it in the shipped layout, because the
-  shared-memory channel was named from the launcher's folder rather than the game's.
-- Starting the launcher before the local server showed an empty card library with the owned-cards
-  filter stuck on.
-- A hand-edited settings file with a bad port value produced an error box every two seconds.
-- Stop Game could stay greyed out for the whole session after the launcher looked at the game
-  process while it was still starting.
-- Clicking a slider to the right of its thumb did nothing; the check box rows only took a click on
-  the box or the words.
-- A stop of the local server that failed at once left the window unable to close.
-- A patch installer that stalled could hang the first run with every control disabled.
-- A failed start-up check no longer opens the main window on top of its own error.
-- Use Selected Account now refuses to switch accounts while the local server is running, like the
-  other account actions.
-- The window size and position read back wrongly on systems with a comma decimal separator; a
-  deck file with more than thirty cards, or one that cannot be published, no longer stops the
-  window from opening; Stop Game no longer touches a game running from a sibling folder; the
-  Photo Mode tab survives a game process that has just exited and a hand-edited hotkey list;
-  blended rotations in photo mode are normalised to unit length.
-
-## [1.0.1] - 2026-09-14
-
-### Added
-
-- Windows Firewall is set up on first run: one program-scoped inbound allow rule each for the local
-  server, the game and the cabinet service, so Windows does not interrupt the first launch with a
-  prompt that opens behind the game window. Missing rules are put back on any later start, and if
-  the rules cannot be created the summary says Windows will ask instead.
-- The player guide ships inside the release package as `GUIDE_EN.md` and `GUIDE_EN.pdf`.
-
-### Fixed
-
-- The Stop Game confirmation could be lost behind a fullscreen game and appeared in no window list.
-  Dialogs gained a foreground mode - topmost, shown in the task bar, activated on load - and closing
-  one without pressing a button now answers nothing rather than No. The first-run summary and the
-  first-run error dialog use it too.
-
-## [1.0.0] - 2026-09-14
-
-First release, for Cloud23333's FGO Arcade local platform V1.01.
-
-### Added
-
-- **The launcher**, an English build of the platform's V1.01 front end, on five pages: Play,
-  Account, Cards and Deck, Settings, Advanced. Published as a self-contained single file, so a
-  player does not have to install a .NET runtime.
-- **English card data**: 1,384 card names and 1,264 Craft Essence effects, searchable by their
-  English names. Names follow the English release; effect text follows FGO NA phrasing with every
-  number checked against the Japanese original, because the arcade's values differ from the mobile
-  game's.
-- **English game files**: 65,652 translated text rows covering story, quests, Servant and Craft
-  Essence profiles, skills, items, missions and every menu, and 155 rebuilt sprite archives - title,
-  card read, main menu, terminal, tutorial, formation, battle HUD, results, shops, synthesis,
-  present box, master missions, matching, rankings, grail, help pages, title editor, on-screen
-  keyboards and summon lines.
-- **English replacements outside the assembly** for the launch scripts, the environment check, the
-  account and server tools and the summon candidate notes, so every line that reaches the screen is
-  English wherever it comes from.
-- **Error codes and help** rewritten as one sentence and the fix, including the ones this project
-  confirmed: 4102, 4104 on drives E: and Y:, 4105 without administrator rights, and the 0xC0000005
-  crash caused by Windows Defender Controlled Folder Access.
+- **The game in English.** 65,266 translated text rows - story, quests, tutorial, Servant and Craft
+  Essence profiles, skills, items, missions and every menu - and over 260 rebuilt sprite archives:
+  title, card read, main menu, terminal, formation, battle HUD, results, shops, synthesis, present
+  box, master missions, matching, rankings, grail, help pages, title editor, on-screen keyboards and
+  the summon screens. The launch scripts, the environment check, the account and server tools are
+  English too, so every line that reaches the screen is English wherever it comes from.
+- **The launcher**, an English front end for the platform on five pages: Play, Account, Cards and
+  Deck, Settings, Advanced. One self-contained executable; no .NET runtime to install.
 - **A first run that sets everything up**: installs the English files, checks the game can write to
-  its folders, runs the environment check, creates the account Master with a full Servant and Craft
-  Essence roster, and fills in the launch settings that are missing - windowed 1280x720 on the
-  primary monitor. Nothing at all on later starts.
-- **The installer**, `Apply-EN-Patch.ps1`: finds the install, refuses drives E: and Y: and a running
-  game, backs up every file it replaces, checks every file it copies against a SHA-256 manifest,
-  never writes to accounts, decks, the server state folder or the database, and undoes itself with
-  `-Rollback`.
-- **The release packager**, `package.ps1`, which builds the zip and its manifest from the same
-  bytes, so the manifest always describes what ships.
+  its folders, adds the Windows Firewall rules for the local server, the game and the cabinet
+  service, creates the account Master with a full Servant and Craft Essence roster, and fills in
+  the launch settings that are missing (windowed 1280x720 on the primary monitor). Nothing at all on
+  later starts.
+- **The deck editor**: 1,384 cards with their English names and 1,264 Craft Essence effects, searchable.
+  Drag a card into the deck to add one copy, drag a deck card to reorder it, drag it back out to
+  remove it; double-click picks the art and the number of copies. The deck reaches the game on Play.
+- **Account tools**: create and select accounts, grant a full roster, all Craft Essences, max bond,
+  materials and costumes in one click each.
+- **Error codes and help** rewritten as one sentence and the fix, including 4102, 4104 on drives E:
+  and Y:, 4105 without administrator rights, and the 0xC0000005 crash caused by Windows Defender
+  Controlled Folder Access.
+- **AMD and Intel graphics** through a bundled OpenGL compatibility layer (`compat\fgoglcompat.dll`)
+  that translates the game's NVIDIA-only extensions. Turned on by itself on a PC without an NVIDIA
+  card; greyed out on NVIDIA, where the layer only produces a white window.
+- **An updater**: the launcher asks GitHub Releases whether a newer version exists and offers to
+  fetch and apply it.
+- **The installer** behind the first run, `Apply-EN-Patch.ps1`: finds the install, refuses drives
+  E: and Y: and a running game, backs up every file it replaces, checks every file it copies
+  against a SHA-256 manifest, never touches accounts, decks or the database, and undoes itself
+  with `-Rollback`.
+- **The player guide** inside the package as `GUIDE_EN.md` and `GUIDE_EN.pdf`: install, first run,
+  controls, a sortie step by step, the shops, every error code.
 
 ### Known limits
 
 - No online play and no matchmaking; everything runs against the local server.
-- The in-game summon does not draw cards. Servants come from the Account page and the card library.
-- The co-op event banners, the co-op result screens and the event shops from 0029 on are still
-  Japanese. They are artwork, not text.
+- The co-op event banners, the co-op result screens, the event shops from 0029 on and the summon
+  screen's title art are still Japanese. They are artwork, not text. A few lines in event stories
+  are still Japanese as well.
