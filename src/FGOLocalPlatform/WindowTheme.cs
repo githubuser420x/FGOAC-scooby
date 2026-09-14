@@ -14,9 +14,9 @@ internal static class WindowTheme
 
 	public static void Apply(Window window)
 	{
-		window.Background = new SolidColorBrush(Color.FromRgb(12, 10, 14));
-		window.Foreground = Brushes.White;
-		window.FontFamily = new FontFamily("Segoe UI, Microsoft YaHei UI");
+		window.Background = (Brush)Application.Current.Resources["AbyssBrush"];
+		window.Foreground = (Brush)Application.Current.Resources["ParchmentBrush"];
+		window.FontFamily = (FontFamily)Application.Current.Resources["UiFont"];
 		window.FontSize = 14.0;
 		window.UseLayoutRounding = true;
 		TextOptions.SetTextFormattingMode((DependencyObject)(object)window, (TextFormattingMode)1);

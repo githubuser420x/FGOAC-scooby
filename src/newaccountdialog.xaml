@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Window x:Class="FGOLocalPlatform.NewAccountDialog" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="New Local Account" Width="460" SizeToContent="Height" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Background="#0C0A0E" Foreground="#FFFFFFFF" FontFamily="Segoe UI, Microsoft YaHei UI" xmlns:fgolocalplatform="clr-namespace:FGOLocalPlatform;assembly=FGOLocalPlatform">
-  <Border BorderBrush="#4A1D46" BorderThickness="1" Padding="20">
+<Window x:Class="FGOLocalPlatform.NewAccountDialog" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="New Local Account" Width="460" SizeToContent="Height" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Background="{StaticResource NightBottomBrush}" Foreground="{StaticResource TextBrush}" FontFamily="{StaticResource UiFont}" xmlns:fgolocalplatform="clr-namespace:FGOLocalPlatform;assembly=FGOLocalPlatform">
+  <Border BorderBrush="{StaticResource IceDeepBrush}" BorderThickness="1" Padding="20">
     <StackPanel>
-      <TextBlock Text="Master name (shown in game)" Foreground="#B45A9F" FontWeight="SemiBold" />
+      <TextBlock Text="Master name (shown in game)" Foreground="{StaticResource IceBrush}" FontWeight="SemiBold" />
       <TextBox Name="MasterNameTextBox" MaxLength="32" Margin="0,6,0,14" />
-      <TextBlock Text="Account mode" Foreground="#B45A9F" FontWeight="SemiBold" />
+      <TextBlock Text="Account mode" Foreground="{StaticResource IceBrush}" FontWeight="SemiBold" />
       <ComboBox Name="AccountModeComboBox" Margin="0,6,0,6" SelectedIndex="0">
         <ComboBoxItem Content="normal - Standard account (starting resources)" Tag="normal" />
       </ComboBox>
-      <TextBlock TextWrapping="Wrap" Foreground="#BFB5C2" FontSize="12" Margin="0,0,0,16" Text="A new account starts from the standard beginning state. Once it exists, use the card print and growth options on the account page whenever you need them." />
+      <TextBlock TextWrapping="Wrap" Foreground="{StaticResource TextSoftBrush}" FontSize="12" Margin="0,0,0,16" Text="A new account starts from the standard beginning state. Once it exists, use the card print and growth options on the account page whenever you need them." />
       <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
         <Button Content="Create" Width="96" IsDefault="True" Click="CreateButton_OnClick" />
         <Button Content="Cancel" Width="96" IsCancel="True" />

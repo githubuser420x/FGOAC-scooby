@@ -9,6 +9,11 @@ namespace FGOLocalPlatform;
 
 internal static class ThemedMessageBox
 {
+	private static T Resource<T>(string key)
+	{
+		return (T)Application.Current.Resources[key];
+	}
+
 	public static MessageBoxResult Show(string message, string caption = "FGOAC scooby", MessageBoxButton buttons = MessageBoxButton.OK, MessageBoxImage image = MessageBoxImage.None, MessageBoxResult defaultResult = MessageBoxResult.None, bool foreground = false)
 	{
 		return Show(null, message, caption, buttons, image, defaultResult, foreground);
@@ -46,10 +51,7 @@ internal static class ThemedMessageBox
 			dialog.Owner = owner;
 		}
 		WindowTheme.Apply(dialog);
-		StackPanel stackPanel = new StackPanel
-		{
-			Margin = new Thickness(24.0)
-		};
+		StackPanel stackPanel = new StackPanel();
 		string text = image switch
 		{
 			MessageBoxImage.Hand => "Error", 
@@ -57,12 +59,37 @@ internal static class ThemedMessageBox
 			MessageBoxImage.Question => "Confirm", 
 			_ => "Notice", 
 		};
-		stackPanel.Children.Add(new TextBlock
+		Brush titleBrush = image switch
+		{
+			MessageBoxImage.Hand => Resource<Brush>("DangerBrush"), 
+			MessageBoxImage.Exclamation => Resource<Brush>("EmberBrush"), 
+			_ => Resource<Brush>("ParchmentBrush"), 
+		};
+		StackPanel titleRow = new StackPanel
+		{
+			Orientation = Orientation.Horizontal,
+			Margin = new Thickness(0.0, 0.0, 0.0, 8.0)
+		};
+		titleRow.Children.Add(new Border
+		{
+			Width = 2.0,
+			Background = titleBrush,
+			Margin = new Thickness(0.0, 1.0, 12.0, 1.0)
+		});
+		titleRow.Children.Add(new TextBlock
 		{
 			Text = text,
-			FontSize = 18.0,
+			FontFamily = Resource<FontFamily>("DisplayFont"),
+			FontSize = 21.0,
 			FontWeight = FontWeights.SemiBold,
-			Foreground = new SolidColorBrush(Color.FromRgb(210, 140, 190)),
+			Foreground = titleBrush,
+			VerticalAlignment = VerticalAlignment.Center
+		});
+		stackPanel.Children.Add(titleRow);
+		stackPanel.Children.Add(new Border
+		{
+			Height = 1.0,
+			Background = Resource<Brush>("RuleBrush"),
 			Margin = new Thickness(0.0, 0.0, 0.0, 16.0)
 		});
 		UIElementCollection children = stackPanel.Children;
@@ -86,7 +113,17 @@ internal static class ThemedMessageBox
 			Margin = new Thickness(0.0, 22.0, 0.0, 0.0)
 		};
 		stackPanel.Children.Add(stackPanel2);
-		dialog.Content = stackPanel;
+		dialog.Content = new ChamferPanel
+		{
+			Fill = Resource<Brush>("PlateBrush"),
+			Stroke = Resource<Brush>("GoldSoftBrush"),
+			StrokeThickness = 1.0,
+			Cut = 16.0,
+			OrnamentBrush = Resource<Brush>("GoldBrush"),
+			Padding = new Thickness(22.0, 20.0, 22.0, 20.0),
+			Child = stackPanel,
+			Margin = new Thickness(10.0)
+		};
 		MessageBoxResult[] choices = buttons switch
 		{
 			MessageBoxButton.YesNo => new MessageBoxResult[2]
@@ -126,8 +163,12 @@ internal static class ThemedMessageBox
 				MessageBoxResult.Cancel => "Cancel", 
 				_ => "OK", 
 			};
-			button.MinWidth = 88.0;
-			button.MinHeight = 36.0;
+			button.MinWidth = 104.0;
+			button.MinHeight = 40.0;
+			if (choice == defaultResult)
+			{
+				button.Style = Resource<Style>("PrimaryButtonStyle");
+			}
 			button.IsDefault = choice == defaultResult;
 			button.IsCancel = choice == MessageBoxResult.Cancel || buttons == MessageBoxButton.OK;
 			Button button3 = button;

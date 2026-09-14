@@ -27,7 +27,18 @@ public sealed class SummonCardOption : INotifyPropertyChanged
 
 	public string Name { get; init; } = "";
 
-	public string ChineseName => CardNames.Chinese(Kind, EntityId);
+	/// <summary>The name on the card, English where we have it and Japanese where we do not.</summary>
+	public string EnglishName
+	{
+		get
+		{
+			string english = CardNames.English(Kind, EntityId);
+			return string.IsNullOrWhiteSpace(english) ? Name : english;
+		}
+	}
+
+	/// <summary>The Japanese name, or nothing when it is already the name above.</summary>
+	public string JapaneseName => string.IsNullOrWhiteSpace(CardNames.English(Kind, EntityId)) ? "" : Name;
 
 	public int Rarity { get; init; }
 

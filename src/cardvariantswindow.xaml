@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Window x:Class="FGOLocalPlatform.CardVariantsWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Choose Card Type and Quantity" Background="#101017" Foreground="#F5F1F6" Width="880" Height="650" MinWidth="700" MinHeight="440" WindowStartupLocation="CenterOwner" xmlns:fgolocalplatform="clr-namespace:FGOLocalPlatform;assembly=FGOLocalPlatform">
+<Window x:Class="FGOLocalPlatform.CardVariantsWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Choose Card Type and Quantity" Background="{StaticResource PlateBrush}" Foreground="{StaticResource TextBrush}" Width="880" Height="650" MinWidth="700" MinHeight="440" WindowStartupLocation="CenterOwner" xmlns:fgolocalplatform="clr-namespace:FGOLocalPlatform;assembly=FGOLocalPlatform">
   <Grid Margin="18">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
@@ -8,12 +8,12 @@
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
     <StackPanel Margin="0,0,0,12">
-      <TextBlock FontWeight="Bold" FontSize="18" TextWrapping="Wrap" Text="{Binding JapaneseName}" />
-      <TextBlock Foreground="#D7BBDD" TextWrapping="Wrap" Text="{Binding ChineseName}" />
-      <TextBlock Foreground="#BFB5C2" Text="{Binding EntityLabel}" />
+      <TextBlock Style="{StaticResource SectionTitleStyle}" FontSize="21" TextWrapping="Wrap" Text="{Binding EnglishName}" />
+      <TextBlock Style="{StaticResource SecondaryNameStyle}" TextWrapping="Wrap" Text="{Binding JapaneseName}" />
+      <TextBlock Foreground="{StaticResource TextSoftBrush}" Text="{Binding EntityLabel}" />
       <TextBlock Name="Hint" TextWrapping="Wrap" Margin="0,8,0,0" />
     </StackPanel>
-    <Border Name="CraftPreview" Grid.Row="1" Visibility="Collapsed" Background="#1B1720" Padding="12" Margin="0,0,0,12">
+    <Border Name="CraftPreview" Grid.Row="1" Visibility="Collapsed" Background="{StaticResource PlateBrush}" Padding="12" Margin="0,0,0,12">
       <Grid Height="235">
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="170" />
@@ -22,11 +22,11 @@
         <Image Name="CraftImage" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
         <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" Margin="14,0,0,0">
           <StackPanel>
-            <TextBlock Text="Normal Effect" Foreground="#F5F1F6" FontWeight="Bold" />
-            <TextBlock Name="NormalEffect" Foreground="#EDE7EF" TextWrapping="Wrap" Margin="0,6,0,16" />
-            <TextBlock Text="Max Limit Break Effect" Foreground="#F5F1F6" FontWeight="Bold" />
-            <TextBlock Name="MaximumEffect" Foreground="#EDE7EF" TextWrapping="Wrap" Margin="0,6,0,12" />
-            <TextBlock Text="Hover the effect text to see the Japanese original." Foreground="#BFB5C2" FontSize="11" TextWrapping="Wrap" />
+            <TextBlock Text="Normal Effect" Foreground="{StaticResource TextBrush}" FontWeight="Bold" />
+            <TextBlock Name="NormalEffect" Foreground="{StaticResource TextBrush}" TextWrapping="Wrap" Margin="0,6,0,16" />
+            <TextBlock Text="Max Limit Break Effect" Foreground="{StaticResource TextBrush}" FontWeight="Bold" />
+            <TextBlock Name="MaximumEffect" Foreground="{StaticResource TextBrush}" TextWrapping="Wrap" Margin="0,6,0,12" />
+            <TextBlock Text="Hover the effect text to see the Japanese original." Foreground="{StaticResource TextSoftBrush}" FontSize="11" TextWrapping="Wrap" />
           </StackPanel>
         </ScrollViewer>
       </Grid>
@@ -70,7 +70,7 @@
       </DataGrid.Columns>
     </DataGrid>
     <StackPanel Grid.Row="3" Margin="0,12,0,0">
-      <TextBlock Name="Error" Foreground="#E7C56A" TextWrapping="Wrap" />
+      <TextBlock Name="Error" Foreground="{StaticResource GoldBrush}" TextWrapping="Wrap" />
       <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
         <Button Content="Cancel" IsCancel="True" />
         <Button Content="Add Selected Quantities" Click="Add_OnClick" />

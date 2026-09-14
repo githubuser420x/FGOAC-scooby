@@ -4,7 +4,6 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Markup;
 using System.Windows.Media;
 
 namespace FGOLocalPlatform;
@@ -39,7 +38,7 @@ public sealed class EasterEggSettingsView : StackPanel
 	public EasterEggSettingsView(string path)
 	{
 		settingsPath = path;
-		EnabledCheckBox.Style = (Style)XamlReader.Parse("\r\n<Style xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' TargetType='ToggleButton'>\r\n <Setter Property='Background' Value='#17131B'/><Setter Property='BorderBrush' Value='#46364D'/>\r\n <Setter Property='BorderThickness' Value='1'/><Setter Property='Padding' Value='14,6'/>\r\n <Setter Property='Template'><Setter.Value><ControlTemplate TargetType='ToggleButton'>\r\n  <Border Background='{TemplateBinding Background}' BorderBrush='{TemplateBinding BorderBrush}' BorderThickness='{TemplateBinding BorderThickness}' Padding='{TemplateBinding Padding}'>\r\n   <ContentPresenter HorizontalAlignment='Center' VerticalAlignment='Center'/>\r\n  </Border>\r\n </ControlTemplate></Setter.Value></Setter>\r\n <Style.Triggers>\r\n  <Trigger Property='IsChecked' Value='True'><Setter Property='Background' Value='#5A1D50'/><Setter Property='BorderBrush' Value='#A85B9B'/></Trigger>\r\n  <Trigger Property='IsMouseOver' Value='True'><Setter Property='BorderBrush' Value='#ED9BDC'/></Trigger>\r\n  <Trigger Property='IsKeyboardFocused' Value='True'><Setter Property='BorderBrush' Value='#ED9BDC'/></Trigger>\r\n </Style.Triggers>\r\n</Style>");
+		EnabledCheckBox.Style = (Style)Application.Current.Resources["SwitchToggleStyle"];
 		StackPanel stackPanel = new StackPanel
 		{
 			Orientation = Orientation.Horizontal

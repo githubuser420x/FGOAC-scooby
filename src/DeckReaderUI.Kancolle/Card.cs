@@ -209,6 +209,8 @@ public class Card
 		BitmapImage bitmapImage = new BitmapImage();
 		bitmapImage.BeginInit();
 		bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+		// The tiles are 144 px wide, so there is no reason to keep more pixels than that in memory.
+		bitmapImage.DecodePixelWidth = 144;
 		bitmapImage.UriSource = new Uri(uriString, UriKind.Absolute);
 		bitmapImage.EndInit();
 		((Freezable)bitmapImage).Freeze();

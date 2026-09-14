@@ -491,6 +491,11 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		};
 		statusTimer.Tick += async delegate
 		{
+			// Nothing on screen to update while the window is out of the way.
+			if (base.WindowState == WindowState.Minimized)
+			{
+				return;
+			}
 			await RefreshRuntimeStatusAsync();
 			await RefreshLogPanelsAsync();
 			await RefreshAccountsIfChangedAsync();
@@ -504,6 +509,8 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			await RefreshLogPanelsAsync();
 			await RefreshAccountsAsync(showErrors: false);
 			await RunFirstRunAsync();
+			AboutVersionText.Text = "Version " + UpdateSettings.Version + ", an English build of the FGO Arcade local platform.";
+			await CheckForUpdateAsync(announce: false);
 		};
 	}
 
@@ -612,27 +619,145 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		Close();
 	}
 
+	/// <summary>
+	/// Reading MainModule opens the process and walks its module list, which is far too much to do
+	/// every two seconds, so the answer is remembered per process id. In the normal case there is no
+	/// ago.exe at all and the check costs one process enumeration.
+	/// </summary>
+	private static readonly Dictionary<int, bool> GameProcessCache = new Dictionary<int, bool>();
+
 	private static bool IsThisGameRunning()
 	{
 		string b = Path.Combine(GamePaths.GameRoot, "ago.exe");
 		Process[] processesByName = Process.GetProcessesByName("ago");
+		if (processesByName.Length == 0)
+		{
+			GameProcessCache.Clear();
+			return false;
+		}
+		bool found = false;
+		HashSet<int> alive = new HashSet<int>();
 		foreach (Process process in processesByName)
 		{
 			using (process)
 			{
-				try
+				alive.Add(process.Id);
+				if (!GameProcessCache.TryGetValue(process.Id, out var isOurs))
 				{
-					if (string.Equals(process.MainModule?.FileName, b, StringComparison.OrdinalIgnoreCase))
+					isOurs = false;
+					try
 					{
-						return true;
+						isOurs = string.Equals(process.MainModule?.FileName, b, StringComparison.OrdinalIgnoreCase);
 					}
+					catch (Exception ex) when (((ex is Win32Exception || ex is InvalidOperationException) ? 1 : 0) != 0)
+					{
+					}
+					GameProcessCache[process.Id] = isOurs;
 				}
-				catch (Exception ex) when (((ex is Win32Exception || ex is InvalidOperationException) ? 1 : 0) != 0)
-				{
-				}
+				found |= isOurs;
 			}
 		}
-		return false;
+		foreach (int gone in GameProcessCache.Keys.Where((int id) => !alive.Contains(id)).ToList())
+		{
+			GameProcessCache.Remove(gone);
+		}
+		return found;
+	}
+
+	private Updater.Release availableUpdate;
+
+	/// <summary>
+	/// Looks for a newer release. On startup a failure says nothing on screen and only reaches
+	/// logs\update.log; the button on the About page reports either way, in one sentence.
+	/// </summary>
+	private async Task CheckForUpdateAsync(bool announce)
+	{
+		if (announce)
+		{
+			AboutUpdateStatusText.Text = "Checking...";
+		}
+		try
+		{
+			availableUpdate = await Updater.CheckAsync();
+		}
+		catch (Exception ex)
+		{
+			Updater.Log("Check failed: " + ex);
+			if (announce)
+			{
+				AboutUpdateStatusText.Text = "The update check could not reach GitHub: " + ex.Message + ". Check your connection, or open " + UpdateSettings.ReleasesUrl + " yourself.";
+			}
+			return;
+		}
+		if (availableUpdate == null)
+		{
+			if (announce)
+			{
+				AboutUpdateStatusText.Text = "You are on the latest version (" + UpdateSettings.Version + ").";
+			}
+			return;
+		}
+		UpdateBannerText.Text = "Update " + availableUpdate.Version + " is available.";
+		UpdateBanner.Visibility = Visibility.Visible;
+		if (announce)
+		{
+			AboutUpdateStatusText.Text = "Update " + availableUpdate.Version + " is available. Install it from the banner on the Play page.";
+		}
+	}
+
+	private async void CheckUpdatesButton_OnClick(object sender, RoutedEventArgs e)
+	{
+		Button button = (Button)sender;
+		button.IsEnabled = false;
+		try
+		{
+			await CheckForUpdateAsync(announce: true);
+		}
+		finally
+		{
+			button.IsEnabled = true;
+		}
+	}
+
+	private void UpdateLaterButton_OnClick(object sender, RoutedEventArgs e)
+	{
+		UpdateBanner.Visibility = Visibility.Collapsed;
+	}
+
+	private async void UpdateInstallButton_OnClick(object sender, RoutedEventArgs e)
+	{
+		if (availableUpdate == null)
+		{
+			return;
+		}
+		Updater.Release release = availableUpdate;
+		UpdateBanner.Visibility = Visibility.Collapsed;
+		StartGameButton.IsEnabled = false;
+		string installRoot = Path.GetFullPath(Path.Combine(GamePaths.GameRoot, ".."));
+		// The installer's output arrives on a background thread.
+		bool installed = await Updater.InstallAsync(release, installRoot, delegate(string message)
+		{
+			base.Dispatcher.Invoke(delegate
+			{
+				RuntimeStatusText.Text = message;
+				AppendInjectionLog(message + Environment.NewLine);
+			});
+		}, CancellationToken.None);
+		if (!installed)
+		{
+			await RefreshRuntimeStatusAsync();
+			return;
+		}
+		availableUpdate = null;
+		AboutUpdateStatusText.Text = "Version " + release.Version + " is installed.";
+		if (Updater.HasStagedLauncher(out var stagedPath))
+		{
+			RuntimeStatusText.Text = "Version " + release.Version + " is ready - the launcher restarts to finish.";
+			Updater.SwapAndRestart(stagedPath);
+			Close();
+			return;
+		}
+		RuntimeStatusText.Text = "Version " + release.Version + " is installed. Close and reopen the launcher to run it.";
 	}
 
 	private void AboutLink_OnRequestNavigate(object sender, RequestNavigateEventArgs e)
@@ -682,7 +807,6 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 	{
 		base.Title = ProtectedBranding.WindowTitle;
 		HeaderBrandText.Text = ProtectedBranding.HeaderText;
-		FooterNoticeText.Text = ProtectedBranding.FooterNotice;
 	}
 
 	private void PublishDeck()
@@ -701,7 +825,21 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 
 	private void UpdateDeckStatus()
 	{
-		DeckStatusText.Text = $"Deck synced: {cardCollection.SelectedCards.Count}/{30} cards - FGO 11.00 format 6";
+		DeckStatusText.Text = $"{cardCollection.SelectedCards.Count} of 30 cards - FGO 11.00 format 6";
+		UpdateHeroCard();
+	}
+
+	/// <summary>
+	/// The Play page shows the first card of the deck, which is the Servant the cabinet reads first.
+	/// With an empty deck it shows the game's own mark instead.
+	/// </summary>
+	private void UpdateHeroCard()
+	{
+		Card lead = cardCollection.SelectedCards.FirstOrDefault();
+		HeroCardImage.Source = lead?.Thumbnail;
+		bool haveCard = HeroCardImage.Source != null;
+		HeroCardImage.Visibility = (haveCard ? Visibility.Visible : Visibility.Collapsed);
+		HeroFallbackImage.Visibility = (haveCard ? Visibility.Collapsed : Visibility.Visible);
 	}
 
 	private void Reload()
@@ -755,7 +893,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			{
 				return true;
 			}
-			return cardStack.JapaneseName.Contains(currentCardSearch, StringComparison.OrdinalIgnoreCase) || cardStack.ChineseName.Contains(currentCardSearch, StringComparison.OrdinalIgnoreCase) || cardStack.EntityLabel.Contains(currentCardSearch, StringComparison.OrdinalIgnoreCase) || cardStack.Variants.Any((Card c) => c.FileName.Contains(currentCardSearch, StringComparison.OrdinalIgnoreCase) || c.TrcId.ToString().Contains(currentCardSearch));
+			return cardStack.EnglishName.Contains(currentCardSearch, StringComparison.OrdinalIgnoreCase) || cardStack.JapaneseName.Contains(currentCardSearch, StringComparison.OrdinalIgnoreCase) || cardStack.EntityLabel.Contains(currentCardSearch, StringComparison.OrdinalIgnoreCase) || cardStack.Variants.Any((Card c) => c.FileName.Contains(currentCardSearch, StringComparison.OrdinalIgnoreCase) || c.TrcId.ToString().Contains(currentCardSearch));
 		};
 		cardListView.Refresh();
 		filteredCardItems = ((IEnumerable)cardListView).Cast<CardStack>().ToList();
@@ -832,8 +970,8 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		}
 		else
 		{
-			button.Background = new SolidColorBrush(Color.FromRgb(90, 29, 80));
-			button.BorderBrush = new SolidColorBrush(Color.FromRgb(168, 91, 155));
+			button.Background = (Brush)Application.Current.Resources["PlateHighBrush"];
+			button.BorderBrush = (Brush)Application.Current.Resources["IceBrush"];
 		}
 	}
 
@@ -2570,7 +2708,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		LogPanelColumn.MinWidth = ((!collapsed) ? 310 : 0);
 		LogPanelColumn.Width = new GridLength(collapsed ? 0.0 : expandedLogWidth);
 		LogSplitterColumn.Width = new GridLength((!collapsed) ? 7 : 0);
-		ToggleLogsButton.Content = (collapsed ? "◀ Show Logs" : "Hide Logs ▶");
+		ToggleLogsButton.Content = (collapsed ? "Show logs" : "Hide logs");
 	}
 
 	private void ToggleLogs_OnClick(object sender, RoutedEventArgs e)

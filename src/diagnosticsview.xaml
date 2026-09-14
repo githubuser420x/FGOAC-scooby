@@ -5,8 +5,8 @@
       <TextBlock Text="Diagnostics and Help" FontSize="22" FontWeight="Bold" />
       <Button Name="EnvironmentCheckButton" Content="Run Environment Check" HorizontalAlignment="Left" Padding="18,10" Margin="0,16,0,8" Click="EnvironmentCheck_OnClick" />
       <TextBlock Name="EnvironmentCheckText" Text="Checks the runtime libraries, script versions, audio device and folder permissions; it does not start the server. The report is saved to logs/environment-check.txt." TextWrapping="Wrap" />
-      <TextBlock Text="Error Codes and Fixes" Foreground="#F5F1F6" FontWeight="Bold" Margin="0,16,0,0" />
-      <TextBlock Name="ErrorGuideText" Foreground="#EDE7EF" TextWrapping="Wrap" Margin="8,12,8,12" />
+      <TextBlock Text="Error Codes and Fixes" Foreground="{StaticResource TextBrush}" FontWeight="Bold" Margin="0,16,0,0" />
+      <TextBlock Name="ErrorGuideText" Foreground="{StaticResource TextBrush}" TextWrapping="Wrap" Margin="8,12,8,12" />
     </StackPanel>
   </ScrollViewer>
 </UserControl>

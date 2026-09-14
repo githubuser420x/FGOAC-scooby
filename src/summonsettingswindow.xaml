@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<UserControl x:Class="FGOLocalPlatform.SummonSettingsWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Background="#101017" Foreground="#EEEEF4" FontFamily="Segoe UI, Microsoft YaHei UI" xmlns:fgolocalplatform="clr-namespace:FGOLocalPlatform;assembly=FGOLocalPlatform">
+<UserControl x:Class="FGOLocalPlatform.SummonSettingsWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Background="{StaticResource PlateBrush}" Foreground="{StaticResource TextBrush}" FontFamily="{StaticResource UiFont}" xmlns:fgolocalplatform="clr-namespace:FGOLocalPlatform;assembly=FGOLocalPlatform">
   <Grid Margin="20">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
@@ -11,7 +11,7 @@
     </Grid.RowDefinitions>
     <StackPanel>
       <TextBlock Text="Servants and Craft Essences share one set of draw rates" FontSize="22" FontWeight="SemiBold" />
-      <TextBlock Margin="0,8,0,12" Foreground="#BDBDCB" TextWrapping="Wrap" Text="Regular and supplemental cards share one local draw table; story-fixed cards are held out of it. Weight divided by total weight is the draw chance, and 0 means the card is never drawn. There is no hidden rate-up and no ten-pull pity." />
+      <TextBlock Margin="0,8,0,12" Foreground="{StaticResource TextSoftBrush}" TextWrapping="Wrap" Text="Regular and supplemental cards share one local draw table; story-fixed cards are held out of it. Weight divided by total weight is the draw chance, and 0 means the card is never drawn. There is no hidden rate-up and no ten-pull pity." />
     </StackPanel>
     <DockPanel Grid.Row="1" Margin="0,0,0,10">
       <TextBlock Text="Search name / number" VerticalAlignment="Center" Margin="0,0,12,0" />
@@ -33,7 +33,7 @@
       <Button Content="Only Selected (100%)" Click="OnlyOne_OnClick" />
       <Button Content="Even for Selected" Click="EqualSelected_OnClick" />
       <Button Content="Exclude Selected" Click="Exclude_OnClick" />
-      <TextBlock Text="Ctrl / Shift selects more than one" VerticalAlignment="Center" Foreground="#BDBDCB" Margin="8,0,0,6" />
+      <TextBlock Text="Ctrl / Shift selects more than one" VerticalAlignment="Center" Foreground="{StaticResource TextSoftBrush}" Margin="8,0,0,6" />
     </WrapPanel>
     <DataGrid Name="CardsGrid" Grid.Row="3" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" SelectionMode="Extended" SelectionUnit="FullRow" MinRowHeight="112" HeadersVisibility="Column" GridLinesVisibility="Horizontal" EnableRowVirtualization="True" CellEditEnding="Grid_OnCellEditEnding" BeginningEdit="Grid_OnBeginningEdit" SelectionChanged="Grid_OnSelectionChanged">
       <FrameworkElement.Resources>
@@ -57,13 +57,13 @@
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
-        <DataGridTemplateColumn Header="Japanese Name / English Name / Internal ID" Width="*" MinWidth="260" IsReadOnly="True">
+        <DataGridTemplateColumn Header="Name / Internal ID" Width="*" MinWidth="260" IsReadOnly="True">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
               <StackPanel VerticalAlignment="Center">
-                <TextBlock TextWrapping="Wrap" Text="{Binding Name}" ToolTip="{Binding AcquisitionNote}" />
-                <TextBlock TextWrapping="Wrap" Foreground="#D7BBDD" Margin="6,4" ToolTip="English name; some are machine-translated" Text="{Binding ChineseName}" />
-                <TextBlock Foreground="#BDBDCB" Margin="6,5,6,0" Text="{Binding FileNumber}" ToolTip="{Binding FileName}" />
+                <TextBlock TextWrapping="Wrap" FontWeight="SemiBold" Text="{Binding EnglishName}" ToolTip="{Binding AcquisitionNote}" />
+                <TextBlock TextWrapping="Wrap" Style="{StaticResource SecondaryNameStyle}" Margin="6,4" Text="{Binding JapaneseName}" />
+                <TextBlock Foreground="{StaticResource TextSoftBrush}" Margin="6,5,6,0" Text="{Binding FileNumber}" ToolTip="{Binding FileName}" />
               </StackPanel>
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
@@ -77,9 +77,9 @@
       </DataGrid.Columns>
     </DataGrid>
     <StackPanel Grid.Row="4" Margin="0,12,0,8">
-      <TextBlock Name="SummaryText" FontSize="15" TextWrapping="Wrap" Foreground="#DCD6FF" />
-      <TextBlock Name="StatusText" Margin="0,6,0,0" TextWrapping="Wrap" Foreground="#BDBDCB" />
-      <TextBlock Margin="0,6,0,0" TextWrapping="Wrap" Foreground="#A5A5B5" FontSize="12" Text="Supplemental covers cards that come from local rewards, Bond and the like rather than a regular summon, and keeps one base card art for each. Story and first-clear cards are listed separately and stay out of the random pool. Normal and Fatal summon tickets draw only from the card arts each one supports, using these same weights; fixed exchanges are unaffected." />
+      <TextBlock Name="SummaryText" FontSize="15" TextWrapping="Wrap" Foreground="{StaticResource TextBrush}" />
+      <TextBlock Name="StatusText" Margin="0,6,0,0" TextWrapping="Wrap" Foreground="{StaticResource TextSoftBrush}" />
+      <TextBlock Margin="0,6,0,0" TextWrapping="Wrap" Foreground="{StaticResource TextFaintBrush}" FontSize="12" Text="Supplemental covers cards that come from local rewards, Bond and the like rather than a regular summon, and keeps one base card art for each. Story and first-clear cards are listed separately and stay out of the random pool. Normal and Fatal summon tickets draw only from the card arts each one supports, using these same weights; fixed exchanges are unaffected." />
     </StackPanel>
     <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right">
       <Button Content="Reload" Height="36" Margin="3" VerticalAlignment="Center" Click="Reload_OnClick" />

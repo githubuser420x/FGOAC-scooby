@@ -80,7 +80,7 @@ public partial class SummonSettingsWindow : UserControl, IComponentConnector
 			_ => !summonCardOption.IsStory, 
 		} && (KindFilter.SelectedIndex == 0 || summonCardOption.Kind == KindFilter.SelectedIndex))
 		{
-			if (text.Length != 0 && !summonCardOption.Name.Contains(text, StringComparison.OrdinalIgnoreCase) && !summonCardOption.ChineseName.Contains(text, StringComparison.OrdinalIgnoreCase) && !summonCardOption.FileNumber.Contains(text, StringComparison.OrdinalIgnoreCase) && !summonCardOption.FileName.Contains(text, StringComparison.OrdinalIgnoreCase))
+			if (text.Length != 0 && !summonCardOption.Name.Contains(text, StringComparison.OrdinalIgnoreCase) && !summonCardOption.EnglishName.Contains(text, StringComparison.OrdinalIgnoreCase) && !summonCardOption.FileNumber.Contains(text, StringComparison.OrdinalIgnoreCase) && !summonCardOption.FileName.Contains(text, StringComparison.OrdinalIgnoreCase))
 			{
 				return summonCardOption.TcId.ToString().Contains(text);
 			}

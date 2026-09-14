@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <UserControl x:Class="FGOLocalPlatform.CursorSettingsView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:fgolocalplatform="clr-namespace:FGOLocalPlatform;assembly=FGOLocalPlatform">
   <StackPanel Margin="3,12">
-    <TextBlock Text="Mouse Pointer and Inverted Outline" Foreground="#F5F1F6" FontWeight="Bold" Margin="0,0,0,10" />
-    <TextBlock Text="Replaces the crosshair pointer inside the game. These settings are saved on their own and take effect the next time the game starts." Foreground="#BFB5C2" TextWrapping="Wrap" />
+    <TextBlock Text="Mouse Pointer and Inverted Outline" Foreground="{StaticResource TextBrush}" FontWeight="Bold" Margin="0,0,0,10" />
+    <TextBlock Text="Replaces the crosshair pointer inside the game. These settings are saved on their own and take effect the next time the game starts." Foreground="{StaticResource TextSoftBrush}" TextWrapping="Wrap" />
     <WrapPanel Margin="0,8">
       <ComboBox Name="Mode" Width="170" SelectedIndex="0" SelectionChanged="Settings_OnChanged">
         <ComboBoxItem Content="Default Crosshair" />
@@ -11,34 +11,34 @@
       </ComboBox>
       <Button Content="Choose Image..." Margin="8,0" Click="Choose_OnClick" />
     </WrapPanel>
-    <TextBlock Name="ImageName" Text="Supports PNG with transparency, JPG and BMP. The image is copied into the game folder, so it keeps working if you move the installation." TextWrapping="Wrap" Foreground="#BFB5C2" />
+    <TextBlock Name="ImageName" Text="Supports PNG with transparency, JPG and BMP. The image is copied into the game folder, so it keeps working if you move the installation." TextWrapping="Wrap" Foreground="{StaticResource TextSoftBrush}" />
     <Grid Margin="0,8">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="140" />
         <ColumnDefinition Width="*" />
       </Grid.ColumnDefinitions>
-      <Border Width="132" Height="132" Background="#26202D" BorderBrush="#8A6A98" BorderThickness="1" VerticalAlignment="Top">
+      <Border Width="132" Height="132" Background="{StaticResource PlateHighBrush}" BorderBrush="{StaticResource TextFaintBrush}" BorderThickness="1" VerticalAlignment="Top">
         <Grid>
           <Image Name="Preview" Stretch="None" />
           <Canvas IsHitTestVisible="False">
-            <Ellipse Name="Hotspot" Width="5" Height="5" Fill="#FF66B8" Stroke="#FFFFFFFF" StrokeThickness="1" />
+            <Ellipse Name="Hotspot" Width="5" Height="5" Fill="{StaticResource IceBrush}" Stroke="{StaticResource TextBrush}" StrokeThickness="1" />
           </Canvas>
         </Grid>
       </Border>
       <StackPanel Grid.Column="1" Margin="12,0,0,0">
-        <TextBlock Foreground="#EDE7EF" Text="{Binding ElementName=SizeSlider, Path=Value, StringFormat=Size: {0:0} px}" />
+        <TextBlock Foreground="{StaticResource TextBrush}" Text="{Binding ElementName=SizeSlider, Path=Value, StringFormat=Size: {0:0} px}" />
         <Slider Name="SizeSlider" Minimum="16" Maximum="128" Value="48" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="Settings_OnChanged" />
-        <TextBlock Foreground="#EDE7EF" Text="{Binding ElementName=OutlineSlider, Path=Value, StringFormat=Inverted outline: {0:0} px (0 turns it off)}" />
+        <TextBlock Foreground="{StaticResource TextBrush}" Text="{Binding ElementName=OutlineSlider, Path=Value, StringFormat=Inverted outline: {0:0} px (0 turns it off)}" />
         <Slider Name="OutlineSlider" Minimum="0" Maximum="6" Value="2" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="Settings_OnChanged" />
-        <TextBlock Foreground="#BFB5C2" Text="The outline inverts the colors of whatever is behind it, in real time. The preview uses a dark checkerboard; the pointer itself keeps the image colors, and transparent areas are cut away along the outline." TextWrapping="Wrap" Margin="0,8" />
+        <TextBlock Foreground="{StaticResource TextSoftBrush}" Text="The outline inverts the colors of whatever is behind it, in real time. The preview uses a dark checkerboard; the pointer itself keeps the image colors, and transparent areas are cut away along the outline." TextWrapping="Wrap" Margin="0,8" />
       </StackPanel>
     </Grid>
-    <TextBlock Text="The pink dot marks where a click actually lands. The hotspot is set as a percentage of the pointer canvas: 50% is the center, 0% is the top left corner." Foreground="#BFB5C2" TextWrapping="Wrap" />
-    <TextBlock Foreground="#EDE7EF" Text="{Binding ElementName=HotX, Path=Value, StringFormat=Hotspot X: {0:0}%}" />
+    <TextBlock Text="The pink dot marks where a click actually lands. The hotspot is set as a percentage of the pointer canvas: 50% is the center, 0% is the top left corner." Foreground="{StaticResource TextSoftBrush}" TextWrapping="Wrap" />
+    <TextBlock Foreground="{StaticResource TextBrush}" Text="{Binding ElementName=HotX, Path=Value, StringFormat=Hotspot X: {0:0}%}" />
     <Slider Name="HotX" Minimum="0" Maximum="100" Value="50" ValueChanged="Settings_OnChanged" />
-    <TextBlock Foreground="#EDE7EF" Text="{Binding ElementName=HotY, Path=Value, StringFormat=Hotspot Y: {0:0}%}" />
+    <TextBlock Foreground="{StaticResource TextBrush}" Text="{Binding ElementName=HotY, Path=Value, StringFormat=Hotspot Y: {0:0}%}" />
     <Slider Name="HotY" Minimum="0" Maximum="100" Value="50" ValueChanged="Settings_OnChanged" />
     <Button Content="Save Pointer Settings" HorizontalAlignment="Left" Margin="0,8" Click="Save_OnClick" />
-    <TextBlock Name="Status" Foreground="#E7C56A" TextWrapping="Wrap" />
+    <TextBlock Name="Status" Foreground="{StaticResource GoldBrush}" TextWrapping="Wrap" />
   </StackPanel>
 </UserControl>

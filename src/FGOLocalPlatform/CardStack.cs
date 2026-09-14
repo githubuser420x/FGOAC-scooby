@@ -14,9 +14,25 @@ public sealed class CardStack
 
 	public IReadOnlyList<Card> Variants { get; private init; } = Array.Empty<Card>();
 
-	public string JapaneseName => CardNames.Get(Card).Japanese;
+	/// <summary>The name on the card, English where we have it and Japanese where we do not.</summary>
+	public string EnglishName
+	{
+		get
+		{
+			CardNames.Names names = CardNames.Get(Card);
+			return string.IsNullOrWhiteSpace(names.English) ? names.Japanese : names.English;
+		}
+	}
 
-	public string ChineseName => CardNames.Get(Card).Chinese;
+	/// <summary>The Japanese name, or nothing when it is already the name above.</summary>
+	public string JapaneseName
+	{
+		get
+		{
+			CardNames.Names names = CardNames.Get(Card);
+			return string.IsNullOrWhiteSpace(names.English) ? "" : names.Japanese;
+		}
+	}
 
 	public string EntityLabel => "Internal ID " + CardFormState.EntityKey(Card);
 

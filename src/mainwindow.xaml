@@ -1,11 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Window x:Class="FGOLocalPlatform.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:kancolle="clr-namespace:DeckReaderUI.Kancolle" xmlns:local="clr-namespace:FGOLocalPlatform" xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework" Title="" Icon="AprilFoolFGOFirstHassan.ico" Width="1540" Height="900" MinWidth="1180" MinHeight="720" WindowStyle="None" ResizeMode="CanResize" Background="#050506" Foreground="#FFFFFFFF" FontFamily="Segoe UI, Microsoft YaHei UI" FontSize="14" Closing="MainWindow_OnClosing">
+<Window x:Class="FGOLocalPlatform.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:kancolle="clr-namespace:DeckReaderUI.Kancolle" xmlns:local="clr-namespace:FGOLocalPlatform" xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework" Title="" Icon="platform.ico" Width="1280" Height="800" MinWidth="1060" MinHeight="680" WindowStyle="None" ResizeMode="CanResize" Background="{StaticResource NightBottomBrush}" Foreground="{StaticResource TextBrush}" FontFamily="{StaticResource UiFont}" FontSize="14" Closing="MainWindow_OnClosing">
   <shell:WindowChrome.WindowChrome>
     <shell:WindowChrome CaptionHeight="32" ResizeBorderThickness="7" GlassFrameThickness="0" CornerRadius="0" UseAeroCaptionButtons="False" />
   </shell:WindowChrome.WindowChrome>
   <FrameworkElement.Resources>
     <ResourceDictionary>
       <Style x:Key="CardFormMenuItemStyle" TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}" />
+      <Style x:Key="StopGameButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource DangerButtonStyle}">
+        <Style.Triggers>
+          <Trigger Property="IsEnabled" Value="False">
+            <Setter Property="Visibility" Value="Collapsed" />
+          </Trigger>
+        </Style.Triggers>
+      </Style>
+      <Style x:Key="OwnedOnlyToggleStyle" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource SwitchToggleStyle}">
+        <Setter Property="Content" Value="Owned cards only" />
+        <Setter Property="MinHeight" Value="34" />
+        <Setter Property="Padding" Value="11,5" />
+      </Style>
+      <Style x:Key="EnglishTextToggleStyle" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource SwitchToggleStyle}">
+        <Setter Property="Content" Value="English text off" />
+        <Style.Triggers>
+          <Trigger Property="IsChecked" Value="True">
+            <Setter Property="Content" Value="English text on" />
+          </Trigger>
+        </Style.Triggers>
+      </Style>
       <Style x:Key="CaptionButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="Width" Value="44" />
         <Setter Property="Height" Value="31" />
@@ -14,7 +34,7 @@
         <Setter Property="Background" Value="#00FFFFFF" />
         <Setter Property="BorderBrush" Value="#00FFFFFF" />
         <Setter Property="BorderThickness" Value="0,0,0,2" />
-        <Setter Property="Foreground" Value="#DCD5DF" />
+        <Setter Property="Foreground" Value="{StaticResource TextSoftBrush}" />
         <Setter Property="Focusable" Value="False" />
         <Setter Property="FrameworkElement.Cursor" Value="Arrow" />
         <Setter Property="UIElement.SnapsToDevicePixels" Value="True" />
@@ -28,14 +48,14 @@
               </Border>
               <ControlTemplate.Triggers>
                 <Trigger Property="UIElement.IsMouseOver" Value="True">
-                  <Setter TargetName="CaptionSurface" Property="Border.Background" Value="#251B27" />
-                  <Setter TargetName="CaptionSurface" Property="Border.BorderBrush" Value="#C764B3" />
-                  <Setter Property="Foreground" Value="#FFFFFF" />
+                  <Setter TargetName="CaptionSurface" Property="Border.Background" Value="{StaticResource PlateHighBrush}" />
+                  <Setter TargetName="CaptionSurface" Property="Border.BorderBrush" Value="{StaticResource IceBrush}" />
+                  <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
-                  <Setter TargetName="CaptionSurface" Property="Border.Background" Value="#4A1D46" />
-                  <Setter TargetName="CaptionSurface" Property="Border.BorderBrush" Value="#F08ADA" />
-                  <Setter Property="Foreground" Value="#FFFFFF" />
+                  <Setter TargetName="CaptionSurface" Property="Border.Background" Value="{StaticResource IceDeepBrush}" />
+                  <Setter TargetName="CaptionSurface" Property="Border.BorderBrush" Value="{StaticResource IceBrush}" />
+                  <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
                 </Trigger>
               </ControlTemplate.Triggers>
             </ControlTemplate>
@@ -43,21 +63,21 @@
         </Setter>
       </Style>
       <Style x:Key="CloseCaptionButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource CaptionButtonStyle}">
-        <Setter Property="Foreground" Value="#DCD5DF" />
+        <Setter Property="Foreground" Value="{StaticResource TextSoftBrush}" />
       </Style>
       <Style x:Key="PanelSplitterStyle" TargetType="{x:Type GridSplitter}">
-        <Setter Property="Background" Value="#151119" />
+        <Setter Property="Background" Value="{StaticResource PlateBrush}" />
         <Setter Property="GridSplitter.ShowsPreview" Value="True" />
         <Setter Property="UIElement.SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
           <Setter.Value>
             <ControlTemplate TargetType="{x:Type GridSplitter}">
               <Grid Background="{TemplateBinding Control.Background}">
-                <Border Name="Grip" Background="#4A1D46" Opacity="0.7" HorizontalAlignment="Center" VerticalAlignment="Center" Width="2" Height="30" />
+                <Border Name="Grip" Background="{StaticResource IceDeepBrush}" Opacity="0.7" HorizontalAlignment="Center" VerticalAlignment="Center" Width="2" Height="30" />
               </Grid>
               <ControlTemplate.Triggers>
                 <Trigger Property="UIElement.IsMouseOver" Value="True">
-                  <Setter TargetName="Grip" Property="Border.Background" Value="#B45A9F" />
+                  <Setter TargetName="Grip" Property="Border.Background" Value="{StaticResource IceBrush}" />
                   <Setter TargetName="Grip" Property="UIElement.Opacity" Value="1" />
                 </Trigger>
               </ControlTemplate.Triggers>
@@ -70,11 +90,11 @@
           <Setter.Value>
             <ControlTemplate TargetType="{x:Type GridSplitter}">
               <Grid Background="{TemplateBinding Control.Background}">
-                <Border Name="Grip" Background="#4A1D46" Opacity="0.7" HorizontalAlignment="Center" VerticalAlignment="Center" Width="30" Height="2" />
+                <Border Name="Grip" Background="{StaticResource IceDeepBrush}" Opacity="0.7" HorizontalAlignment="Center" VerticalAlignment="Center" Width="30" Height="2" />
               </Grid>
               <ControlTemplate.Triggers>
                 <Trigger Property="UIElement.IsMouseOver" Value="True">
-                  <Setter TargetName="Grip" Property="Border.Background" Value="#B45A9F" />
+                  <Setter TargetName="Grip" Property="Border.Background" Value="{StaticResource IceBrush}" />
                   <Setter TargetName="Grip" Property="UIElement.Opacity" Value="1" />
                 </Trigger>
               </ControlTemplate.Triggers>
@@ -97,19 +117,19 @@
                     <RowDefinition Height="126" />
                     <RowDefinition Height="58" />
                   </Grid.RowDefinitions>
-                  <Border Background="#050506" BorderBrush="#493E4F" BorderThickness="1" Padding="3">
+                  <Border Background="{StaticResource NightBottomBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" Padding="3">
                     <Image Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Thumbnail}" />
                   </Border>
-                  <Border Grid.Row="1" Background="#E8121016" BorderBrush="#6B245E" BorderThickness="1,0,1,1" Padding="5,2">
+                  <Border Grid.Row="1" Background="#E8101D36" BorderBrush="{StaticResource IceDimBrush}" BorderThickness="1,0,1,1" Padding="5,2">
                     <StackPanel VerticalAlignment="Center">
-                      <Viewbox Height="17" Stretch="Uniform" StretchDirection="DownOnly">
-                        <TextBlock TextAlignment="Center" Foreground="#FFFFFFFF" FontSize="11" Text="{Binding JapaneseName}" />
+                      <Viewbox Height="18" Stretch="Uniform" StretchDirection="DownOnly">
+                        <TextBlock TextAlignment="Center" Foreground="{StaticResource TextBrush}" FontSize="12" FontWeight="SemiBold" Text="{Binding EnglishName}" />
                       </Viewbox>
-                      <Viewbox Height="17" Stretch="Uniform" StretchDirection="DownOnly">
-                        <TextBlock TextAlignment="Center" Foreground="#D7BBDD" FontSize="11" ToolTip="English name, from the official FGO NA name list where a match exists" Text="{Binding ChineseName}" />
+                      <Viewbox Height="15" Stretch="Uniform" StretchDirection="DownOnly">
+                        <TextBlock TextAlignment="Center" Style="{StaticResource SecondaryNameStyle}" FontSize="10" Text="{Binding JapaneseName}" />
                       </Viewbox>
                       <Viewbox Height="16" Stretch="Uniform" StretchDirection="DownOnly">
-                        <TextBlock TextAlignment="Center" Foreground="#BFB5C2" FontSize="10" Text="{Binding EntityLabel}" />
+                        <TextBlock TextAlignment="Center" Foreground="{StaticResource TextSoftBrush}" FontSize="10" Text="{Binding EntityLabel}" />
                       </Viewbox>
                     </StackPanel>
                   </Border>
@@ -121,23 +141,65 @@
       </DataTemplate>
     </ResourceDictionary>
   </FrameworkElement.Resources>
-  <Border Background="#050506" BorderBrush="#29232D" BorderThickness="1">
+  <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="1">
+    <Border.Background>
+      <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0" Color="#0B1B3A" />
+        <GradientStop Offset="0.55" Color="#08132A" />
+        <GradientStop Offset="1" Color="#050A16" />
+      </LinearGradientBrush>
+    </Border.Background>
     <Grid>
       <Grid.RowDefinitions>
         <RowDefinition Height="32" />
-        <RowDefinition Height="72" />
+        <RowDefinition Height="80" />
         <RowDefinition Height="*" />
-        <RowDefinition Height="38" />
+        <RowDefinition Height="36" />
       </Grid.RowDefinitions>
-      <Border Grid.Row="0" Background="#0C0A0E" BorderBrush="#2C2530" BorderThickness="0,0,0,1" MouseLeftButtonDown="TitleBar_OnMouseLeftButtonDown">
+      <!-- The soft blue bokeh of the RESULT screen. Four frozen radial brushes, no bitmap. -->
+      <Canvas IsHitTestVisible="False" ClipToBounds="True">
+        <Ellipse Canvas.Left="-120" Canvas.Top="-60" Width="560" Height="560" Opacity="0.30">
+          <Ellipse.Fill>
+            <RadialGradientBrush>
+              <GradientStop Offset="0" Color="#2A5C9E" />
+              <GradientStop Offset="1" Color="#000B1B3A" />
+            </RadialGradientBrush>
+          </Ellipse.Fill>
+        </Ellipse>
+        <Ellipse Canvas.Left="620" Canvas.Top="-220" Width="760" Height="760" Opacity="0.24">
+          <Ellipse.Fill>
+            <RadialGradientBrush>
+              <GradientStop Offset="0" Color="#1E4C86" />
+              <GradientStop Offset="1" Color="#000B1B3A" />
+            </RadialGradientBrush>
+          </Ellipse.Fill>
+        </Ellipse>
+        <Ellipse Canvas.Left="240" Canvas.Top="420" Width="520" Height="520" Opacity="0.18">
+          <Ellipse.Fill>
+            <RadialGradientBrush>
+              <GradientStop Offset="0" Color="#17406F" />
+              <GradientStop Offset="1" Color="#00050A16" />
+            </RadialGradientBrush>
+          </Ellipse.Fill>
+        </Ellipse>
+        <Ellipse Canvas.Left="900" Canvas.Top="360" Width="680" Height="680" Opacity="0.16">
+          <Ellipse.Fill>
+            <RadialGradientBrush>
+              <GradientStop Offset="0" Color="#123A66" />
+              <GradientStop Offset="1" Color="#00050A16" />
+            </RadialGradientBrush>
+          </Ellipse.Fill>
+        </Ellipse>
+      </Canvas>
+      <Border Grid.Row="0" Background="#40050A16" BorderBrush="{StaticResource LineSoftBrush}" BorderThickness="0,0,0,1" MouseLeftButtonDown="TitleBar_OnMouseLeftButtonDown">
         <Grid>
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
           </Grid.ColumnDefinitions>
           <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0">
-            <Image Source="AprilFoolFGOFirstHassan.ico" Width="18" Height="18" Margin="0,0,8,0" />
-            <TextBlock Name="HeaderBrandText" Foreground="#B9B0BC" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" />
+            <Image Source="platform.ico" Width="18" Height="18" Margin="0,0,9,0" RenderOptions.BitmapScalingMode="HighQuality" />
+            <TextBlock Name="HeaderBrandText" Foreground="{StaticResource TextSoftBrush}" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" />
           </StackPanel>
           <StackPanel Grid.Column="1" Orientation="Horizontal">
             <Button Style="{StaticResource CaptionButtonStyle}" ToolTip="Minimize" Click="MinimizeButton_OnClick">
@@ -152,109 +214,118 @@
           </StackPanel>
         </Grid>
       </Border>
-      <Border Grid.Row="1" Background="#050506" BorderBrush="#34283A" BorderThickness="0,0,0,1">
-        <Grid ClipToBounds="True">
-          <Canvas IsHitTestVisible="False">
-            <Polygon Points="0,0 350,0 320,72 0,72" Fill="#F4F1F5" />
-          </Canvas>
-          <Grid Margin="24,0,16,0">
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="340" />
-              <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <StackPanel VerticalAlignment="Center">
-              <StackPanel Orientation="Horizontal">
-                <TextBlock Text="FGO" FontSize="30" FontWeight="Black" Foreground="#080709" />
-                <TextBlock Text=" / LOCAL" FontSize="18" FontWeight="Light" Foreground="#6B245E" Margin="8,9,0,0" />
-              </StackPanel>
-              <TextBlock Text="ARCADE 11.00 - DECK / SERVER / DISPLAY" Foreground="#413843" FontSize="11" FontWeight="SemiBold" />
+      <Border Grid.Row="1" Background="#66102040" BorderBrush="{StaticResource LineBrush}" BorderThickness="0,0,0,1">
+        <Grid Margin="20,0,16,0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <Image Source="platform.ico" Width="34" Height="34" Margin="0,0,13,0" RenderOptions.BitmapScalingMode="HighQuality" />
+            <local:OutlinedText Text="FGOAC scooby" FontFamily="{DynamicResource DisplayFont}" FontSize="27" Fill="{StaticResource TextBrush}" Stroke="{StaticResource IceDimBrush}" StrokeThickness="1" VerticalAlignment="Center" />
+          </StackPanel>
+          <Border Grid.Column="1" Style="{StaticResource StatusBandStyle}" Margin="26,0" MaxWidth="560" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock Text="server" Style="{StaticResource BandKeyStyle}" Margin="0,0,12,0" />
+              <TextBlock Style="{StaticResource BandValueStyle}" Text="{Binding Text, ElementName=RuntimeStatusText}" />
             </StackPanel>
-            <DockPanel Grid.Column="1" VerticalAlignment="Center" Margin="8,0,0,0">
-              <ToggleButton Name="ChineseEnabledCheckBox" VerticalAlignment="Stretch" Margin="3,3,10,3" MinWidth="152" ToolTip="Turns the translated in-game text on or off. Takes effect the next time you start the game.">
-                <FrameworkElement.Style>
-                  <Style TargetType="{x:Type ToggleButton}">
-                    <Setter Property="Content" Value="English Text - Off" />
-                    <Setter Property="Foreground" Value="#FFFFFFFF" />
-                    <Setter Property="Background" Value="#17131B" />
-                    <Setter Property="BorderBrush" Value="#3E3343" />
-                    <Setter Property="BorderThickness" Value="1" />
-                    <Setter Property="Padding" Value="10,6" />
-                    <Setter Property="FontWeight" Value="SemiBold" />
-                    <Setter Property="Template">
-                      <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type ToggleButton}">
-                          <Border Background="{TemplateBinding Control.Background}" BorderBrush="{TemplateBinding Control.BorderBrush}" BorderThickness="{TemplateBinding Control.BorderThickness}" Padding="{TemplateBinding Control.Padding}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                          </Border>
-                        </ControlTemplate>
-                      </Setter.Value>
-                    </Setter>
-                    <Style.Triggers>
-                      <Trigger Property="ToggleButton.IsChecked" Value="True">
-                        <Setter Property="Content" Value="English Text - On" />
-                        <Setter Property="Background" Value="#5A1D50" />
-                        <Setter Property="BorderBrush" Value="#A85B9B" />
-                      </Trigger>
-                      <Trigger Property="UIElement.IsMouseOver" Value="True">
-                        <Setter Property="BorderBrush" Value="#ED9BDC" />
-                      </Trigger>
-                      <Trigger Property="UIElement.IsKeyboardFocused" Value="True">
-                        <Setter Property="BorderBrush" Value="#ED9BDC" />
-                      </Trigger>
-                      <Trigger Property="IsPressed" Value="True">
-                        <Setter Property="Background" Value="#78336C" />
-                      </Trigger>
-                    </Style.Triggers>
-                  </Style>
-                </FrameworkElement.Style>
-              </ToggleButton>
-              <UniformGrid Rows="1">
-                <Button Content="Start Server" ToolTip="Starts the local server. If it is already running, this checks that its ports answer." Click="StartServerButton_OnClick" />
-                <Button Content="Stop Server" Click="StopServerButton_OnClick" />
-                <Button Content="Open Logs" Click="OpenLogsButton_OnClick" />
-                <Button Name="StopGameButton" Content="Stop Game" IsEnabled="False" Background="#35141E" BorderBrush="#713044" Click="StopGameButton_OnClick" />
-                <Button Name="StartGameButton" Content="Play" FontSize="15" Background="#5A1D50" BorderBrush="#A85B9B" Click="StartGameButton_OnClick" />
-              </UniformGrid>
-            </DockPanel>
-          </Grid>
+          </Border>
+          <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+            <Button Name="StopGameButton" Style="{StaticResource StopGameButtonStyle}" Content="Stop game" IsEnabled="False" Height="46" MinWidth="118" Margin="0,0,10,0" Click="StopGameButton_OnClick" />
+            <Button Name="StartGameButton" Style="{StaticResource PrimaryButtonStyle}" Content="Play" FontSize="19" MinWidth="150" Height="46" Margin="0" Click="StartGameButton_OnClick" />
+          </StackPanel>
         </Grid>
       </Border>
       <Grid Row="2" Margin="10">
         <Grid.ColumnDefinitions>
-          <ColumnDefinition Name="WorkspaceColumn" Width="*" MinWidth="650" />
+          <ColumnDefinition Name="WorkspaceColumn" Width="*" MinWidth="620" />
           <ColumnDefinition Name="LogSplitterColumn" Width="7" />
           <ColumnDefinition Name="LogPanelColumn" Width="440" MinWidth="310" />
         </Grid.ColumnDefinitions>
-        <TabControl Grid.Column="0" Background="#101014" BorderBrush="#403545">
+        <TabControl Grid.Column="0" MaxWidth="1180" HorizontalAlignment="Stretch" Background="#00FFFFFF" BorderBrush="#00FFFFFF" BorderThickness="0">
           <TabItem Header="Play">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
-              <StackPanel Margin="24" MaxWidth="820" HorizontalAlignment="Left">
-                <TextBlock Text="Play" FontSize="26" FontWeight="Bold" Margin="0,0,0,6" />
-                <TextBlock Text="The same buttons sit in the bar at the top of the window, so you can start and stop the game from any page." TextWrapping="Wrap" Foreground="#BFB5C2" Margin="0,0,0,20" />
-                <WrapPanel Margin="0,0,0,20">
-                  <Button Content="Play" FontSize="20" FontWeight="Bold" Padding="56,14" Margin="0,0,12,8" Background="#5A1D50" BorderBrush="#A85B9B" IsEnabled="{Binding IsEnabled, ElementName=StartGameButton}" Click="StartGameButton_OnClick" />
-                  <Button Content="Stop Game" Padding="22,14" Margin="0,0,12,8" Background="#35141E" BorderBrush="#713044" IsEnabled="{Binding IsEnabled, ElementName=StopGameButton}" Click="StopGameButton_OnClick" />
-                  <Button Content="Start Server" Padding="18,14" Margin="0,0,12,8" ToolTip="Starts the local server. If it is already running, this checks that its ports answer." Click="StartServerButton_OnClick" />
-                  <Button Content="Stop Server" Padding="18,14" Margin="0,0,12,8" Click="StopServerButton_OnClick" />
-                  <Button Content="Open Logs" Padding="18,14" Margin="0,0,0,8" Click="OpenLogsButton_OnClick" />
-                </WrapPanel>
-                <Border Background="#18131B" BorderBrush="#4A1D46" BorderThickness="1" Padding="14,10" Margin="0,0,0,24">
-                  <StackPanel>
-                    <TextBlock Text="STATUS" Foreground="#A84F96" FontWeight="Bold" FontSize="11" Margin="0,0,0,6" />
-                    <TextBlock Foreground="#F5F1F6" TextWrapping="Wrap" Text="{Binding Text, ElementName=RuntimeStatusText}" />
-                    <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
-                      <TextBlock Text="Account in use: " Foreground="#BFB5C2" />
-                      <TextBlock Foreground="#D7BBDD" TextTrimming="CharacterEllipsis" Text="{Binding Text, ElementName=CurrentAccountText}" />
-                    </StackPanel>
-                    <TextBlock Foreground="#D7BBDD" TextWrapping="Wrap" Margin="0,4,0,0" Text="{Binding Text, ElementName=DeckStatusText}" />
-                  </StackPanel>
+              <StackPanel Margin="18,18,18,22">
+                <Border Name="UpdateBanner" Style="{StaticResource StatusBandStyle}" Visibility="Collapsed" Margin="0,0,0,16">
+                  <DockPanel>
+                    <Button DockPanel.Dock="Right" Content="Later" MinHeight="34" Padding="16,5,16,3" Margin="8,0,0,0" Click="UpdateLaterButton_OnClick" />
+                    <Button DockPanel.Dock="Right" Style="{StaticResource PrimaryButtonStyle}" Content="Install now" FontSize="14" MinHeight="34" Padding="18,5" Margin="8,0,0,0" Click="UpdateInstallButton_OnClick" />
+                    <TextBlock Name="UpdateBannerText" VerticalAlignment="Center" Foreground="{StaticResource TextBrush}" TextWrapping="Wrap" />
+                  </DockPanel>
                 </Border>
-                <TextBlock Text="First time here" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,10" />
-                <TextBlock TextWrapping="Wrap" Foreground="#D7BBDD" Margin="0,0,0,7" Text="1. Your account is ready. The first start creates the account Master with the full Servant and Craft Essence roster and selects it, because the in-game summon does not work offline. Account is where you see it, rename the Master, or add another one - the server has to be stopped to create an account." />
-                <TextBlock TextWrapping="Wrap" Foreground="#D7BBDD" Margin="0,0,0,7" Text="2. Open Cards and Deck and pick up to 30 cards. The deck is what the cabinet card reader hands to the game, and it is published again every time you press Play." />
-                <TextBlock TextWrapping="Wrap" Foreground="#D7BBDD" Margin="0,0,0,7" Text="3. Check Settings for your monitor, resolution and controls. The first start picks windowed 1280x720 on your main monitor with keyboard controls, and never changes a setting you have chosen yourself." />
-                <TextBlock TextWrapping="Wrap" Foreground="#D7BBDD" Margin="0,0,0,7" Text="4. Press Play. The server starts by itself if it is not already running, and the game takes about a minute to reach the title screen." />
-                <TextBlock TextWrapping="Wrap" Foreground="#BFB5C2" Margin="0,14,0,0" Text="The game has to run as administrator, so Windows asks for permission once. If something goes wrong, Advanced has Diagnostics and Help with the error codes and their fixes." />
+                <local:ChamferPanel Fill="{StaticResource PlateBrush}" Stroke="{StaticResource GoldSoftBrush}" StrokeThickness="1" Cut="16" OrnamentBrush="{StaticResource GoldBrush}" Padding="22,20" Margin="0,0,0,16">
+                  <Grid>
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="2*" MinWidth="200" />
+                      <ColumnDefinition Width="3*" />
+                    </Grid.ColumnDefinitions>
+                    <Border Background="{StaticResource PlateLowBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" Padding="10" Margin="0,0,20,0">
+                      <Grid>
+                        <Image Name="HeroFallbackImage" Source="platform.ico" Width="96" Height="96" RenderOptions.BitmapScalingMode="HighQuality" />
+                        <Image Name="HeroCardImage" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" Visibility="Collapsed" />
+                      </Grid>
+                    </Border>
+                    <StackPanel Grid.Column="1">
+                      <Button Content="Play" Style="{StaticResource PrimaryButtonStyle}" FontSize="34" Height="72" Margin="0,0,0,14" HorizontalAlignment="Stretch" IsEnabled="{Binding IsEnabled, ElementName=StartGameButton}" Click="StartGameButton_OnClick" />
+                      <Border Style="{StaticResource StatusBandStyle}" Margin="0,0,0,7">
+                        <Grid>
+                          <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="74" />
+                            <ColumnDefinition Width="*" />
+                          </Grid.ColumnDefinitions>
+                          <TextBlock Text="server" Style="{StaticResource BandKeyStyle}" />
+                          <TextBlock Grid.Column="1" Style="{StaticResource BandValueStyle}" Text="{Binding Text, ElementName=RuntimeStatusText}" />
+                        </Grid>
+                      </Border>
+                      <Border Style="{StaticResource StatusBandStyle}" Margin="0,0,0,7">
+                        <Grid>
+                          <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="74" />
+                            <ColumnDefinition Width="*" />
+                          </Grid.ColumnDefinitions>
+                          <TextBlock Text="Master" Style="{StaticResource BandKeyStyle}" />
+                          <TextBlock Grid.Column="1" Style="{StaticResource BandValueStyle}" Text="{Binding Text, ElementName=CurrentAccountText}" />
+                        </Grid>
+                      </Border>
+                      <Border Style="{StaticResource StatusBandStyle}" Margin="0,0,0,14">
+                        <Grid>
+                          <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="74" />
+                            <ColumnDefinition Width="*" />
+                          </Grid.ColumnDefinitions>
+                          <TextBlock Text="deck" Style="{StaticResource BandKeyStyle}" />
+                          <TextBlock Grid.Column="1" Style="{StaticResource BandValueStyle}" Text="{Binding Text, ElementName=DeckStatusText}" />
+                        </Grid>
+                      </Border>
+                      <UniformGrid Columns="4" Height="42">
+                        <Button Content="Start server" Margin="0,0,3,0" FontSize="13" ToolTip="Starts the local server. If it is already running, this checks that its ports answer." Click="StartServerButton_OnClick" />
+                        <Button Content="Stop server" Margin="3,0" FontSize="13" Click="StopServerButton_OnClick" />
+                        <Button Content="Open logs" Margin="3,0" FontSize="13" Click="OpenLogsButton_OnClick" />
+                        <Button Content="Stop game" Style="{StaticResource DangerButtonStyle}" Margin="3,0,0,0" FontSize="13" IsEnabled="{Binding IsEnabled, ElementName=StopGameButton}" Click="StopGameButton_OnClick" />
+                      </UniformGrid>
+                    </StackPanel>
+                  </Grid>
+                </local:ChamferPanel>
+                <local:ChamferPanel Fill="{StaticResource PlateBrush}" Stroke="{StaticResource GoldSoftBrush}" StrokeThickness="1" Cut="16" OrnamentBrush="{StaticResource GoldBrush}" Padding="22,18">
+                  <StackPanel>
+                    <TextBlock Text="How it works" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,12" />
+                    <Grid>
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                      </Grid.ColumnDefinitions>
+                      <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                      </Grid.RowDefinitions>
+                      <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource HelpTextStyle}" Margin="0,0,20,10" Text="Play: starts the local server and the game. The title screen appears after about a minute." />
+                      <TextBlock Grid.Row="0" Grid.Column="1" Style="{StaticResource HelpTextStyle}" Margin="0,0,0,10" Text="Cards and Deck: choose up to 30 cards. They are sent to the game every time you press Play." />
+                      <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource HelpTextStyle}" Margin="0,0,20,0" Text="Account: your first start created the account Master with every Servant. Rename it or add another one while the game is closed." />
+                      <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource HelpTextStyle}" Text="Settings: monitor, resolution and controls. Advanced has the server, logs and help with error codes." />
+                    </Grid>
+                  </StackPanel>
+                </local:ChamferPanel>
               </StackPanel>
             </ScrollViewer>
           </TabItem>
@@ -263,27 +334,26 @@
               <StackPanel Margin="16">
                 <TextBlock Text="Local Accounts" FontSize="22" FontWeight="Bold" Margin="0,0,0,16" />
                 <WrapPanel Margin="0,0,0,16" VerticalAlignment="Center">
-                  <TextBlock Text="ACCOUNT" Foreground="#A84F96" VerticalAlignment="Center" Margin="3" FontWeight="Bold" />
-                  <TextBlock Text="In use" VerticalAlignment="Center" Margin="10,3,3,3" Foreground="#BFB5C2" />
-                  <TextBlock Name="CurrentAccountText" Text="Loading..." Foreground="#F5F1F6" VerticalAlignment="Center" Margin="3" />
-                  <TextBlock Text="Access code" VerticalAlignment="Center" Margin="10,3,3,3" Foreground="#BFB5C2" />
-                  <TextBlock Name="CurrentAccessCodeText" Text="—" Foreground="#9CF6C8" VerticalAlignment="Center" Margin="3" FontFamily="Cascadia Mono, Consolas" />
-                  <TextBlock Text="Select" VerticalAlignment="Center" Margin="10,3,3,3" Foreground="#BFB5C2" />
+                  <TextBlock Text="In use" VerticalAlignment="Center" Margin="10,3,3,3" Foreground="{StaticResource TextSoftBrush}" />
+                  <TextBlock Name="CurrentAccountText" Text="Loading..." Foreground="{StaticResource TextBrush}" VerticalAlignment="Center" Margin="3" />
+                  <TextBlock Text="Access code" VerticalAlignment="Center" Margin="10,3,3,3" Foreground="{StaticResource TextSoftBrush}" />
+                  <TextBlock Name="CurrentAccessCodeText" Text="—" Foreground="{StaticResource ReadyBrush}" VerticalAlignment="Center" Margin="3" FontFamily="{StaticResource DigitFont}" />
+                  <TextBlock Text="Select" VerticalAlignment="Center" Margin="10,3,3,3" Foreground="{StaticResource TextSoftBrush}" />
                   <ComboBox Name="AccountComboBox" Width="330" VerticalAlignment="Center" DisplayMemberPath="DisplayText" ToolTip="Local accounts (Master name - Aime ID - account mode)" SelectionChanged="AccountComboBox_OnSelectionChanged" />
                   <Button Name="UseAccountButton" Content="Use Selected Account" Click="UseAccountButton_OnClick" />
                   <Button Name="CreateAccountButton" Content="New Account" Click="CreateAccountButton_OnClick" />
                 </WrapPanel>
                 <WrapPanel Margin="0,0,0,16">
-                  <Button Name="ResetAccountButton" Content="Reset to a New Account" Background="#35141E" BorderBrush="#713044" Click="ResetAccountButton_OnClick" />
-                  <Button Name="DeleteAccountButton" Content="Delete Account" IsEnabled="False" Background="#45141B" BorderBrush="#A43B4A" ToolTip="Permanently deletes the selected account: its save data, Aime identity, card mappings and leftover backups" Click="DeleteAccountButton_OnClick" />
+                  <Button Name="ResetAccountButton" Content="Reset to a New Account" Style="{StaticResource DangerButtonStyle}" Click="ResetAccountButton_OnClick" />
+                  <Button Name="DeleteAccountButton" Content="Delete Account" IsEnabled="False" Style="{StaticResource DestructiveButtonStyle}" ToolTip="Permanently deletes the selected account: its save data, Aime identity, card mappings and leftover backups" Click="DeleteAccountButton_OnClick" />
                   <Button Name="RepairAccountButton" Content="Repair Past Results" ToolTip="Replays the saved cabinet traffic to restore EXP, materials, Bond and Quest progress that an older build failed to save" Click="RepairAccountButton_OnClick" />
-                  <Button Name="GrantBenefitsButton" Content="Grant Items" IsEnabled="False" Background="#28402F" BorderBrush="#4F8B63" ToolTip="Pick currency or materials from the installed game data and add a chosen amount to the selected account" Click="GrantBenefitsButton_OnClick" />
+                  <Button Name="GrantBenefitsButton" Content="Grant Items" IsEnabled="False" Style="{StaticResource GrantButtonStyle}" ToolTip="Pick currency or materials from the installed game data and add a chosen amount to the selected account" Click="GrantBenefitsButton_OnClick" />
                   <Button Name="RefreshAccountsButton" Content="Refresh" Click="RefreshAccountsButton_OnClick" />
                   <Button Name="SummonHistoryButton" Content="Print History" IsEnabled="False" Click="SummonHistoryButton_OnClick" />
-                  <TextBlock Name="CurrentSummonSummaryText" Text="Lv.1 - EXP 0 - 0 cards" Foreground="#E7C56A" VerticalAlignment="Center" Margin="8,3,3,3" />
+                  <TextBlock Name="CurrentSummonSummaryText" Text="Lv.1 - EXP 0 - 0 cards" Foreground="{StaticResource GoldBrush}" VerticalAlignment="Center" Margin="8,3,3,3" />
                 </WrapPanel>
                 <TextBlock Text="One-Click Inventory and Growth" FontSize="18" FontWeight="SemiBold" Margin="3,4,0,8" />
-                <TextBlock Text="These act on the selected account. Quit the game and stop the server first. The growth options only affect Servants the account already owns." Foreground="#BFB5C2" Margin="3,0,0,10" TextWrapping="Wrap" />
+                <TextBlock Text="These act on the selected account. Quit the game and stop the server first. The growth options only affect Servants the account already owns." Foreground="{StaticResource TextSoftBrush}" Margin="3,0,0,10" TextWrapping="Wrap" />
                 <WrapPanel Name="AccountUpgradePanel" IsEnabled="False" MaxWidth="960" HorizontalAlignment="Left">
                   <FrameworkElement.Resources>
                     <ResourceDictionary>
@@ -309,7 +379,7 @@
             </ScrollViewer>
           </TabItem>
           <TabItem Header="Cards and Deck">
-            <TabControl Background="#101014" BorderBrush="#403545">
+            <TabControl Background="{StaticResource PlateBrush}" BorderBrush="{StaticResource LineBrush}">
               <TabItem Header="Deck">
                 <Grid>
                   <Grid.RowDefinitions>
@@ -319,7 +389,7 @@
                     <RowDefinition Height="7" />
                     <RowDefinition Name="DeckPanelRow" Height="195" MinHeight="195" />
                   </Grid.RowDefinitions>
-                  <Border Grid.Row="0" Background="{StaticResource PanelBrush}" BorderBrush="#403545" BorderThickness="1">
+                  <Border Grid.Row="0" Background="{StaticResource PlateBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1">
                     <Grid Margin="8">
                       <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -332,7 +402,7 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                       </Grid.ColumnDefinitions>
-                      <TextBlock Grid.Row="0" Grid.Column="0" Text="Card Folder" Foreground="#A84F96" VerticalAlignment="Center" Margin="3" FontWeight="Bold" />
+                      <TextBlock Grid.Row="0" Grid.Column="0" Text="Card Folder" Foreground="{StaticResource IceBrush}" VerticalAlignment="Center" Margin="3" FontWeight="Bold" />
                       <TextBox Name="CardsPathTextBox" Grid.Row="0" Grid.Column="1" VerticalContentAlignment="Center" KeyDown="CardsPathTextBox_OnKeyDown" />
                       <Button Grid.Row="0" Grid.Column="2" Content="Reload" ToolTip="Read the card folder again" Click="ReloadButton_OnClick" />
                     </Grid>
@@ -346,70 +416,31 @@
                     <Grid.ColumnDefinitions>
                       <ColumnDefinition Name="CardListColumn" Width="*" MinWidth="360" />
                     </Grid.ColumnDefinitions>
-                    <Border Grid.Row="0" Grid.Column="0" Background="#18131B" BorderBrush="#4A1D46" BorderThickness="1" Padding="7,3">
+                    <Border Grid.Row="0" Grid.Column="0" Background="{StaticResource PlateBrush}" BorderBrush="{StaticResource IceDeepBrush}" BorderThickness="1" Padding="7,3">
                       <StackPanel>
                         <DockPanel Margin="4,3,4,7" LastChildFill="False">
-                          <TextBlock Text="Pick Servants and Craft Essences - double-click a card to choose its art and how many copies" Foreground="#B45A9F" FontWeight="Bold" VerticalAlignment="Center" />
+                          <TextBlock Text="Pick Servants and Craft Essences - double-click a card to choose its art and how many copies" Foreground="{StaticResource IceBrush}" FontWeight="Bold" VerticalAlignment="Center" />
                         </DockPanel>
                         <DockPanel LastChildFill="True">
                           <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock Text="Show" Foreground="#BFB5C2" VerticalAlignment="Center" />
+                            <TextBlock Text="Show" Foreground="{StaticResource TextSoftBrush}" VerticalAlignment="Center" />
                             <ComboBox Name="CardTypeComboBox" Width="150" SelectedIndex="0" ToolTip="List Servant cards and Craft Essence cards separately">
                               <ComboBoxItem Content="All Cards" Tag="0" />
                               <ComboBoxItem Content="Servants" Tag="1" />
                               <ComboBoxItem Content="Craft Essences" Tag="2" />
                             </ComboBox>
-                            <ToggleButton Name="OwnedCardsOnlyCheckBox" IsEnabled="False" VerticalAlignment="Center" Margin="8,3,3,3" ToolTip="Show only cards this account already owns. Cards still waiting to be printed are left out." Checked="OwnedCardsOnlyCheckBox_OnChanged" Unchecked="OwnedCardsOnlyCheckBox_OnChanged">
-                              <FrameworkElement.Style>
-                                <Style TargetType="{x:Type ToggleButton}">
-                                  <Setter Property="Content" Value="Owned Only - Off" />
-                                  <Setter Property="Foreground" Value="#FFFFFFFF" />
-                                  <Setter Property="Background" Value="#17131B" />
-                                  <Setter Property="BorderBrush" Value="#3E3343" />
-                                  <Setter Property="Padding" Value="9,3" />
-                                  <Setter Property="FontWeight" Value="SemiBold" />
-                                  <Setter Property="Template">
-                                    <Setter.Value>
-                                      <ControlTemplate TargetType="{x:Type ToggleButton}">
-                                        <Border Background="{TemplateBinding Control.Background}" BorderBrush="{TemplateBinding Control.BorderBrush}" BorderThickness="1" Padding="{TemplateBinding Control.Padding}">
-                                          <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                        </Border>
-                                      </ControlTemplate>
-                                    </Setter.Value>
-                                  </Setter>
-                                  <Style.Triggers>
-                                    <Trigger Property="ToggleButton.IsChecked" Value="True">
-                                      <Setter Property="Content" Value="Owned Only - On" />
-                                      <Setter Property="Background" Value="#5A1D50" />
-                                      <Setter Property="BorderBrush" Value="#A85B9B" />
-                                    </Trigger>
-                                    <Trigger Property="UIElement.IsMouseOver" Value="True">
-                                      <Setter Property="BorderBrush" Value="#ED9BDC" />
-                                    </Trigger>
-                                    <Trigger Property="UIElement.IsKeyboardFocused" Value="True">
-                                      <Setter Property="BorderBrush" Value="#ED9BDC" />
-                                    </Trigger>
-                                    <Trigger Property="IsPressed" Value="True">
-                                      <Setter Property="Background" Value="#78336C" />
-                                    </Trigger>
-                                    <Trigger Property="IsEnabled" Value="False">
-                                      <Setter Property="UIElement.Opacity" Value="0.5" />
-                                    </Trigger>
-                                  </Style.Triggers>
-                                </Style>
-                              </FrameworkElement.Style>
-                            </ToggleButton>
+                            <ToggleButton Name="OwnedCardsOnlyCheckBox" Style="{StaticResource OwnedOnlyToggleStyle}" IsEnabled="False" VerticalAlignment="Center" Margin="8,3,3,3" ToolTip="Show only cards this account already owns. Cards still waiting to be printed are left out." Checked="OwnedCardsOnlyCheckBox_OnChanged" Unchecked="OwnedCardsOnlyCheckBox_OnChanged" />
                           </StackPanel>
                           <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
                             <Button Name="BuildThumbnailCacheButton" Content="Cache Thumbnails" Padding="9,3" ToolTip="Build a local JPEG thumbnail cache in DEVICE/cache/card-thumbnails" Click="BuildThumbnailCacheButton_OnClick" />
-                            <TextBlock Text="View" Foreground="#BFB5C2" VerticalAlignment="Center" Margin="7,0,2,0" />
+                            <TextBlock Text="View" Foreground="{StaticResource TextSoftBrush}" VerticalAlignment="Center" Margin="7,0,2,0" />
                             <Button Name="ListViewModeButton" Content="List" Padding="9,3" Click="ListViewModeButton_OnClick" />
                             <Button Name="IconViewModeButton" Content="Icons" Padding="9,3" Click="IconViewModeButton_OnClick" />
                           </StackPanel>
                         </DockPanel>
-                        <TextBlock Name="CardCatalogSummaryText" Text="Reading the card folder..." Margin="4,3" Foreground="#D7BBDD" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Name="CardCatalogSummaryText" Text="Reading the card folder..." Margin="4,3" Foreground="{StaticResource TextSoftBrush}" TextTrimming="CharacterEllipsis" />
                         <DockPanel Margin="0,4,0,0">
-                          <TextBlock Text="Search" VerticalAlignment="Center" Margin="4,0,10,0" Foreground="#BFB5C2" />
+                          <TextBlock Text="Search" VerticalAlignment="Center" Margin="4,0,10,0" Foreground="{StaticResource TextSoftBrush}" />
                           <TextBox Name="SearchTextBox" VerticalContentAlignment="Center" ToolTip="Filter as you type by card name, id or file name. Clear the box to show everything again." TextChanged="CardPickerSearchBox_OnTextChanged" />
                         </DockPanel>
                       </StackPanel>
@@ -428,19 +459,19 @@
                               <ColumnDefinition Width="*" />
                               <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <Border Background="#050506" BorderBrush="#493E4F" BorderThickness="1" Padding="2">
+                            <Border Background="{StaticResource NightBottomBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" Padding="2">
                               <Image Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Thumbnail}" />
                             </Border>
                             <StackPanel Grid.Column="1" Margin="12,0,8,0" VerticalAlignment="Center">
-                              <TextBlock Foreground="#FFFFFFFF" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" Text="{Binding JapaneseName}" />
-                              <TextBlock Foreground="#D7BBDD" TextWrapping="Wrap" ToolTip="English name, from the official FGO NA name list where a match exists" Text="{Binding ChineseName}" />
-                              <TextBlock Foreground="#BFB5C2" FontSize="11" Margin="0,4,0,0" Text="{Binding EntityLabel}" />
+                              <TextBlock Foreground="{StaticResource TextBrush}" FontSize="15" FontWeight="SemiBold" TextWrapping="Wrap" Text="{Binding EnglishName}" />
+                              <TextBlock Style="{StaticResource SecondaryNameStyle}" FontSize="12" TextWrapping="Wrap" Text="{Binding JapaneseName}" />
+                              <TextBlock Foreground="{StaticResource TextSoftBrush}" FontSize="11" Margin="0,4,0,0" Text="{Binding EntityLabel}" />
                             </StackPanel>
                             <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="8">
-                              <Border Background="#351832" BorderBrush="#8A2E78" BorderThickness="1" Padding="8,3">
-                                <TextBlock Foreground="#F2C8EA" FontSize="11" Text="{Binding StackLabel}" />
+                              <Border Background="{StaticResource IceDeepBrush}" BorderBrush="{StaticResource IceDimBrush}" BorderThickness="1" Padding="8,3">
+                                <TextBlock Foreground="{StaticResource IceBrush}" FontSize="11" Text="{Binding StackLabel}" />
                               </Border>
-                              <TextBlock Foreground="#A84F96" FontFamily="Cascadia Mono, Consolas" HorizontalAlignment="Right" Margin="0,7,0,0" Text="{Binding TrcId, StringFormat=TC ID {0}}" />
+                              <TextBlock Foreground="{StaticResource IceBrush}" FontFamily="{StaticResource DigitFont}" HorizontalAlignment="Right" Margin="0,7,0,0" Text="{Binding TrcId, StringFormat=TC ID {0}}" />
                             </StackPanel>
                           </Grid>
                         </DataTemplate>
@@ -448,14 +479,14 @@
                     </ListView>
                   </Grid>
                   <GridSplitter Grid.Row="3" Style="{StaticResource HorizontalPanelSplitterStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ResizeDirection="Rows" ResizeBehavior="PreviousAndNext" />
-                  <Border Grid.Row="4" Background="#0A090C" BorderBrush="#403545" BorderThickness="1">
+                  <Border Grid.Row="4" Background="{StaticResource NightBottomBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1">
                     <Grid>
                       <Grid.RowDefinitions>
                         <RowDefinition Height="34" />
                         <RowDefinition Height="*" />
                       </Grid.RowDefinitions>
-                      <DockPanel Background="#18131B">
-                        <TextBlock Name="DeckStatusText" DockPanel.Dock="Left" Foreground="#B45A9F" FontWeight="SemiBold" VerticalAlignment="Center" Margin="10,0" />
+                      <DockPanel Background="{StaticResource PlateBrush}">
+                        <TextBlock Name="DeckStatusText" DockPanel.Dock="Left" Foreground="{StaticResource IceBrush}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="10,0" />
                         <Button DockPanel.Dock="Right" Content="Clear Deck" Padding="10,3" Click="ClearButton_OnClick" />
                       </DockPanel>
                       <ListView Name="SelectedCardList" Grid.Row="1" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled" SelectionChanged="SelectedCardList_OnSelectionChanged" MouseDoubleClick="SelectedCardList_OnMouseDoubleClick">
@@ -468,15 +499,15 @@
                           <DataTemplate DataType="{x:Type local:CardStack}">
                             <Grid Margin="4" Width="88" Height="142">
                               <Image Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Thumbnail}" />
-                              <Border VerticalAlignment="Bottom" Background="#EA17121A" Padding="3">
+                              <Border VerticalAlignment="Bottom" Background="#EA1B2E52" Padding="3">
                                 <StackPanel>
-                                  <Viewbox Height="14" Stretch="Uniform" StretchDirection="DownOnly">
-                                    <TextBlock TextAlignment="Center" Foreground="#FFFFFFFF" FontSize="10" Text="{Binding JapaneseName}" />
+                                  <Viewbox Height="15" Stretch="Uniform" StretchDirection="DownOnly">
+                                    <TextBlock TextAlignment="Center" Foreground="{StaticResource TextBrush}" FontSize="10" FontWeight="SemiBold" Text="{Binding EnglishName}" />
                                   </Viewbox>
-                                  <Viewbox Height="14" Stretch="Uniform" StretchDirection="DownOnly">
-                                    <TextBlock TextAlignment="Center" Foreground="#D7BBDD" FontSize="10" Text="{Binding ChineseName}" />
+                                  <Viewbox Height="13" Stretch="Uniform" StretchDirection="DownOnly">
+                                    <TextBlock TextAlignment="Center" Style="{StaticResource SecondaryNameStyle}" FontSize="9" Text="{Binding JapaneseName}" />
                                   </Viewbox>
-                                  <TextBlock TextAlignment="Center" Foreground="#F2C8EA" FontSize="10" Text="{Binding Count, StringFormat=×{0}}" />
+                                  <TextBlock TextAlignment="Center" Foreground="{StaticResource IceBrush}" FontSize="10" Text="{Binding Count, StringFormat=×{0}}" />
                                 </StackPanel>
                               </Border>
                             </Grid>
@@ -493,14 +524,17 @@
             </TabControl>
           </TabItem>
           <TabItem Header="Settings">
-            <TabControl Background="#101014" BorderBrush="#403545">
+            <TabControl Background="{StaticResource PlateBrush}" BorderBrush="{StaticResource LineBrush}">
               <TabItem Header="Display">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                  <StackPanel Margin="20" MaxWidth="720" HorizontalAlignment="Stretch">
-                    <TextBlock Text="Display and Resolution" FontSize="22" FontWeight="SemiBold" Margin="0,0,0,16" />
+                  <StackPanel Margin="22" MaxWidth="820" HorizontalAlignment="Left">
+                    <TextBlock Text="Game language" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,10" />
+                    <ToggleButton Name="ChineseEnabledCheckBox" Style="{StaticResource EnglishTextToggleStyle}" HorizontalAlignment="Left" MinWidth="210" Margin="0,0,0,8" ToolTip="Turns the translated in-game text on or off. Takes effect the next time you start the game." />
+                    <TextBlock Style="{StaticResource HelpTextStyle}" Margin="0,0,0,26" Text="Off leaves the game in Japanese. The switch takes effect the next time you press Play." />
+                    <TextBlock Text="Display and Resolution" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,16" />
                     <WrapPanel>
                       <StackPanel Orientation="Horizontal" Margin="0,0,12,8">
-                        <TextBlock Text="Mode" VerticalAlignment="Center" Margin="3" Foreground="#BFB5C2" />
+                        <TextBlock Text="Mode" VerticalAlignment="Center" Margin="3" Foreground="{StaticResource TextSoftBrush}" />
                         <ComboBox Name="DisplayModeComboBox" Width="152">
                           <ComboBoxItem Content="Windowed" Tag="windowed" />
                           <ComboBoxItem Content="Borderless" Tag="borderless" />
@@ -508,11 +542,11 @@
                         </ComboBox>
                       </StackPanel>
                       <StackPanel Orientation="Horizontal" Margin="0,0,12,8">
-                        <TextBlock Text="Monitor" VerticalAlignment="Center" Margin="8,3,3,3" Foreground="#BFB5C2" />
+                        <TextBlock Text="Monitor" VerticalAlignment="Center" Margin="8,3,3,3" Foreground="{StaticResource TextSoftBrush}" />
                         <ComboBox Name="MonitorComboBox" Width="262" ToolTip="The game uses this monitor the next time it starts. If that monitor is disconnected it falls back to the primary one." DropDownOpened="MonitorComboBox_OnDropDownOpened" />
                       </StackPanel>
                       <StackPanel Orientation="Horizontal" Margin="0,0,12,8">
-                        <TextBlock Text="Aspect" VerticalAlignment="Center" Margin="8,3,3,3" Foreground="#BFB5C2" />
+                        <TextBlock Text="Aspect" VerticalAlignment="Center" Margin="8,3,3,3" Foreground="{StaticResource TextSoftBrush}" />
                         <ComboBox Name="AspectRatioComboBox" Width="140" SelectionChanged="AspectRatioComboBox_OnSelectionChanged">
                           <ComboBoxItem Content="16:9" Tag="16:9" />
                           <ComboBoxItem Content="16:10" Tag="16:10" />
@@ -530,7 +564,7 @@
                       <StackPanel Orientation="Horizontal" Margin="0,0,12,8">
                         <ComboBox Name="ResolutionComboBox" Width="132" IsEditable="False" ToolTip="Resolution presets" SelectionChanged="ResolutionComboBox_OnSelectionChanged" />
                         <TextBox Name="CustomWidthTextBox" Width="58" MaxLength="4" VerticalContentAlignment="Center" ToolTip="Custom width, 480-7680" />
-                        <TextBlock Text="×" VerticalAlignment="Center" Margin="2" Foreground="#BFB5C2" />
+                        <TextBlock Text="×" VerticalAlignment="Center" Margin="2" Foreground="{StaticResource TextSoftBrush}" />
                         <TextBox Name="CustomHeightTextBox" Width="58" MaxLength="4" VerticalContentAlignment="Center" ToolTip="Custom height, 480-7680" />
                       </StackPanel>
                     </WrapPanel>
@@ -569,15 +603,15 @@
                         <ComboBoxItem Content="200% (4x pixels)" Tag="200" />
                       </ComboBox>
                     </WrapPanel>
-                    <TextBlock Text="Renders the scene above your display resolution and scales it back down, so characters look sharper and edges are cleaner. The UI size and the field of view do not change, and it can be combined with SMAA." TextWrapping="Wrap" Foreground="#BFB5C2" Margin="0,0,0,8" />
-                    <TextBlock Text="The higher the scale, the more GPU it costs. Lower it if the game stutters. If your GPU cannot handle the setting, the game falls back to 100%." TextWrapping="Wrap" Foreground="#BFB5C2" Margin="0,0,0,8" />
+                    <TextBlock Text="Renders the scene above your display resolution and scales it back down, so characters look sharper and edges are cleaner. The UI size and the field of view do not change, and it can be combined with SMAA." TextWrapping="Wrap" Foreground="{StaticResource TextSoftBrush}" Margin="0,0,0,8" />
+                    <TextBlock Text="The higher the scale, the more GPU it costs. Lower it if the game stutters. If your GPU cannot handle the setting, the game falls back to 100%." TextWrapping="Wrap" Foreground="{StaticResource TextSoftBrush}" Margin="0,0,0,8" />
                     <WrapPanel Margin="0,0,0,16">
                       <CheckBox Name="MotionBlurCheckBox" Content="Motion Blur" Margin="3,8,22,8" />
                       <CheckBox Name="DepthOfFieldCheckBox" Content="Depth of Field" IsChecked="True" Margin="3,8,22,8" />
                       <CheckBox Name="BloomCheckBox" Content="Bloom" IsChecked="True" Margin="3,8,22,8" />
                       <CheckBox Name="DisableCameraShakeCheckBox" Content="No Camera Shake" Margin="3,8,22,8" ToolTip="Removes the game's camera shake while leaving normal camera movement alone. Takes effect the next time you start the game." />
                     </WrapPanel>
-                    <TextBlock Text="SMAA smooths the finished image, including UI text. Anisotropic filtering sharpens scene textures viewed at an angle." TextWrapping="Wrap" Foreground="#BFB5C2" Margin="0,0,0,24" />
+                    <TextBlock Text="SMAA smooths the finished image, including UI text. Anisotropic filtering sharpens scene textures viewed at an angle." TextWrapping="Wrap" Foreground="{StaticResource TextSoftBrush}" Margin="0,0,0,24" />
                     <WrapPanel Margin="0,0,0,12">
                       <TextBlock Text="Shadow Resolution" VerticalAlignment="Center" Margin="3,0,12,0" />
                       <ComboBox Name="ShadowResolutionComboBox" Width="210" SelectedIndex="0">
@@ -587,9 +621,9 @@
                         <ComboBoxItem Content="4096 x 4096" Tag="4096" />
                       </ComboBox>
                     </WrapPanel>
-                    <TextBlock Text="Sets how sharp real-time cast shadows are. Ambient occlusion and baked shadows are not affected. A higher resolution costs more video memory and draw time. Takes effect the next time you start the game." TextWrapping="Wrap" Foreground="#BFB5C2" Margin="0,0,0,24" />
+                    <TextBlock Text="Sets how sharp real-time cast shadows are. Ambient occlusion and baked shadows are not affected. A higher resolution costs more video memory and draw time. Takes effect the next time you start the game." TextWrapping="Wrap" Foreground="{StaticResource TextSoftBrush}" Margin="0,0,0,24" />
                     <CheckBox Name="HideTargetLinesCheckBox" Content="Hide Enemy Lock-on Lines" Margin="3,0,0,8" />
-                    <TextBlock Text="Hides only the connecting lines. Lock-on itself and the target marker still work. Takes effect the next time you start the game." TextWrapping="Wrap" Foreground="#BFB5C2" Margin="0,0,0,20" />
+                    <TextBlock Text="Hides only the connecting lines. Lock-on itself and the target marker still work. Takes effect the next time you start the game." TextWrapping="Wrap" Foreground="{StaticResource TextSoftBrush}" Margin="0,0,0,20" />
                     <TextBlock Text="Battle Damage Popups" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
                     <Grid MaxWidth="680" HorizontalAlignment="Left" Width="Auto" Margin="0,0,0,12">
                       <Grid.ColumnDefinitions>
@@ -598,10 +632,10 @@
                         <ColumnDefinition Width="65" />
                       </Grid.ColumnDefinitions>
                       <Grid.RowDefinitions>
-                        <RowDefinition Height="38" />
-                        <RowDefinition Height="38" />
-                        <RowDefinition Height="38" />
-                        <RowDefinition Height="38" />
+                        <RowDefinition Height="36" />
+                        <RowDefinition Height="36" />
+                        <RowDefinition Height="36" />
+                        <RowDefinition Height="36" />
                       </Grid.RowDefinitions>
                       <TextBlock Text="Damage Number Size" VerticalAlignment="Center" />
                       <Slider Name="DamageNumberScaleSlider" Grid.Column="1" Minimum="0" Maximum="200" Value="100" SmallChange="0.1" IsSnapToTickEnabled="False" VerticalAlignment="Center" />
@@ -616,7 +650,7 @@
                       <Slider Name="DamageTextureOpacitySlider" Grid.Row="3" Grid.Column="1" Minimum="0" Maximum="100" Value="100" SmallChange="0.1" IsSnapToTickEnabled="False" VerticalAlignment="Center" />
                       <TextBox Grid.Row="3" Grid.Column="2" Margin="8,3,0,3" VerticalContentAlignment="Center" ToolTip="Percentage; decimals are allowed" Text="{Binding Value, ElementName=DamageTextureOpacitySlider, Mode=TwoWay, UpdateSourceTrigger=LostFocus, StringFormat=F1, ValidatesOnExceptions=True}" />
                     </Grid>
-                    <TextBlock Text="Resizes the damage numbers and the Critical, Weak Point and Guard popups. No other part of the UI changes. Opacity 0% hides a popup, 100% leaves it as the game draws it." TextWrapping="Wrap" Foreground="#BFB5C2" />
+                    <TextBlock Text="Resizes the damage numbers and the Critical, Weak Point and Guard popups. No other part of the UI changes. Opacity 0% hides a popup, 100% leaves it as the game draws it." TextWrapping="Wrap" Foreground="{StaticResource TextSoftBrush}" />
                     <Button Content="Reset Damage Popups" HorizontalAlignment="Left" Margin="0,10,0,20" Click="ResetDamageUi_OnClick" />
                     <CheckBox Name="HideUiCheckBox" Content="Hide the UI When the Game Starts" Margin="3,8" />
                     <CheckBox Name="HideCabinetHudCheckBox" Content="Hide the Cabinet HUD: GP, CREDIT, the volume control and the status icons (the End Game button stays)" ToolTip="The hidden GP and volume controls also stop responding to touch. Actual audio output is unchanged. Takes effect the next time you start the game." Margin="3,8" />
@@ -624,9 +658,9 @@
                       <TextBlock Text="Show / Hide UI Shortcut" VerticalAlignment="Center" Margin="3,0,12,0" />
                       <Button Name="HideUiKeyButton" Content="F10" MinWidth="150" Click="HideUiKeyButton_OnClick" PreviewKeyDown="HideUiKeyButton_OnPreviewKeyDown" LostKeyboardFocus="HideUiKeyButton_OnLostKeyboardFocus" />
                     </WrapPanel>
-                    <TextBlock Text="Click the button, then press the key you want. Esc cancels. The shortcut works while the game window has focus; press it again to bring the UI back." TextWrapping="Wrap" Foreground="#BFB5C2" />
+                    <TextBlock Text="Click the button, then press the key you want. Esc cancels. The shortcut works while the game window has focus; press it again to bring the UI back." TextWrapping="Wrap" Foreground="{StaticResource TextSoftBrush}" />
                     <Separator Margin="0,24,0,12" />
-                    <TextBlock Text="These settings take effect the next time you start the game. A wider aspect ratio shows more of the scene; the UI stays centred at its own ratio." TextWrapping="Wrap" Foreground="#BFB5C2" />
+                    <TextBlock Text="These settings take effect the next time you start the game. A wider aspect ratio shows more of the scene; the UI stays centred at its own ratio." TextWrapping="Wrap" Foreground="{StaticResource TextSoftBrush}" />
                     <Button Content="Save Display Settings" HorizontalAlignment="Left" Padding="24,8" Margin="0,16,0,8" Click="SaveGraphicsButton_OnClick" />
                   </StackPanel>
                 </ScrollViewer>
@@ -640,7 +674,7 @@
             </TabControl>
           </TabItem>
           <TabItem Header="Advanced">
-            <TabControl Background="#101014" BorderBrush="#403545">
+            <TabControl Background="{StaticResource PlateBrush}" BorderBrush="{StaticResource LineBrush}">
               <TabItem Header="Server">
                 <local:ServerSettingsView x:Name="ServerSettingsPanel" ConfigureRequested="ServerSettings_OnConfigure" />
               </TabItem>
@@ -660,36 +694,29 @@
               </TabItem>
               <TabItem Header="About">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                  <StackPanel Margin="20" MaxWidth="720" HorizontalAlignment="Stretch">
-                    <TextBlock Text="About" FontSize="22" FontWeight="Bold" Margin="0,0,0,8" />
-                    <TextBlock Text="FGOAC scooby - English build of the FGO Arcade local platform, version 1.01" TextWrapping="Wrap" Foreground="#BFB5C2" Margin="0,0,0,10" />
-                    <TextBlock Text="FGOLocalPlatform by Cloud23333" Foreground="#F5F1F6" FontWeight="SemiBold" Margin="0,0,0,6" />
-                    <TextBlock Text="This program is free. If you paid for it, demand a full refund and report the seller." TextWrapping="Wrap" Foreground="#E7C56A" Margin="0,0,0,24" />
-                    <TextBlock Text="Upstream project" Foreground="#B45A9F" FontSize="16" FontWeight="Bold" Margin="0,0,0,8" />
-                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,24">
-                      <Hyperlink Foreground="#BCDFFF" NavigateUri="https://gitea.tendokyu.moe/TeamTofuShop/segatools" RequestNavigate="AboutLink_OnRequestNavigate">https://gitea.tendokyu.moe/TeamTofuShop/segatools</Hyperlink>
+                  <StackPanel Margin="24,20,24,24" MaxWidth="780" HorizontalAlignment="Left">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                      <Border Width="2" Background="{StaticResource GoldSoftBrush}" Margin="0,4,16,4" />
+                      <TextBlock Text="FGOAC scooby" Style="{StaticResource PageTitleStyle}" FontSize="30" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <Border Height="1" Background="{StaticResource LineBrush}" Margin="0,6,0,18" />
+                    <TextBlock Name="AboutVersionText" Style="{StaticResource HelpTextStyle}" Foreground="{StaticResource TextBrush}" FontSize="15" Margin="0,0,0,20" />
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                      <Button Content="Check for updates" Click="CheckUpdatesButton_OnClick" Margin="0,0,10,0" />
+                      <TextBlock Name="AboutUpdateStatusText" Style="{StaticResource HelpTextStyle}" VerticalAlignment="Center" MaxWidth="470" />
+                    </StackPanel>
+                    <TextBlock Margin="0,0,0,8">
+                      <Hyperlink Foreground="{StaticResource IceBrush}" NavigateUri="https://github.com/githubuser420x/FGOAC-scooby" RequestNavigate="AboutLink_OnRequestNavigate">Open on GitHub</Hyperlink>
                     </TextBlock>
-                    <TextBlock Text="11.00 fixes, rendering fixes, one-click local deployment and the extra features" TextWrapping="Wrap" Foreground="#B45A9F" FontSize="16" FontWeight="Bold" Margin="0,0,0,8" />
-                    <TextBlock Margin="0,0,0,24">
-                      <Hyperlink Foreground="#BCDFFF" NavigateUri="https://space.bilibili.com/13236455" RequestNavigate="AboutLink_OnRequestNavigate">bilibili Cloud23333</Hyperlink>
+                    <TextBlock Margin="0,0,0,22">
+                      <Hyperlink Foreground="{StaticResource IceBrush}" NavigateUri="https://github.com/githubuser420x/FGOAC-scooby/releases" RequestNavigate="AboutLink_OnRequestNavigate">View changelog</Hyperlink>
                     </TextBlock>
-                    <TextBlock Text="Translation tool" Foreground="#B45A9F" FontSize="16" FontWeight="Bold" Margin="0,0,0,8" />
-                    <TextBlock Margin="0,0,0,24">
-                      <Hyperlink Foreground="#BCDFFF" NavigateUri="https://space.bilibili.com/13236455" RequestNavigate="AboutLink_OnRequestNavigate">bilibili Cloud23333</Hyperlink>
-                    </TextBlock>
-                    <Separator Margin="0,0,0,24" />
-                    <TextBlock Text="Special thanks" Foreground="#E7C56A" FontSize="18" FontWeight="Bold" Margin="0,0,0,10" />
-                    <TextBlock TextWrapping="Wrap" FontSize="16">
-                      <Run Text="Everyone who backed the project on Aizhuzhu" />
-                      <InlineUIContainer BaselineAlignment="Center">
-                        <Image Source="/FGOLocalPlatform;component/Assets/crying-emoji.png" Width="22" Height="22" Margin="1,0" AutomationProperties.Name="😭" RenderOptions.BitmapScalingMode="HighQuality" />
-                      </InlineUIContainer>
-                      <Run Text=" - it would not have got this far without you" />
-                    </TextBlock>
-                    <TextBlock Margin="0,10,0,0">
-                      <Hyperlink Foreground="#BCDFFF" NavigateUri="https://azz.ee/Cloud23333" RequestNavigate="AboutLink_OnRequestNavigate">Cloud23333 on Aizhuzhu</Hyperlink>
-                    </TextBlock>
-                    <local:EasterEggSettingsView Margin="0,24,0,0" />
+                    <TextBlock Style="{StaticResource HelpTextStyle}" Margin="0,0,0,24" Text="FGOAC scooby is a free fan project; FGO Arcade belongs to Sega and TYPE-MOON." />
+                    <Border Height="1" Background="{StaticResource LineBrush}" Margin="0,0,0,20" />
+                    <TextBlock Text="Easter egg" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,10" />
+                    <local:EasterEggSettingsView Margin="0,0,0,26" />
+                    <Border Height="1" Background="{StaticResource LineBrush}" Margin="0,0,0,16" />
+                    <TextBlock Style="{StaticResource HelpTextStyle}" Foreground="{StaticResource TextFaintBrush}" Text="Thanks to Cloud23333, whose FGO Arcade local platform made this possible." />
                   </StackPanel>
                 </ScrollViewer>
               </TabItem>
@@ -703,49 +730,43 @@
             <RowDefinition Height="7" />
             <RowDefinition Name="InjectionLogRow" Height="*" MinHeight="150" />
           </Grid.RowDefinitions>
-          <Border Grid.Row="0" Background="#08070A" BorderBrush="#4A1D46" BorderThickness="1">
+          <Border Grid.Row="0" Background="{StaticResource PlateLowBrush}" BorderBrush="{StaticResource IceDeepBrush}" BorderThickness="1">
             <Grid>
               <Grid.RowDefinitions>
                 <RowDefinition Height="36" />
                 <RowDefinition Height="*" />
               </Grid.RowDefinitions>
-              <Border Background="#1A111B" BorderBrush="#4A1D46" BorderThickness="0,0,0,1">
-                <DockPanel Margin="10,0" LastChildFill="False">
-                  <TextBlock Text="SERVER LOG" FontWeight="Bold" Foreground="#B45A9F" VerticalAlignment="Center" />
-                  <TextBlock Text="LIVE" DockPanel.Dock="Right" Foreground="#9CF6C8" FontSize="11" VerticalAlignment="Center" />
-                </DockPanel>
+              <Border Background="{StaticResource PlateBrush}" BorderBrush="{StaticResource IceDeepBrush}" BorderThickness="0,0,0,1">
+                <TextBlock Text="Server" Style="{StaticResource LabelTextStyle}" FontSize="14" Foreground="{StaticResource TextBrush}" VerticalAlignment="Center" Margin="12,0" />
               </Border>
-              <TextBox Name="ServerLogTextBox" Grid.Row="1" IsReadOnly="True" BorderThickness="0" Margin="0" Padding="9" FontFamily="Cascadia Mono, Consolas" FontSize="11" TextWrapping="NoWrap" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
+              <TextBox Name="ServerLogTextBox" Grid.Row="1" IsReadOnly="True" BorderThickness="0" Margin="0" Padding="9" FontFamily="{StaticResource DigitFont}" FontSize="11" TextWrapping="NoWrap" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
             </Grid>
           </Border>
           <GridSplitter Grid.Row="1" Style="{StaticResource HorizontalPanelSplitterStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ResizeDirection="Rows" ResizeBehavior="PreviousAndNext" />
-          <Border Grid.Row="2" Background="#08070A" BorderBrush="#3E3343" BorderThickness="1">
+          <Border Grid.Row="2" Background="{StaticResource PlateLowBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1">
             <Grid>
               <Grid.RowDefinitions>
                 <RowDefinition Height="36" />
                 <RowDefinition Height="*" />
               </Grid.RowDefinitions>
-              <Border Background="#151217" BorderBrush="#3E3343" BorderThickness="0,0,0,1">
-                <DockPanel Margin="10,0" LastChildFill="False">
-                  <TextBlock Text="GAME LOG" FontWeight="Bold" Foreground="#E9E3EB" VerticalAlignment="Center" />
-                  <TextBlock Text="TAIL" DockPanel.Dock="Right" Foreground="#9D6A96" FontSize="11" VerticalAlignment="Center" />
-                </DockPanel>
+              <Border Background="{StaticResource PlateBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="0,0,0,1">
+                <TextBlock Text="Game" Style="{StaticResource LabelTextStyle}" FontSize="14" Foreground="{StaticResource TextBrush}" VerticalAlignment="Center" Margin="12,0" />
               </Border>
-              <TextBox Name="InjectionLogTextBox" Grid.Row="1" IsReadOnly="True" BorderThickness="0" Margin="0" Padding="9" FontFamily="Cascadia Mono, Consolas" FontSize="11" TextWrapping="NoWrap" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
+              <TextBox Name="InjectionLogTextBox" Grid.Row="1" IsReadOnly="True" BorderThickness="0" Margin="0" Padding="9" FontFamily="{StaticResource DigitFont}" FontSize="11" TextWrapping="NoWrap" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
             </Grid>
           </Border>
         </Grid>
       </Grid>
-      <Border Grid.Row="3" Background="#0C0A0E" BorderBrush="#34283A" BorderThickness="0,1,0,0">
-        <Grid Margin="12,0">
+      <Border Grid.Row="3" Background="{StaticResource BandBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0">
+        <Grid Margin="14,0">
           <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
           </Grid.ColumnDefinitions>
-          <TextBlock Name="RuntimeStatusText" VerticalAlignment="Center" Foreground="#B45A9F" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
-          <Button Name="ToggleLogsButton" Grid.Column="2" Content="Hide Logs ▶" Padding="8,2" Margin="12,2,0,2" Click="ToggleLogs_OnClick" />
-          <TextBlock Name="FooterNoticeText" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#E7C56A" FontSize="11" FontWeight="SemiBold" Margin="18,0,0,0" />
+          <Border Width="2" Background="{StaticResource IceDimBrush}" Margin="0,9,12,9" />
+          <TextBlock Name="RuntimeStatusText" Grid.Column="1" VerticalAlignment="Center" Foreground="{StaticResource TextBrush}" TextTrimming="CharacterEllipsis" />
+          <Button Name="ToggleLogsButton" Grid.Column="2" Content="Hide logs" MinHeight="0" Height="30" Padding="14,0,14,0" Margin="12,0,0,0" Click="ToggleLogs_OnClick" />
         </Grid>
       </Border>
     </Grid>
