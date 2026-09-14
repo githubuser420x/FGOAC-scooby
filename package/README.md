@@ -27,8 +27,8 @@ for them in the task bar.
 
 Later starts skip all of that and go straight to Play.
 
-**GUIDE_EN.pdf** in this folder is the full guide: requirements, how to get Servants without the
-gacha, controls, the exchange shops, and troubleshooting.
+**GUIDE_EN.pdf** in this folder is the full guide: requirements, how to get Servants, controls, the
+exchange shops, and troubleshooting.
 
 Two things to know before you start:
 
@@ -51,14 +51,13 @@ but keep them if you may want to roll back later.
   official English card names and Craft Essence effects in the card library.
 - Offline single player: the tutorial, solo sorties, the terminal, the exchange shops, synthesis,
   My Room, rankings and the title editor.
+- The in-game summon, drawing from the local server with the weights set on the launcher's Draw
+  Rates page. The Account page can also grant a full roster in one click.
 
 ## What does not work
 
 - **No online play.** Everything runs against the local server; there is no matchmaking and no
   official service to connect to.
-- **The in-game summon does not draw cards.** Servants come from the Account page (One-Click
-  Inventory and Growth) and from the card library on the Cards and Deck page. The Draw Rates page
-  only sets the weights the server would use - it does not pull anything by itself.
 - **A few event screens are still Japanese**: the co-op event banners, the co-op result screens and
   the later event shops. They are artwork, not text, and the rest of the game is unaffected.
 - The game is built for NVIDIA cards and wants a current driver; a black screen usually means the

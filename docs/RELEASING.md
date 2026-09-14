@@ -66,7 +66,7 @@ Never test against the install you play on.
 
 ```
 git tag -a vX.Y.Z -m "X.Y.Z"
-git push origin main --follow-tags
+git push origin master --follow-tags
 
 gh release create vX.Y.Z ^
   "release\FGOAC-scooby-vX.Y.Z.zip" ^
@@ -84,7 +84,7 @@ skips both, and the updater will not see it.
 ## 5. After publishing
 
 - Open the release page and confirm both assets are attached and the zip's size looks right; the
-  full package is around 570 MB.
+  full package is around 630 MB.
 - Start a launcher from the previous version and confirm it offers the update, fetches it and
   applies it.
 - Add a new empty `[Unreleased]` section at the top of `CHANGELOG.md`.

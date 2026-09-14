@@ -14,8 +14,7 @@ publish.cmd    self-contained single file, written to dist\FGOAC scooby.exe
 deploy.cmd D:\path\to\FGOA   copy the published exe into an install
 ```
 
-Expect around 165 `CS8632` warnings and zero errors. Those warnings come from the decompiled source
-and are not worth silencing one file at a time.
+Expect zero warnings and zero errors.
 
 To try a build against a real install, publish and then run `deploy.cmd` with your install root.
 The launcher needs administrator rights because the game does.
@@ -27,7 +26,7 @@ The launcher needs administrator rights because the game does.
 | `src\` | the launcher: C# and XAML, one WPF project |
 | `overlay\` | English replacements for files that live outside the assembly, laid out by their path relative to the install root |
 | `patch\` | the installer players run, and the manifest builder it checks against |
-| `docs\` | player guide, developer notes, design, release steps, project history |
+| `docs\` | player guide, developer notes, release steps |
 | `package\` | the README and changelog that ship inside the release zip |
 
 `docs\DEVELOPING.md` says where `src\` comes from, the compile fixes the decompile needs and what
@@ -46,9 +45,8 @@ you were on and the log files; the template lists which ones.
 - **Plain English.** Short sentences. An error message says what failed, then what to do about it.
 - **ASCII only** in source, scripts, commit messages and documentation. The one place non-ASCII text
   is expected is Japanese card and quest names in data files that are deliberately left untranslated.
-- **No attribution lines** of any kind in commits, code comments or documentation - no trailers, no
-  tool credits, no signatures. Commit messages are factual and short, present tense, and say what
-  the change does rather than what you did.
+- **Commit messages** are short, factual and in the present tense: what the change does. No
+  trailers or signatures.
 - **One logical change per commit.** A rename and a behaviour change are two commits.
 - **Match the file you are in.** The C# is decompiler output with the translation applied on top;
   it uses tabs and it is not going to be reformatted. `.editorconfig` has the rest.

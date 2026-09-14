@@ -6,7 +6,7 @@ One or two sentences. If it changes something on screen, say which page.
 
 ## How it was checked
 
-- [ ] `build.cmd` is clean (around 165 `CS8632` warnings, zero errors)
+- [ ] `build.cmd` is clean (zero warnings, zero errors)
 - [ ] `publish.cmd` produces `dist\FGOAC scooby.exe` and it starts
 - [ ] the pages the change touches were opened and looked at
 - [ ] if a translation or data file changed: no CJK left where English was expected, and every
