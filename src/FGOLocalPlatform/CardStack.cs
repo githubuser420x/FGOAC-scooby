@@ -18,7 +18,7 @@ public sealed class CardStack
 
 	public string ChineseName => CardNames.Get(Card).Chinese;
 
-	public string EntityLabel => "内部编号 " + CardFormState.EntityKey(Card);
+	public string EntityLabel => "Internal ID " + CardFormState.EntityKey(Card);
 
 	public string DisplayName => Card.DisplayName;
 
@@ -28,7 +28,7 @@ public sealed class CardStack
 
 	public BitmapImage Thumbnail => Card.Thumbnail;
 
-	public string StackLabel => $"{Card.CardTypeLabel} ×{Count}";
+	public string StackLabel => $"{Card.CardTypeLabel} x{Count}";
 
 	private CardStack(Card card, int count)
 	{

@@ -28,11 +28,11 @@ public sealed class KeyBindingButton : Button
 	{
 		SetResourceReference(FrameworkElement.StyleProperty, typeof(Button));
 		base.HorizontalContentAlignment = HorizontalAlignment.Left;
-		base.ToolTip = "点击后按键绑定；Esc 取消。右键菜单可清除绑定。";
+		base.ToolTip = "Click, then press a key to bind it. Esc cancels; the right-click menu clears the binding.";
 		ContextMenu contextMenu = new ContextMenu();
 		MenuItem menuItem = new MenuItem
 		{
-			Header = "清除绑定"
+			Header = "Clear Binding"
 		};
 		menuItem.Click += delegate
 		{
@@ -54,7 +54,7 @@ public sealed class KeyBindingButton : Button
 		base.OnClick();
 		Focus();
 		listening = true;
-		base.Content = "请按键…（Esc 取消）";
+		base.Content = "Press a key... (Esc cancels)";
 	}
 
 	protected override void OnPreviewKeyDown(KeyEventArgs e)
@@ -116,17 +116,17 @@ public sealed class KeyBindingButton : Button
 		switch (vk)
 		{
 		case 0:
-			return "未绑定";
+			return "Not bound";
 		case 1:
-			return "鼠标左键";
+			return "Left Mouse Button";
 		case 2:
-			return "鼠标右键";
+			return "Right Mouse Button";
 		case 4:
-			return "鼠标中键";
+			return "Middle Mouse Button";
 		case 5:
-			return "鼠标侧键 1";
+			return "Mouse Button 4";
 		case 6:
-			return "鼠标侧键 2";
+			return "Mouse Button 5";
 		case 8:
 			return "Backspace";
 		case 9:
@@ -138,7 +138,7 @@ public sealed class KeyBindingButton : Button
 		case 27:
 			return "Esc";
 		case 32:
-			return "空格";
+			return "Space";
 		case 16:
 			return "Shift";
 		case 17:
@@ -146,17 +146,17 @@ public sealed class KeyBindingButton : Button
 		case 18:
 			return "Alt";
 		case 160:
-			return "左 Shift";
+			return "Left Shift";
 		case 161:
-			return "右 Shift";
+			return "Right Shift";
 		case 162:
-			return "左 Ctrl";
+			return "Left Ctrl";
 		case 163:
-			return "右 Ctrl";
+			return "Right Ctrl";
 		case 164:
-			return "左 Alt";
+			return "Left Alt";
 		case 165:
-			return "右 Alt";
+			return "Right Alt";
 		case 33:
 			return "Page Up";
 		case 34:
@@ -178,9 +178,9 @@ public sealed class KeyBindingButton : Button
 		case 46:
 			return "Delete";
 		case 91:
-			return "左 Win";
+			return "Left Win";
 		case 92:
-			return "右 Win";
+			return "Right Win";
 		case 144:
 			return "Num Lock";
 		case 145:
@@ -255,7 +255,7 @@ public sealed class KeyBindingButton : Button
 		case 103:
 		case 104:
 		case 105:
-			return $"小键盘 {vk - 96}";
+			return $"Numpad {vk - 96}";
 		case 112:
 		case 113:
 		case 114:
@@ -282,17 +282,17 @@ public sealed class KeyBindingButton : Button
 		case 135:
 			return $"F{vk - 111}";
 		case 106:
-			return "小键盘 *";
+			return "Numpad *";
 		case 107:
-			return "小键盘 +";
+			return "Numpad +";
 		case 109:
-			return "小键盘 -";
+			return "Numpad -";
 		case 110:
-			return "小键盘 .";
+			return "Numpad .";
 		case 111:
-			return "小键盘 /";
+			return "Numpad /";
 		default:
-			return ((int)KeyInterop.KeyFromVirtualKey(vk) == 0) ? $"按键 0x{vk:X}" : ((object)KeyInterop.KeyFromVirtualKey(vk)/*cast due to constrained. prefix*/).ToString();
+			return ((int)KeyInterop.KeyFromVirtualKey(vk) == 0) ? $"Key 0x{vk:X}" : ((object)KeyInterop.KeyFromVirtualKey(vk)/*cast due to constrained. prefix*/).ToString();
 		}
 	}
 }

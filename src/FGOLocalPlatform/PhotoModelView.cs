@@ -25,13 +25,13 @@ public sealed class PhotoModelView : StackPanel, IDisposable
 
 	private readonly CheckBox manualHead = new CheckBox
 	{
-		Content = "自定义头部旋转",
+		Content = "Custom Head Rotation",
 		Margin = new Thickness(0.0, 10.0, 0.0, 8.0)
 	};
 
 	private readonly CheckBox weapons = new CheckBox
 	{
-		Content = "显示武器",
+		Content = "Show Weapons",
 		Foreground = Brushes.White,
 		IsChecked = true,
 		Margin = new Thickness(0.0, 10.0, 0.0, 10.0)
@@ -39,7 +39,7 @@ public sealed class PhotoModelView : StackPanel, IDisposable
 
 	private readonly CheckBox head = new CheckBox
 	{
-		Content = "头部跟随镜头",
+		Content = "Head Follows Camera",
 		Foreground = Brushes.White,
 		Margin = new Thickness(0.0, 10.0, 0.0, 10.0)
 	};
@@ -104,14 +104,14 @@ public sealed class PhotoModelView : StackPanel, IDisposable
 		this.selection = selection;
 		base.Children.Add(new TextBlock
 		{
-			Text = "模型与武器",
+			Text = "Model and Weapons",
 			FontSize = 16.0,
 			FontWeight = FontWeights.Bold,
 			Margin = new Thickness(0.0, 0.0, 0.0, 8.0)
 		});
 		base.Children.Add(new TextBlock
 		{
-			Text = "使用上方面部动画区域所选角色，按场景坐标移动，不改变镜头。",
+			Text = "Moves the character picked in Face Animation above along the scene axes. The camera does not move.",
 			TextWrapping = TextWrapping.Wrap
 		});
 		for (int i = 0; i < 3; i++)
@@ -131,7 +131,7 @@ public sealed class PhotoModelView : StackPanel, IDisposable
 			});
 			grid.Children.Add(new TextBlock
 			{
-				Text = (new string[3] { "X 横向", "Y 高度", "Z 纵深" })[i]
+				Text = (new string[3] { "X Side", "Y Height", "Z Depth" })[i]
 			});
 			Slider slider = new Slider
 			{
@@ -155,7 +155,7 @@ public sealed class PhotoModelView : StackPanel, IDisposable
 		}
 		Button button = new Button
 		{
-			Content = "重置位置",
+			Content = "Reset Position",
 			Margin = new Thickness(0.0, 8.0, 0.0, 8.0)
 		};
 		button.Click += delegate
@@ -171,14 +171,14 @@ public sealed class PhotoModelView : StackPanel, IDisposable
 		base.Children.Add(button);
 		base.Children.Add(new TextBlock
 		{
-			Text = "模型旋转（度）",
+			Text = "Model Rotation (degrees)",
 			FontSize = 16.0,
 			FontWeight = FontWeights.Bold,
 			Margin = new Thickness(0.0, 10.0, 0.0, 4.0)
 		});
 		base.Children.Add(new TextBlock
 		{
-			Text = "绕模型自身位置，按场景 X、Y、Z 轴旋转；0° 为原始朝向。",
+			Text = "Turns the model about its own position on the scene X, Y and Z axes; 0° is the original facing.",
 			TextWrapping = TextWrapping.Wrap
 		});
 		for (int num = 0; num < 3; num++)
@@ -198,7 +198,7 @@ public sealed class PhotoModelView : StackPanel, IDisposable
 			});
 			grid2.Children.Add(new TextBlock
 			{
-				Text = (new string[3] { "X 俯仰", "Y 转向", "Z 侧倾" })[num],
+				Text = (new string[3] { "X Pitch", "Y Yaw", "Z Roll" })[num],
 				VerticalAlignment = VerticalAlignment.Center
 			});
 			Slider slider2 = new Slider
@@ -223,7 +223,7 @@ public sealed class PhotoModelView : StackPanel, IDisposable
 		}
 		Button button2 = new Button
 		{
-			Content = "重置旋转",
+			Content = "Reset Rotation",
 			Margin = new Thickness(0.0, 8.0, 0.0, 8.0)
 		};
 		button2.Click += delegate
@@ -240,7 +240,7 @@ public sealed class PhotoModelView : StackPanel, IDisposable
 		base.Children.Add(weapons);
 		base.Children.Add(new TextBlock
 		{
-			Text = "显示下方所选武器组合；关闭可隐藏武器。",
+			Text = "Shows the weapons set below; turn this off to hide them all.",
 			TextWrapping = TextWrapping.Wrap
 		});
 		base.Children.Add(status);
@@ -257,7 +257,7 @@ public sealed class PhotoModelView : StackPanel, IDisposable
 		base.Children.Add(head);
 		base.Children.Add(new TextBlock
 		{
-			Text = "在当前动作上转头；超出角色范围时平滑回中。眼球不受影响。",
+			Text = "Turns the head on top of the current motion and eases it back to center once the camera passes the character's limit. The eyes are not affected.",
 			TextWrapping = TextWrapping.Wrap
 		});
 		head.Checked += delegate
@@ -273,7 +273,7 @@ public sealed class PhotoModelView : StackPanel, IDisposable
 		base.Children.Add(manualHead);
 		base.Children.Add(new TextBlock
 		{
-			Text = "与头部跟随镜头共用限位和平滑流程。开启跟随时按局部 X、Y、Z 轴微调，关闭跟随时单独控制；单位为度，0° 不添加偏移。",
+			Text = "Uses the same limits and smoothing as Head Follows Camera. With follow on these fine-tune the local X, Y and Z axes; with follow off they aim the head on their own. Values are degrees, and 0° adds no offset.",
 			TextWrapping = TextWrapping.Wrap
 		});
 		manualHead.Checked += delegate
@@ -303,7 +303,7 @@ public sealed class PhotoModelView : StackPanel, IDisposable
 			});
 			grid3.Children.Add(new TextBlock
 			{
-				Text = (new string[3] { "头部 X", "头部 Y", "头部 Z" })[num2],
+				Text = (new string[3] { "Head X", "Head Y", "Head Z" })[num2],
 				VerticalAlignment = VerticalAlignment.Center
 			});
 			Slider slider3 = new Slider
@@ -328,7 +328,7 @@ public sealed class PhotoModelView : StackPanel, IDisposable
 		}
 		Button button3 = new Button
 		{
-			Content = "重置头部旋转",
+			Content = "Reset Head Rotation",
 			Margin = new Thickness(0.0, 8.0, 0.0, 8.0)
 		};
 		button3.Click += delegate
@@ -344,24 +344,24 @@ public sealed class PhotoModelView : StackPanel, IDisposable
 		base.Children.Add(button3);
 		base.Children.Add(new TextBlock
 		{
-			Text = "武器切换",
+			Text = "Weapon Switching",
 			FontSize = 16.0,
 			FontWeight = FontWeights.Bold,
 			Margin = new Thickness(0.0, 14.0, 0.0, 0.0)
 		});
 		weaponChoice.Items.Add(new ComboBoxItem
 		{
-			Content = "选择要调整的武器",
+			Content = "Select a weapon to adjust",
 			Tag = 0
 		});
 		weaponChoice.SelectedIndex = 0;
 		weaponPosition.Items.Add(new ComboBoxItem
 		{
-			Content = "原有挂接位置",
+			Content = "Original attach point",
 			Tag = 0
 		});
 		weaponPosition.SelectedIndex = 0;
-		string[] array = new string[3] { "保持原状", "显示", "隐藏" };
+		string[] array = new string[3] { "Leave as is", "Show", "Hide" };
 		foreach (string newItem in array)
 		{
 			weaponMode.Items.Add(newItem);
@@ -374,7 +374,7 @@ public sealed class PhotoModelView : StackPanel, IDisposable
 		base.Children.Add(weaponPosition);
 		Button button4 = new Button
 		{
-			Content = "恢复原有武器组合",
+			Content = "Restore Original Weapons",
 			Margin = new Thickness(0.0, 8.0, 0.0, 8.0)
 		};
 		button4.Click += delegate
@@ -389,7 +389,7 @@ public sealed class PhotoModelView : StackPanel, IDisposable
 		base.Children.Add(button4);
 		base.Children.Add(new TextBlock
 		{
-			Text = "每件武器独立设置，可同时显示多件；退出摄影后恢复。",
+			Text = "Each weapon is set on its own and several can show at once; leaving photo mode restores them.",
 			TextWrapping = TextWrapping.Wrap
 		});
 		weaponChoice.SelectionChanged += delegate
@@ -463,7 +463,7 @@ public sealed class PhotoModelView : StackPanel, IDisposable
 				array[i].Value = 0.0;
 			}
 			dirty = true;
-			status.Text = "进入摄影后选择角色。";
+			status.Text = "Enter photo mode, then pick a character.";
 			return;
 		}
 		try
@@ -475,7 +475,7 @@ public sealed class PhotoModelView : StackPanel, IDisposable
 				if (ipc.ReadInt32(0L) != 1297106758 || ipc.ReadInt32(4L) != 6)
 				{
 					Dispose();
-					status.Text = "需要重启游戏以加载新版摄影钩子。";
+					status.Text = "Restart the game to load the newer photo hook.";
 					return;
 				}
 			}
@@ -526,30 +526,30 @@ public sealed class PhotoModelView : StackPanel, IDisposable
 			TextBlock textBlock = status;
 			textBlock.Text = ipc?.ReadInt32(12L) switch
 			{
-				1 => (weapons.IsChecked == true) ? "显示已启用" : "武器已隐藏（勾选上方开关可显示）", 
-				-1 => "角色已离开场景", 
-				-2 => "参数无效", 
-				-3 => "当前模型暂不可用", 
-				-5 => "该武器没有可用的原有挂接点，请选择可用位置。", 
-				_ => "请选择角色", 
+				1 => (weapons.IsChecked == true) ? "Weapons are shown" : "Weapons are hidden - tick Show Weapons above", 
+				-1 => "That character has left the scene.", 
+				-2 => "Those values are not valid.", 
+				-3 => "This model cannot be edited right now.", 
+				-5 => "This weapon has no original attach point - pick one of the listed positions.", 
+				_ => "Pick a character.", 
 			};
 			if (head.IsChecked == true || manualHead.IsChecked == true)
 			{
 				MemoryMappedViewAccessor? memoryMappedViewAccessor = ipc;
 				if (memoryMappedViewAccessor != null && memoryMappedViewAccessor.ReadInt32(44L) == -4)
 				{
-					status.Text = "该角色暂未找到可用头部骨骼或跟随限位。";
+					status.Text = "No usable head bone or follow limit was found on this character.";
 				}
 			}
 		}
 		catch (FileNotFoundException)
 		{
-			status.Text = "需要新版游戏钩子，重启游戏后可用。";
+			status.Text = "This needs a newer game hook - restart the game.";
 		}
 		catch (IOException)
 		{
 			Dispose();
-			status.Text = "连接已断开。";
+			status.Text = "The connection to the game was lost.";
 		}
 	}
 
@@ -595,7 +595,7 @@ public sealed class PhotoModelView : StackPanel, IDisposable
 			weaponPosition.Items.Clear();
 			weaponPosition.Items.Add(new ComboBoxItem
 			{
-				Content = "原有挂接位置",
+				Content = "Original attach point",
 				Tag = 0
 			});
 			weaponPosition.SelectedIndex = 0;
@@ -637,14 +637,14 @@ public sealed class PhotoModelView : StackPanel, IDisposable
 				weaponChoice.Items.Clear();
 				weaponChoice.Items.Add(new ComboBoxItem
 				{
-					Content = "选择要调整的武器",
+					Content = "Select a weapon to adjust",
 					Tag = 0
 				});
 				for (int j = 0; j < list.Count; j++)
 				{
 					weaponChoice.Items.Add(new ComboBoxItem
 					{
-						Content = $"{j + 1} · {list[j]}",
+						Content = $"{j + 1} - {list[j]}",
 						Tag = j + 1
 					});
 				}
@@ -665,13 +665,13 @@ public sealed class PhotoModelView : StackPanel, IDisposable
 			weaponPosition.Items.Clear();
 			weaponPosition.Items.Add(new ComboBoxItem
 			{
-				Content = "原有挂接位置",
+				Content = "Original attach point",
 				Tag = 0
 			});
 			string[] array2 = new string[14]
 			{
-				"", "右手", "左手", "", "上身", "胸部", "左大腿", "下身", "头部", "腰部",
-				"右前臂", "左前臂", "根部", "底部"
+				"", "Right Hand", "Left Hand", "", "Upper Body", "Chest", "Left Thigh", "Lower Body", "Head", "Waist",
+				"Right Forearm", "Left Forearm", "Root", "Base"
 			};
 			for (int k = 1; k < array2.Length; k++)
 			{

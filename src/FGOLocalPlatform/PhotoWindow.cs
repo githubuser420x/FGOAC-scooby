@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Windows;
@@ -69,8 +70,8 @@ public sealed class PhotoWindow : UserControl
 
 	private readonly string[] labels = new string[14]
 	{
-		"进入 / 退出摄影", "前进", "后退", "左移", "右移", "下降", "上升", "向左转", "向右转", "向上看",
-		"向下看", "向左倾斜", "向右倾斜", "重置镜头"
+		"Enter / Exit Photo Mode", "Move Forward", "Move Back", "Move Left", "Move Right", "Move Down", "Move Up", "Turn Left", "Turn Right", "Look Up",
+		"Look Down", "Roll Left", "Roll Right", "Reset Camera"
 	};
 
 	private MemoryMappedFile? mapping;
@@ -121,7 +122,7 @@ public sealed class PhotoWindow : UserControl
 
 	private readonly CheckBox dof = new CheckBox
 	{
-		Content = "自定义景深（仅摄影期间）",
+		Content = "Custom Depth of Field (Photo Mode Only)",
 		Foreground = Brushes.White,
 		Margin = new Thickness(0.0, 12.0, 0.0, 8.0)
 	};
@@ -355,7 +356,7 @@ public sealed class PhotoWindow : UserControl
 		};
 		stackPanel.Children.Add(new TextBlock
 		{
-			Text = "暂停摄影",
+			Text = "Photo Mode",
 			FontSize = 22.0,
 			FontWeight = FontWeights.Bold,
 			Margin = new Thickness(0.0, 0.0, 0.0, 12.0)
@@ -363,15 +364,15 @@ public sealed class PhotoWindow : UserControl
 		stackPanel.Children.Add(status);
 		stackPanel.Children.Add(new TextBlock
 		{
-			Text = "按一次进入，再按一次恢复。右键拖动平移，左键拖动旋转，滚轮缩放；Shift 加速，Ctrl 精细移动。",
+			Text = "Press it once to enter photo mode and again to resume the game. Drag with the right button to pan, the left button to rotate, and scroll to zoom; hold Shift to move faster or Ctrl to move finely.",
 			TextWrapping = TextWrapping.Wrap,
 			Margin = new Thickness(0.0, 12.0, 0.0, 12.0)
 		});
 		(string, int)[] array3 = new(string, int)[3]
 		{
-			("进入 / 退出", 1),
-			("重置镜头", 2),
-			("恢复游戏", 4)
+			("Enter / Exit", 1),
+			("Reset Camera", 2),
+			("Resume Game", 4)
 		};
 		for (int i = 0; i < array3.Length; i++)
 		{
@@ -394,7 +395,7 @@ public sealed class PhotoWindow : UserControl
 		stackPanel.Children.Add(actions);
 		Button button2 = new Button
 		{
-			Content = "显示摄影面板",
+			Content = "Show Photo Panel",
 			HorizontalAlignment = HorizontalAlignment.Left,
 			Margin = new Thickness(0.0, 0.0, 0.0, 10.0)
 		};
@@ -404,8 +405,8 @@ public sealed class PhotoWindow : UserControl
 			UpdateOverlay(view != null && view.ReadInt32(12L) != 0, explicitShow: true);
 		};
 		stackPanel.Children.Add(button2);
-		AddSlider(stackPanel, "视野 FOV", fov, fovLabel);
-		AddSlider(stackPanel, "移动速度", speed, speedLabel);
+		AddSlider(stackPanel, "FOV", fov, fovLabel);
+		AddSlider(stackPanel, "Move Speed", speed, speedLabel);
 		fov.ValueChanged += delegate
 		{
 			fovLabel.Text = $"{fov.Value:F1}°";
@@ -427,15 +428,15 @@ public sealed class PhotoWindow : UserControl
 		faceHome = stackPanel;
 		stackPanel.Children.Add(new TextBlock
 		{
-			Text = "调节焦点与虚化范围；关闭后使用游戏原有景深。退出摄影时恢复原参数。",
+			Text = "Set the focus point and the blur range; with this off the game's own depth of field is used. Leaving photo mode restores the original settings.",
 			TextWrapping = TextWrapping.Wrap
 		});
 		array2 = new(string, Slider)[4]
 		{
-			("焦点距离", focus),
-			("清晰范围", focusRange),
-			("虚化过渡", falloff),
-			("虚化半径", blur)
+			("Focus Distance", focus),
+			("Focus Range", focusRange),
+			("Blur Falloff", falloff),
+			("Blur Radius", blur)
 		};
 		for (int i = 0; i < array2.Length; i++)
 		{
@@ -475,7 +476,7 @@ public sealed class PhotoWindow : UserControl
 		};
 		stackPanel.Children.Add(new TextBlock
 		{
-			Text = "摄影热键",
+			Text = "Photo Mode Hotkeys",
 			FontSize = 22.0,
 			FontWeight = FontWeights.Bold,
 			Margin = new Thickness(0.0, 0.0, 0.0, 12.0)
@@ -486,8 +487,8 @@ public sealed class PhotoWindow : UserControl
 		};
 		dockPanel.Children.Add(new TextBlock
 		{
-			Text = "显示 / 收起摄影面板",
-			Width = 170.0,
+			Text = "Show / Hide Photo Panel",
+			Width = 200.0,
 			VerticalAlignment = VerticalAlignment.Center
 		});
 		dockPanel.Children.Add(panelKey);
@@ -502,7 +503,7 @@ public sealed class PhotoWindow : UserControl
 			dockPanel2.Children.Add(new TextBlock
 			{
 				Text = labels[num2],
-				Width = 170.0,
+				Width = 200.0,
 				VerticalAlignment = VerticalAlignment.Center
 			});
 			Button button3 = new Button
@@ -515,7 +516,7 @@ public sealed class PhotoWindow : UserControl
 			button3.Click += delegate
 			{
 				binding = true;
-				button3.Content = "请按键（Esc 取消）";
+				button3.Content = "Press a key (Esc to cancel)";
 				button3.Focus();
 			};
 			button3.LostKeyboardFocus += delegate
@@ -559,7 +560,7 @@ public sealed class PhotoWindow : UserControl
 		}
 		Button button4 = new Button
 		{
-			Content = "保存热键设置",
+			Content = "Save Hotkeys",
 			HorizontalAlignment = HorizontalAlignment.Left,
 			Padding = new Thickness(20.0, 8.0, 20.0, 8.0),
 			Margin = new Thickness(0.0, 12.0, 0.0, 0.0)
@@ -607,7 +608,7 @@ public sealed class PhotoWindow : UserControl
 		}
 		UnregisterHotKey(hotkeySource.Handle, 20552);
 		bool flag = panelKey.Value >= 8 && RegisterHotKey(hotkeySource.Handle, 20552, 16384u, (uint)panelKey.Value);
-		panelKey.ToolTip = (flag ? "摄影期间显示 / 收起面板；保存后立即生效。" : "热键不可用或已被占用，请换一个按键并保存。也可点击显示摄影面板。");
+		panelKey.ToolTip = (flag ? "Shows or hides the panel during photo mode; it works as soon as you save." : "This key is unavailable or already in use - pick another one and save. You can also click Show Photo Panel.");
 		return flag;
 	}
 
@@ -733,7 +734,7 @@ public sealed class PhotoWindow : UserControl
 			bodyView.Refresh(null, active: false);
 			modelView.Refresh(null, active: false);
 			UpdateOverlay(active: false);
-			status.Text = "游戏未连接；仍可设置按键，保存后重新启动游戏生效。";
+			status.Text = "The game is not running - you can still set the keys, then save and start the game.";
 			return;
 		}
 		bool flag = view.ReadInt32(12L) != 0;
@@ -741,7 +742,7 @@ public sealed class PhotoWindow : UserControl
 		bodyView.Refresh(connectedPid, flag);
 		modelView.Refresh(connectedPid, flag);
 		UpdateOverlay(flag);
-		status.Text = (flag ? $"摄影中 · 战斗计时与宝具暂停仍待验证\n位置 {view.ReadSingle(32L):F2}, {view.ReadSingle(36L):F2}, {view.ReadSingle(40L):F2}" : "已连接游戏 · 摄影关闭");
+		status.Text = (flag ? $"In photo mode - whether the battle timer and Noble Phantasms pause is still unconfirmed\nPosition {view.ReadSingle(32L):F2}, {view.ReadSingle(36L):F2}, {view.ReadSingle(40L):F2}" : "Connected to the game - photo mode off");
 		if (flag && !fov.IsMouseCaptureWithin && (view.ReadInt32(8L) & 8) == 0)
 		{
 			syncing = true;
@@ -864,7 +865,7 @@ public sealed class PhotoWindow : UserControl
 		overlayOwner = gameWindow;
 		overlay = new Window
 		{
-			Title = "摄影 · 景深与角色控制",
+			Title = "Photo Mode - Depth of Field and Character Controls",
 			Width = 540.0,
 			Height = 720.0,
 			Icon = new BitmapImage(new Uri("pack://application:,,,/FGOLocalPlatform;component/Platform.ico")),
@@ -919,7 +920,7 @@ public sealed class PhotoWindow : UserControl
 		dockPanel.Children.Add(dockPanel2);
 		Button button = new Button
 		{
-			Content = "收起",
+			Content = "Hide",
 			Width = 64.0,
 			Height = 32.0,
 			Margin = new Thickness(4.0)
@@ -934,7 +935,7 @@ public sealed class PhotoWindow : UserControl
 		};
 		TextBlock textBlock = new TextBlock
 		{
-			Text = "摄影控制",
+			Text = "Photo Controls",
 			FontSize = 16.0,
 			FontWeight = FontWeights.Bold,
 			Padding = new Thickness(14.0, 10.0, 8.0, 10.0)
@@ -956,7 +957,7 @@ public sealed class PhotoWindow : UserControl
 		dockPanel.Children.Add(tabControl);
 		tabControl.Items.Add(new TabItem
 		{
-			Header = "镜头与景深",
+			Header = "Camera & Depth of Field",
 			Content = Scroller(stackPanel)
 		});
 		StackPanel characterPanel = new StackPanel
@@ -968,19 +969,19 @@ public sealed class PhotoWindow : UserControl
 		modelHost = AddSection();
 		tabControl.Items.Add(new TabItem
 		{
-			Header = "角色控制",
+			Header = "Character Controls",
 			Content = Scroller(characterPanel)
 		});
 		DockFace(floating: true);
 		stackPanel.Children.Add(new TextBlock
 		{
-			Text = "镜头与景深",
+			Text = "Camera & Depth of Field",
 			FontSize = 20.0,
 			FontWeight = FontWeights.Bold
 		});
 		CheckBox checkBox = new CheckBox
 		{
-			Content = "自定义景深",
+			Content = "Custom Depth of Field",
 			Foreground = Brushes.White,
 			Margin = new Thickness(0.0, 12.0, 0.0, 8.0)
 		};
@@ -992,12 +993,12 @@ public sealed class PhotoWindow : UserControl
 		stackPanel.Children.Add(checkBox);
 		(string, Slider)[] array2 = new(string, Slider)[6]
 		{
-			("视野 FOV", fov),
-			("移动速度", speed),
-			("焦点距离", focus),
-			("清晰范围", focusRange),
-			("虚化过渡", falloff),
-			("虚化半径", blur)
+			("FOV", fov),
+			("Move Speed", speed),
+			("Focus Distance", focus),
+			("Focus Range", focusRange),
+			("Blur Falloff", falloff),
+			("Blur Radius", blur)
 		};
 		for (int i = 0; i < array2.Length; i++)
 		{
@@ -1008,7 +1009,7 @@ public sealed class PhotoWindow : UserControl
 			};
 			grid.ColumnDefinitions.Add(new ColumnDefinition
 			{
-				Width = new GridLength(76.0)
+				Width = new GridLength(110.0)
 			});
 			grid.ColumnDefinitions.Add(new ColumnDefinition());
 			grid.ColumnDefinitions.Add(new ColumnDefinition
@@ -1040,7 +1041,7 @@ public sealed class PhotoWindow : UserControl
 		}
 		stackPanel.Children.Add(new TextBlock
 		{
-			Text = "左键旋转 · 右键平移 · 滚轮缩放",
+			Text = "Left button rotates - right button pans - scroll wheel zooms",
 			TextWrapping = TextWrapping.Wrap,
 			Foreground = Brushes.LightSteelBlue,
 			Margin = new Thickness(0.0, 10.0, 0.0, 10.0)
@@ -1049,8 +1050,8 @@ public sealed class PhotoWindow : UserControl
 		stackPanel.Children.Add(wrapPanel);
 		(string, int)[] array3 = new(string, int)[2]
 		{
-			("保存参数", 0),
-			("恢复游戏", 4)
+			("Save Settings", 0),
+			("Resume Game", 4)
 		};
 		for (int i = 0; i < array3.Length; i++)
 		{
@@ -1168,7 +1169,7 @@ public sealed class PhotoWindow : UserControl
 	{
 		if (keys.Distinct().Count() != keys.Length || keys.Contains(panelKey.Value) || panelKey.Value < 8)
 		{
-			ThemedMessageBox.Show(owner, "摄影按键存在重复或面板热键无效，请调整后保存。");
+			ThemedMessageBox.Show(owner, "Two photo keys are the same, or the panel hotkey is not valid - change them and save again.");
 			return;
 		}
 		try
@@ -1194,19 +1195,28 @@ public sealed class PhotoWindow : UserControl
 			jsonObject3["falloff"] = falloff.Value;
 			jsonObject3["blur"] = blur.Value;
 			jsonObject3["speed"] = speed.Value;
-			File.WriteAllText(settingsPath, jsonObject.ToJsonString(new JsonSerializerOptions
+			string text = settingsPath + $".{Environment.ProcessId}.photo.tmp";
+			File.WriteAllText(text, jsonObject.ToJsonString(new JsonSerializerOptions
 			{
 				WriteIndented = true
-			}));
-			status.Text = "摄影设置已保存；面板热键立即生效，游戏镜头按键重启游戏后生效，景深实时生效。";
+			}) + Environment.NewLine, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+			if (File.Exists(settingsPath))
+			{
+				File.Replace(text, settingsPath, settingsPath + ".bak", ignoreMetadataErrors: true);
+			}
+			else
+			{
+				File.Move(text, settingsPath);
+			}
+			status.Text = "Photo settings saved - the panel hotkey and the depth of field work now, and the in-game camera keys work after you restart the game.";
 			if (!RegisterPanelHotkey())
 			{
-				ThemedMessageBox.Show(owner, "面板热键被占用或不可用，请换一个按键并保存；仍可通过“显示摄影面板”按钮唤起。");
+				ThemedMessageBox.Show(owner, "The panel hotkey is unavailable or already in use - pick another one and save. You can still open the panel with the Show Photo Panel button.");
 			}
 		}
 		catch (Exception ex)
 		{
-			ThemedMessageBox.Show(owner, "保存失败：" + ex.Message);
+			ThemedMessageBox.Show(owner, "Could not save the photo settings: " + ex.Message);
 		}
 	}
 }

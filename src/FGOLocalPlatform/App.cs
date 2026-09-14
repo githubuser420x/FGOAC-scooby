@@ -34,7 +34,7 @@ public partial class App : Application
 		}
 		catch (Exception ex)
 		{
-			MessageBox.Show(ex.Message, "FGO 启动检查", MessageBoxButton.OK, MessageBoxImage.Hand);
+			MessageBox.Show(ex.Message, "FGOA scooby - Startup Check", MessageBoxButton.OK, MessageBoxImage.Hand);
 			Shutdown(4);
 			return;
 		}
@@ -43,7 +43,7 @@ public partial class App : Application
 
 	private static void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
 	{
-		ThemedMessageBox.Show(StartupDiagnostics.Explain((!(e.Exception is UnauthorizedAccessException)) ? 1 : 4) + "\n\n" + e.Exception, "FGO 本地平台错误", MessageBoxButton.OK, MessageBoxImage.Hand);
+		ThemedMessageBox.Show(StartupDiagnostics.Explain((!(e.Exception is UnauthorizedAccessException)) ? 1 : 4) + "\n\n" + e.Exception, "FGOA scooby - Error", MessageBoxButton.OK, MessageBoxImage.Hand);
 		e.Handled = true;
 	}
 }

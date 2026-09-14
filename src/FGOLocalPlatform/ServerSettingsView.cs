@@ -45,13 +45,13 @@ public partial class ServerSettingsView : UserControl, IComponentConnector
 		{
 			if (!int.TryParse(value, out var result) || result < 1 || result > 65535)
 			{
-				throw new ArgumentException("端口必须是 1–65535 的整数。");
+				throw new ArgumentException("Each port must be a whole number from 1 to 65535.");
 			}
 			return result;
 		}).ToArray();
 		if (array2.Distinct().Count() != 4)
 		{
-			throw new ArgumentException("四项服务不能使用相同端口。");
+			throw new ArgumentException("The four services cannot share a port.");
 		}
 		List<string> list = new List<string>
 		{
@@ -85,7 +85,7 @@ public partial class ServerSettingsView : UserControl, IComponentConnector
 		{
 			processStartInfo.ArgumentList.Add(item);
 		}
-		using Process process = Process.Start(processStartInfo) ?? throw new IOException("无法调用服务器配置工具。");
+		using Process process = Process.Start(processStartInfo) ?? throw new IOException("Could not run the server configuration tool.");
 		Task<string> output = process.StandardOutput.ReadToEndAsync();
 		Task<string> error = process.StandardError.ReadToEndAsync();
 		await ProcessCompletion.WaitAsync(process, TimeSpan.FromSeconds(15.0));
@@ -97,7 +97,7 @@ public partial class ServerSettingsView : UserControl, IComponentConnector
 		{
 			throw new IOException(jsonNode?["error"]?.GetValue<string>() ?? text2);
 		}
-		return jsonNode ?? throw new IOException("未收到服务器配置。");
+		return jsonNode ?? throw new IOException("No configuration came back from the server tool.");
 	}
 
 	public async Task ReloadAsync()
@@ -113,19 +113,19 @@ public partial class ServerSettingsView : UserControl, IComponentConnector
 			DatabaseBox.Text = config["database"].ToString();
 			List<string> lines = new List<string>
 			{
-				$"服务器地址：{config["address"]}",
-				"程序：Server/python/python.exe",
-				"账号存档：Server/state/fgo-players.json",
-				"数据库：Server/data/mariadb",
-				"日志目录：logs",
+				$"Server address: {config["address"]}",
+				"Program: Server/python/python.exe",
+				"Save file: Server/state/fgo-players.json",
+				"Database: Server/data/mariadb",
+				"Log directory: logs",
 				""
 			};
 			Dictionary<string, string> labels = new Dictionary<string, string>
 			{
-				["http"] = "游戏 / ALL.Net",
-				["billing"] = "计费 HTTPS",
-				["aime"] = "Aime 读卡",
-				["database"] = "本地数据库"
+				["http"] = "Game / ALL.Net",
+				["billing"] = "Billing HTTPS",
+				["aime"] = "Aime card reader",
+				["database"] = "Local database"
 			};
 			string[] array = new string[4] { "http", "billing", "aime", "database" };
 			foreach (string key in array)
@@ -143,7 +143,7 @@ public partial class ServerSettingsView : UserControl, IComponentConnector
 				catch
 				{
 				}
-				lines.Add($"{labels[key]} · {port}：{(open ? "端口已监听" : "未启动")}");
+				lines.Add($"{labels[key]} · {port}: {(open ? "listening" : "not running")}");
 			}
 			InfoText.Text = string.Join(Environment.NewLine, lines);
 		}

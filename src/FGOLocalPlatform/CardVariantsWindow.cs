@@ -58,12 +58,12 @@ public partial class CardVariantsWindow : Window, IComponentConnector
 			CraftPreview.Visibility = Visibility.Visible;
 			CraftImage.Source = card.Bitmap;
 			CraftEffects.Effect effect = CraftEffects.Get(CardFormState.EntityKey(card));
-			NormalEffect.Text = effect?.Normal ?? "未找到普通效果说明";
-			MaximumEffect.Text = effect?.Maximum ?? "未找到满破效果说明";
+			NormalEffect.Text = effect?.Normal ?? "No normal effect text found.";
+			MaximumEffect.Text = effect?.Maximum ?? "No Max Limit Break effect text found.";
 			NormalEffect.ToolTip = effect?.NormalJapanese;
 			MaximumEffect.ToolTip = effect?.MaximumJapanese;
 		}
-		Hint.Text = $"卡组剩余 {slots} 个位置。双击卡片行选择数量并加入；也可填写多行数量后批量加入。" + (ownedOnly ? "仅允许加入本账号已入库的卡片。" : "当前浏览全部卡库。");
+		Hint.Text = $"{slots} slots left in the deck. Double-click a row to pick a quantity and add it, or fill in several rows and add them all at once." + (ownedOnly ? " Only cards this account owns can be added." : " Browsing the full card library.");
 	}
 
 	private void Forms_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -77,7 +77,7 @@ public partial class CardVariantsWindow : Window, IComponentConnector
 		e.Handled = true;
 		if (item.Maximum < 1)
 		{
-			Error.Text = "此类型没有可加入的卡片，或卡组已满。";
+			Error.Text = "No card of this type can be added, or the deck is full.";
 			return;
 		}
 		CardQuantityWindow cardQuantityWindow = new CardQuantityWindow(item.Label, item.Maximum, add: true)
@@ -108,7 +108,7 @@ public partial class CardVariantsWindow : Window, IComponentConnector
 		{
 			if (!int.TryParse(choice.Quantity, NumberStyles.None, CultureInfo.InvariantCulture, out var result) || result < 0 || result > choice.Maximum)
 			{
-				Error.Text = $"{choice.Label}：请输入 0～{choice.Maximum} 的整数。";
+				Error.Text = $"{choice.Label}: enter a whole number from 0 to {choice.Maximum}.";
 				return;
 			}
 			if (result > 0)
@@ -118,7 +118,7 @@ public partial class CardVariantsWindow : Window, IComponentConnector
 		}
 		if (dictionary.Values.Sum() < 1 || dictionary.Values.Sum() > slots)
 		{
-			Error.Text = $"请选择 1～{slots} 张卡片。";
+			Error.Text = $"Choose 1 to {slots} cards.";
 		}
 		else
 		{

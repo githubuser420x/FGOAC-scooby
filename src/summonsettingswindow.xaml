@@ -10,30 +10,30 @@
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
     <StackPanel>
-      <TextBlock Text="从者与礼装，共用一份概率" FontSize="22" FontWeight="SemiBold" />
-      <TextBlock Margin="0,8,0,12" Foreground="#BDBDCB" TextWrapping="Wrap" Text="普通与补充卡共用本地概率，剧情固定卡单独保护。权重 ÷ 总权重 = 实际概率；0 表示不抽取。不叠加隐藏 Pickup 或十连保底。" />
+      <TextBlock Text="Servants and Craft Essences share one set of draw rates" FontSize="22" FontWeight="SemiBold" />
+      <TextBlock Margin="0,8,0,12" Foreground="#BDBDCB" TextWrapping="Wrap" Text="Regular and supplemental cards share one local draw table; story-fixed cards are held out of it. Weight divided by total weight is the draw chance, and 0 means the card is never drawn. There is no hidden rate-up and no ten-pull pity." />
     </StackPanel>
     <DockPanel Grid.Row="1" Margin="0,0,0,10">
-      <TextBlock Text="搜索卡名 / 编号" VerticalAlignment="Center" Margin="0,0,12,0" />
-      <ComboBox Name="CategoryFilter" DockPanel.Dock="Right" Width="215" Margin="10,0,0,0" SelectedIndex="0" SelectionChanged="Filter_OnChanged">
-        <ComboBoxItem Content="普通＋补充（可抽取）" />
-        <ComboBoxItem Content="普通召唤" />
-        <ComboBoxItem Content="补充获取" />
-        <ComboBoxItem Content="剧情固定获取（只读）" />
+      <TextBlock Text="Search name / number" VerticalAlignment="Center" Margin="0,0,12,0" />
+      <ComboBox Name="CategoryFilter" DockPanel.Dock="Right" Width="265" Margin="10,0,0,0" SelectedIndex="0" SelectionChanged="Filter_OnChanged">
+        <ComboBoxItem Content="Regular + Supplemental (drawable)" />
+        <ComboBoxItem Content="Regular Summon" />
+        <ComboBoxItem Content="Supplemental" />
+        <ComboBoxItem Content="Story (fixed, read-only)" />
       </ComboBox>
       <ComboBox Name="KindFilter" DockPanel.Dock="Right" Width="125" Margin="10,0,0,0" SelectedIndex="0" SelectionChanged="Filter_OnChanged">
-        <ComboBoxItem Content="全部类型" />
-        <ComboBoxItem Content="从者" />
-        <ComboBoxItem Content="概念礼装" />
+        <ComboBoxItem Content="All Types" />
+        <ComboBoxItem Content="Servant" />
+        <ComboBoxItem Content="Craft Essence" />
       </ComboBox>
-      <TextBox Name="SearchBox" ToolTip="搜索日文名、中文译名、文件编号、完整文件名或卡牌 ID" TextChanged="Search_OnChanged" />
+      <TextBox Name="SearchBox" ToolTip="Search the Japanese name, English name, file number, full file name or card ID" TextChanged="Search_OnChanged" />
     </DockPanel>
     <WrapPanel Name="EditButtons" Grid.Row="2">
-      <Button Content="全部平均" Click="EqualAll_OnClick" />
-      <Button Content="只抽选中卡（100%）" Click="OnlyOne_OnClick" />
-      <Button Content="仅所选卡平均" Click="EqualSelected_OnClick" />
-      <Button Content="排除选中卡" Click="Exclude_OnClick" />
-      <TextBlock Text="Ctrl / Shift 可多选" VerticalAlignment="Center" Foreground="#BDBDCB" Margin="8,0,0,6" />
+      <Button Content="Even for All" Click="EqualAll_OnClick" />
+      <Button Content="Only Selected (100%)" Click="OnlyOne_OnClick" />
+      <Button Content="Even for Selected" Click="EqualSelected_OnClick" />
+      <Button Content="Exclude Selected" Click="Exclude_OnClick" />
+      <TextBlock Text="Ctrl / Shift selects more than one" VerticalAlignment="Center" Foreground="#BDBDCB" Margin="8,0,0,6" />
     </WrapPanel>
     <DataGrid Name="CardsGrid" Grid.Row="3" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" SelectionMode="Extended" SelectionUnit="FullRow" MinRowHeight="112" HeadersVisibility="Column" GridLinesVisibility="Horizontal" EnableRowVirtualization="True" CellEditEnding="Grid_OnCellEditEnding" BeginningEdit="Grid_OnBeginningEdit" SelectionChanged="Grid_OnSelectionChanged">
       <FrameworkElement.Resources>
@@ -50,40 +50,40 @@
         </ResourceDictionary>
       </FrameworkElement.Resources>
       <DataGrid.Columns>
-        <DataGridTemplateColumn Header="卡面" Width="84" IsReadOnly="True">
+        <DataGridTemplateColumn Header="Card" Width="84" IsReadOnly="True">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
               <Image Height="90" Width="68" Margin="3" Stretch="Uniform" Source="{Binding Icon}" />
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
-        <DataGridTemplateColumn Header="日文名 / 中文译名 / 内部编号" Width="*" MinWidth="260" IsReadOnly="True">
+        <DataGridTemplateColumn Header="Japanese Name / English Name / Internal ID" Width="*" MinWidth="260" IsReadOnly="True">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
               <StackPanel VerticalAlignment="Center">
                 <TextBlock TextWrapping="Wrap" Text="{Binding Name}" ToolTip="{Binding AcquisitionNote}" />
-                <TextBlock TextWrapping="Wrap" Foreground="#D7BBDD" Margin="6,4" ToolTip="中文参考译名，含机器翻译" Text="{Binding ChineseName}" />
+                <TextBlock TextWrapping="Wrap" Foreground="#D7BBDD" Margin="6,4" ToolTip="English name; some are machine-translated" Text="{Binding ChineseName}" />
                 <TextBlock Foreground="#BDBDCB" Margin="6,5,6,0" Text="{Binding FileNumber}" ToolTip="{Binding FileName}" />
               </StackPanel>
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
-        <DataGridTextColumn Header="分类" Width="100" MaxWidth="140" ElementStyle="{StaticResource WrappedCell}" IsReadOnly="True" Binding="{Binding CategoryName}" />
-        <DataGridTextColumn Header="类型 / 卡面" Width="112" ElementStyle="{StaticResource WrappedCell}" IsReadOnly="True" Binding="{Binding KindName}" />
-        <DataGridTextColumn Header="星级" Width="65" ElementStyle="{StaticResource WrappedCell}" IsReadOnly="True" Binding="{Binding Stars}" />
-        <DataGridTextColumn Header="卡牌 ID" Width="85" ElementStyle="{StaticResource WrappedCell}" IsReadOnly="True" Binding="{Binding TcId}" />
-        <DataGridTextColumn Header="权重（整数）" Width="125" ElementStyle="{StaticResource WrappedCell}" Binding="{Binding WeightText, UpdateSourceTrigger=PropertyChanged}" />
-        <DataGridTextColumn Header="实际概率" Width="120" ElementStyle="{StaticResource WrappedCell}" IsReadOnly="True" Binding="{Binding Probability}" />
+        <DataGridTextColumn Header="Category" Width="100" MaxWidth="140" ElementStyle="{StaticResource WrappedCell}" IsReadOnly="True" Binding="{Binding CategoryName}" />
+        <DataGridTextColumn Header="Type / Card" Width="112" ElementStyle="{StaticResource WrappedCell}" IsReadOnly="True" Binding="{Binding KindName}" />
+        <DataGridTextColumn Header="Rarity" Width="65" ElementStyle="{StaticResource WrappedCell}" IsReadOnly="True" Binding="{Binding Stars}" />
+        <DataGridTextColumn Header="Card ID" Width="85" ElementStyle="{StaticResource WrappedCell}" IsReadOnly="True" Binding="{Binding TcId}" />
+        <DataGridTextColumn Header="Weight (integer)" Width="140" ElementStyle="{StaticResource WrappedCell}" Binding="{Binding WeightText, UpdateSourceTrigger=PropertyChanged}" />
+        <DataGridTextColumn Header="Draw Chance" Width="120" ElementStyle="{StaticResource WrappedCell}" IsReadOnly="True" Binding="{Binding Probability}" />
       </DataGrid.Columns>
     </DataGrid>
     <StackPanel Grid.Row="4" Margin="0,12,0,8">
       <TextBlock Name="SummaryText" FontSize="15" TextWrapping="Wrap" Foreground="#DCD6FF" />
       <TextBlock Name="StatusText" Margin="0,6,0,0" TextWrapping="Wrap" Foreground="#BDBDCB" />
-      <TextBlock Margin="0,6,0,0" TextWrapping="Wrap" Foreground="#A5A5B5" FontSize="12" Text="补充类包含本地奖励、羁绊等非普通召唤卡，每种保留初始卡面。剧情/首通固定发放单独列出，不参与随机池。普通/Fatal 呼符仅在各自兼容卡面中按相同权重抽取；固定兑换不变。" />
+      <TextBlock Margin="0,6,0,0" TextWrapping="Wrap" Foreground="#A5A5B5" FontSize="12" Text="Supplemental covers cards that come from local rewards, Bond and the like rather than a regular summon, and keeps one base card art for each. Story and first-clear cards are listed separately and stay out of the random pool. Normal and Fatal summon tickets draw only from the card arts each one supports, using these same weights; fixed exchanges are unaffected." />
     </StackPanel>
     <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right">
-      <Button Content="重新读取" Height="36" Margin="3" VerticalAlignment="Center" Click="Reload_OnClick" />
-      <Button Name="SaveButton" Content="保存 · 下次新抽取生效" FontWeight="Bold" Height="36" Margin="3" VerticalAlignment="Center" Click="Save_OnClick" />
+      <Button Content="Reload" Height="36" Margin="3" VerticalAlignment="Center" Click="Reload_OnClick" />
+      <Button Name="SaveButton" Content="Save · Applies to the Next Draw" FontWeight="Bold" Height="36" Margin="3" VerticalAlignment="Center" Click="Save_OnClick" />
     </StackPanel>
   </Grid>
 </UserControl>

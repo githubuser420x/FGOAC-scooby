@@ -18,9 +18,9 @@ public sealed record CardFormState(Card Card, int Owned, int Selected)
 		{
 			if (Owned <= 0)
 			{
-				return "未打印入库";
+				return "Not printed yet";
 			}
-			return $"已入库 {Owned} 张 · 已选 {Selected} 张 · 可加入 {Available} 张";
+			return $"{Owned} owned - {Selected} in deck - {Available} available";
 		}
 	}
 
@@ -49,30 +49,30 @@ public sealed record CardFormState(Card Card, int Owned, int Selected)
 				switch (num)
 				{
 				case 0:
-					text = "初始卡面";
+					text = "Base Art";
 					break;
 				case 1:
 				case 2:
 				case 3:
-					text = $"第 {num} 次再临";
+					text = $"Ascension {num}";
 					break;
 				case 4:
-					text = "最终再临";
+					text = "Final Ascension";
 					break;
 				default:
-					text = $"特殊卡面 {num:D2}";
+					text = $"Special Art {num:D2}";
 					break;
 				}
 				text2 = text;
 			}
 			else
 			{
-				text2 = $"卡面 {num:D2}";
+				text2 = $"Art {num:D2}";
 			}
 			string value = text2;
-			return $"{value} · {(match.Groups[4].Value.Equals("HOLO", StringComparison.OrdinalIgnoreCase) ? "Fatal 闪卡" : "普通卡")} · TC {card.TrcId}";
+			return $"{value} - {(match.Groups[4].Value.Equals("HOLO", StringComparison.OrdinalIgnoreCase) ? "Fatal Foil" : "Normal")} - TC {card.TrcId}";
 		}
-		return $"卡面 TC {card.TrcId}";
+		return $"Art - TC {card.TrcId}";
 	}
 
 	public static List<CardFormState> Build(Card focus, IEnumerable<Card> library, IEnumerable<Card> selected, IReadOnlyDictionary<int, int> owned)

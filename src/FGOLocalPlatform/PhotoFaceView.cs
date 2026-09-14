@@ -18,7 +18,7 @@ public sealed class PhotoFaceView : StackPanel, IDisposable
 	{
 		public override string ToString()
 		{
-			return $"{Token} · 模型 {Model}";
+			return $"{Token} - Model {Model}";
 		}
 	}
 
@@ -65,7 +65,7 @@ public sealed class PhotoFaceView : StackPanel, IDisposable
 
 	private readonly Button play = new Button
 	{
-		Content = "播放表情",
+		Content = "Play Expression",
 		Margin = new Thickness(0.0, 8.0, 8.0, 8.0)
 	};
 
@@ -98,7 +98,7 @@ public sealed class PhotoFaceView : StackPanel, IDisposable
 		};
 		base.Children.Add(new TextBlock
 		{
-			Text = "面部动画",
+			Text = "Face Animation",
 			FontSize = 16.0,
 			FontWeight = FontWeights.Bold,
 			Margin = new Thickness(0.0, 0.0, 0.0, 8.0)
@@ -147,7 +147,7 @@ public sealed class PhotoFaceView : StackPanel, IDisposable
 		};
 		frame.ValueChanged += delegate
 		{
-			time.Text = $"动画时刻：{frame.Value / 60.0:F2} 秒";
+			time.Text = $"Time: {frame.Value / 60.0:F2} s";
 			dirty = true;
 		};
 		play.Click += delegate
@@ -161,14 +161,14 @@ public sealed class PhotoFaceView : StackPanel, IDisposable
 				playbackFrame = ((frame.Value >= frame.Maximum) ? 0.0 : frame.Value);
 				playback.Restart();
 				playing = true;
-				play.Content = "暂停表情";
+				play.Content = "Pause Expression";
 				playbackTimer.Start();
 			}
 		};
 		base.Children.Add(play);
 		Button button = new Button
 		{
-			Content = "恢复原表情",
+			Content = "Restore Original Expression",
 			Margin = new Thickness(0.0, 8.0, 0.0, 8.0)
 		};
 		button.Click += delegate
@@ -192,7 +192,7 @@ public sealed class PhotoFaceView : StackPanel, IDisposable
 			StopPlayback();
 			saved.Clear();
 			editing = null;
-			status.Text = "进入摄影后选择角色与表情，可播放或拖动时间轴。";
+			status.Text = "Enter photo mode, then pick a character and an expression; you can play it or drag the timeline.";
 			return;
 		}
 		try
@@ -204,7 +204,7 @@ public sealed class PhotoFaceView : StackPanel, IDisposable
 				if (ipc.ReadInt32(0L) != 1162037062 || ipc.ReadInt32(4L) != 1)
 				{
 					Dispose();
-					status.Text = "游戏端表情接口版本不匹配";
+					status.Text = "The game's expression interface version does not match - restart the game.";
 					return;
 				}
 			}
@@ -260,21 +260,21 @@ public sealed class PhotoFaceView : StackPanel, IDisposable
 			TextBlock textBlock = status;
 			textBlock.Text = ipc.ReadInt32(20L) switch
 			{
-				1 => playing ? "正在播放" : "表情已应用", 
-				-1 => "该角色已不在当前列表", 
-				-2 => "游戏尚未加载该表情", 
-				-3 => "角色数据暂不可用", 
-				_ => $"可选角色 {num2} 个", 
+				1 => playing ? "Playing" : "Expression applied", 
+				-1 => "That character is no longer in the list.", 
+				-2 => "The game has not loaded that expression.", 
+				-3 => "Character data is not available right now.", 
+				_ => $"{num2} characters available", 
 			};
 		}
 		catch (FileNotFoundException)
 		{
-			status.Text = "当前游戏未连接表情模块";
+			status.Text = "The running game has not loaded the expression module.";
 		}
 		catch (IOException)
 		{
 			Dispose();
-			status.Text = "表情连接已断开";
+			status.Text = "The expression connection was lost.";
 		}
 	}
 
@@ -289,7 +289,7 @@ public sealed class PhotoFaceView : StackPanel, IDisposable
 			byte[] bytes = Encoding.ASCII.GetBytes(s);
 			if (bytes.Length > 255)
 			{
-				status.Text = "表情名称过长";
+				status.Text = "That expression name is too long.";
 				return;
 			}
 			Array.Copy(bytes, array, bytes.Length);
@@ -320,6 +320,6 @@ public sealed class PhotoFaceView : StackPanel, IDisposable
 		playing = false;
 		playback.Stop();
 		playbackTimer.Stop();
-		play.Content = "播放表情";
+		play.Content = "Play Expression";
 	}
 }

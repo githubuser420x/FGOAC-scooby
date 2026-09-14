@@ -10,7 +10,7 @@ public sealed record PhotoGazeProfile(PhotoGazeChannel Head, PhotoGazeChannel Ey
 	{
 		if (bones.Select((PhotoRigBone b) => b.Index).Distinct().Count() != bones.Count || bones.Select((PhotoRigBone b) => b.Name).Distinct<string>(StringComparer.Ordinal).Count() != bones.Count)
 		{
-			return new PhotoGazeProfile(Unsupported("骨架节点不唯一"), Unsupported("骨架节点不唯一"));
+			return new PhotoGazeProfile(Unsupported("The skeleton lists the same bone twice."), Unsupported("The skeleton lists the same bone twice."));
 		}
 		Dictionary<string, PhotoRigBone> bones2 = bones.ToDictionary<PhotoRigBone, string>((PhotoRigBone b) => b.Name, StringComparer.Ordinal);
 		return new PhotoGazeProfile(ResolveChannel(head, bones2, eyes: false), ResolveChannel(eyes, bones2, eyes: true));
@@ -26,7 +26,7 @@ public sealed record PhotoGazeProfile(PhotoGazeChannel Head, PhotoGazeChannel Ey
 		PhotoLookDescriptor[] array = descriptors.Where((PhotoLookDescriptor d) => d.Parameters.Length == 12 && d.Parameters[0] > 0f).ToArray();
 		if (array.Length == 0)
 		{
-			return Unsupported("该骨架没有有效的原生注视节点");
+			return Unsupported("This skeleton has no usable built-in look-at bones.");
 		}
 		float num = float.PositiveInfinity;
 		List<int> list = new List<int>();
@@ -49,7 +49,7 @@ public sealed record PhotoGazeProfile(PhotoGazeChannel Head, PhotoGazeChannel Ey
 			}
 			if (flag3 || photoLookDescriptor.ForwardAxis == photoLookDescriptor.UpAxis || photoLookDescriptor.Parameters.Any((float v) => !float.IsFinite(v)))
 			{
-				return Unsupported("原生注视配置与当前骨架不匹配");
+				return Unsupported("The built-in look-at setup does not match this skeleton.");
 			}
 			if (eyes)
 			{
@@ -65,25 +65,25 @@ public sealed record PhotoGazeProfile(PhotoGazeChannel Head, PhotoGazeChannel Ey
 			}
 			if (!flag3)
 			{
-				return Unsupported("尚未确认该骨架的注视节点类型");
+				return Unsupported("The look-at bones on this skeleton are not ones we recognize.");
 			}
 			float num3 = photoLookDescriptor.Parameters.Skip(1).Take(7).Select(MathF.Abs)
 				.Min();
 			if (num3 <= 0f || num3 >= 180f)
 			{
-				return Unsupported("原生注视角度无效");
+				return Unsupported("The built-in look-at angle limits are not valid.");
 			}
 			num = MathF.Min(num, num3);
 			list.Add(value.Index);
 		}
 		if (eyes && (array.Length != 2 || !array.Any((PhotoLookDescriptor d) => d.Name == "eye_l") || !array.Any((PhotoLookDescriptor d) => d.Name == "eye_r")))
 		{
-			return Unsupported("缺少左右独立眼球节点");
+			return Unsupported("This skeleton has no separate left and right eye bones.");
 		}
 		if (!eyes && !array.Any((PhotoLookDescriptor d) => d.Name == "head"))
 		{
-			return Unsupported("缺少独立头部节点");
+			return Unsupported("This skeleton has no separate head bone.");
 		}
-		return new PhotoGazeChannel(Supported: true, list.ToArray(), num, "原生节点与限位匹配");
+		return new PhotoGazeChannel(Supported: true, list.ToArray(), num, "Built-in bones and angle limits match.");
 	}
 }

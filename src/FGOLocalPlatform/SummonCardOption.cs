@@ -49,15 +49,15 @@ public sealed class SummonCardOption : INotifyPropertyChanged
 			{
 				if (!(Category == "supplemental"))
 				{
-					return "普通召唤";
+					return "Regular Summon";
 				}
-				return "补充获取";
+				return "Supplemental";
 			}
-			return "剧情固定";
+			return "Story (fixed)";
 		}
 	}
 
-	public string KindName => ((Kind == 1) ? "从者" : "概念礼装") + ((HoloType == 1) ? " · Fatal" : "");
+	public string KindName => ((Kind == 1) ? "Servant" : "Craft Essence") + ((HoloType == 1) ? " · Fatal" : "");
 
 	public string Stars => $"★ {Rarity}";
 
@@ -113,7 +113,7 @@ public sealed class SummonCardOption : INotifyPropertyChanged
 				}
 				return "—";
 			}
-			return "剧情发放";
+			return "Story reward";
 		}
 	}
 

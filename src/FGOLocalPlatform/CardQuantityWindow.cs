@@ -21,10 +21,10 @@ public partial class CardQuantityWindow : Window, IComponentConnector
 		Maximum = maximum;
 		InitializeComponent();
 		CardNameText.Text = cardName;
-		base.Title = (add ? "选择加入数量" : "选择移出数量");
+		base.Title = (add ? "Choose Quantity to Add" : "Choose Quantity to Remove");
 		WindowTheme.Apply(this);
-		ConfirmButton.Content = (add ? "加入卡组" : "移出卡组");
-		LimitText.Text = (add ? $"本次可加入 1–{maximum} 张（受剩余数量及卡组 30 张上限限制）" : $"已选 {maximum} 张，请选择本次移出的数量。");
+		ConfirmButton.Content = (add ? "Add to Deck" : "Remove from Deck");
+		LimitText.Text = (add ? $"You can add 1 to {maximum} now, limited by what is left and the 30-card deck cap." : $"{maximum} in the deck - choose how many to remove.");
 		ValidateQuantity();
 		base.Loaded += delegate
 		{
@@ -42,7 +42,7 @@ public partial class CardQuantityWindow : Window, IComponentConnector
 		int result;
 		bool flag = int.TryParse(QuantityInput.Text, NumberStyles.None, CultureInfo.InvariantCulture, out result) && result >= 1 && result <= Maximum;
 		ConfirmButton.IsEnabled = flag;
-		ValidationText.Text = (flag ? "" : $"请输入 1–{Maximum} 之间的整数。");
+		ValidationText.Text = (flag ? "" : $"Enter a whole number from 1 to {Maximum}.");
 		Quantity = (flag ? result : 0);
 		return flag;
 	}

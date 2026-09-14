@@ -121,7 +121,7 @@ public partial class SummonSettingsWindow : UserControl, IComponentConnector
 		if (e.Row.Item is SummonCardOption { IsStory: not false })
 		{
 			e.Cancel = true;
-			StatusText.Text = "剧情固定卡只读，不可加入随机池。";
+			StatusText.Text = "Story-fixed cards are read-only and cannot be added to the random pool.";
 		}
 	}
 
@@ -145,7 +145,7 @@ public partial class SummonSettingsWindow : UserControl, IComponentConnector
 				JsonNode? jsonNode = jsonObject["version"];
 				if (jsonNode == null || jsonNode.GetValue<int>() != 1 || !(jsonObject["weights"] is JsonObject jsonObject3))
 				{
-					throw new InvalidDataException("配置版本或格式不正确");
+					throw new InvalidDataException("the config version or format is wrong");
 				}
 				jsonObject2 = jsonObject3;
 				HashSet<string> hashSet = (from c in cards
@@ -155,12 +155,12 @@ public partial class SummonSettingsWindow : UserControl, IComponentConnector
 				{
 					if (!hashSet.Contains(item.Key) || !(item.Value is JsonValue jsonValue) || !jsonValue.TryGetValue<int>(out var value) || value < 0 || value > 1000000)
 					{
-						throw new InvalidDataException("卡牌 " + item.Key + " 不可抽取或权重无效");
+						throw new InvalidDataException("Card " + item.Key + " cannot be drawn, or its weight is invalid");
 					}
 				}
 				if (!jsonObject2.Any<KeyValuePair<string, JsonNode>>((KeyValuePair<string, JsonNode> pair) => pair.Value.GetValue<int>() > 0))
 				{
-					throw new InvalidDataException("至少一张卡的权重需要大于 0");
+					throw new InvalidDataException("at least one card needs a weight above 0");
 				}
 			}
 			batching = true;
@@ -172,7 +172,7 @@ public partial class SummonSettingsWindow : UserControl, IComponentConnector
 			loadedText = text;
 			dirty = false;
 			Recalculate();
-			StatusText.Text = ((text == null) ? "尚未保存自定义配置：默认所有候选卡平均抽取。" : "已读取保存配置。正在进行中的抽卡及其重试保持原结果。");
+			StatusText.Text = ((text == null) ? "No custom rates saved yet - every drawable card has the same chance." : "Saved rates loaded. A draw already under way, and its retries, keep their original result.");
 		}
 		catch (Exception ex)
 		{
@@ -180,7 +180,7 @@ public partial class SummonSettingsWindow : UserControl, IComponentConnector
 			loadedText = (File.Exists(settingsPath) ? File.ReadAllText(settingsPath) : null);
 			dirty = true;
 			Recalculate();
-			StatusText.Text = "读取失败：" + ex.Message + "。服务器会拒绝无效配置；可编辑后保存修复。";
+			StatusText.Text = "Could not read the rates: " + ex.Message + ". The server rejects an invalid file - fix the values here and save.";
 		}
 	}
 
@@ -194,10 +194,10 @@ public partial class SummonSettingsWindow : UserControl, IComponentConnector
 		}
 		SaveButton.IsEnabled = flag && num > 0m;
 		decimal num2 = cards.Where((SummonCardOption c) => c.Kind == 1).Sum((Func<SummonCardOption, decimal>)((SummonCardOption c) => c.Weight));
-		SummaryText.Text = ((!flag) ? "权重请输入 0～1,000,000 的整数；不能保存无效输入。" : ((num <= 0m) ? "所有卡均被排除，请至少启用一张。" : $"可抽取 {cards.Count((SummonCardOption c) => !c.IsStory)} 张 · 剧情隔离 {cards.Count((SummonCardOption c) => c.IsStory)} 张 · 启用 {cards.Count((SummonCardOption c) => c.Weight > 0)} 张  |  从者 {num2 * 100m / num:0.####}% · 礼装 {(num - num2) * 100m / num:0.####}%  |  总概率 100%"));
+		SummaryText.Text = ((!flag) ? "Enter each weight as a whole number from 0 to 1,000,000 - invalid input cannot be saved." : ((num <= 0m) ? "Every card is excluded - enable at least one." : $"{cards.Count((SummonCardOption c) => !c.IsStory)} drawable · {cards.Count((SummonCardOption c) => c.IsStory)} story-fixed · {cards.Count((SummonCardOption c) => c.Weight > 0)} enabled  |  Servant {num2 * 100m / num:0.####}% · Craft Essence {(num - num2) * 100m / num:0.####}%  |  total 100%"));
 		if (dirty)
 		{
-			StatusText.Text = "有未保存修改。保存后，服务器下一笔新抽卡读取新配置；当前配置页不会实际抽卡。";
+			StatusText.Text = "You have unsaved changes. Once saved, the server uses the new rates on its next draw. This page only sets draw rates. It does not draw or grant any cards.";
 		}
 	}
 
@@ -224,13 +224,13 @@ public partial class SummonSettingsWindow : UserControl, IComponentConnector
 	{
 		if (CardsGrid.SelectedItems.Count != 1)
 		{
-			StatusText.Text = "请先选中一张卡，再设置 100%。";
+			StatusText.Text = "Select one card first, then set it to 100%.";
 			return;
 		}
 		SummonCardOption selected = (SummonCardOption)CardsGrid.SelectedItem;
 		if (selected.IsStory)
 		{
-			StatusText.Text = "剧情固定卡不能设置为随机抽取。";
+			StatusText.Text = "A story-fixed card cannot be set to draw randomly.";
 			return;
 		}
 		SetWeights((SummonCardOption c) => (c == selected) ? 1 : 0);
@@ -243,7 +243,7 @@ public partial class SummonSettingsWindow : UserControl, IComponentConnector
 			select c).ToHashSet();
 		if (selected.Count == 0)
 		{
-			StatusText.Text = "请先选择要平均抽取的卡。";
+			StatusText.Text = "Select the cards that should share the chance first.";
 			return;
 		}
 		SetWeights((SummonCardOption c) => selected.Contains(c) ? 1 : 0);
@@ -254,12 +254,12 @@ public partial class SummonSettingsWindow : UserControl, IComponentConnector
 		HashSet<SummonCardOption> selected = CardsGrid.SelectedItems.Cast<SummonCardOption>().ToHashSet();
 		if (selected.Count == 0)
 		{
-			StatusText.Text = "请先选择要排除的卡。";
+			StatusText.Text = "Select the cards to exclude first.";
 			return;
 		}
 		if (cards.Any((SummonCardOption c) => !c.Valid))
 		{
-			StatusText.Text = "请先修正无效权重。";
+			StatusText.Text = "Fix the invalid weights first.";
 			return;
 		}
 		SetWeights((SummonCardOption c) => (!selected.Contains(c)) ? c.Weight : 0);
@@ -280,7 +280,7 @@ public partial class SummonSettingsWindow : UserControl, IComponentConnector
 		{
 			if ((File.Exists(settingsPath) ? File.ReadAllText(settingsPath) : null) != loadedText)
 			{
-				throw new IOException("配置已被其他窗口修改，请重新读取后再编辑。");
+				throw new IOException("Another window changed the rates file - click Reload before editing.");
 			}
 			JsonObject jsonObject = new JsonObject();
 			foreach (SummonCardOption item in cards.Where((SummonCardOption c) => !c.IsStory))
@@ -318,11 +318,11 @@ public partial class SummonSettingsWindow : UserControl, IComponentConnector
 			}
 			loadedText = contents;
 			dirty = false;
-			StatusText.Text = "已保存到服务器配置。支持此功能的服务器下一笔新抽卡直接生效，无须重启游戏；替换旧服务器代码后需先重启服务器一次。";
+			StatusText.Text = "Saved to the server config. A server that supports this picks the rates up on its next draw, with no need to restart the game; if you have just replaced older server code, restart the server once.";
 		}
 		catch (Exception ex)
 		{
-			StatusText.Text = "保存失败，原配置未替换：" + ex.Message;
+			StatusText.Text = "Could not save - the existing file was left unchanged: " + ex.Message;
 		}
 	}
 
@@ -330,7 +330,7 @@ public partial class SummonSettingsWindow : UserControl, IComponentConnector
 	{
 		if (dirty)
 		{
-			return ThemedMessageBox.Show("放弃尚未保存的概率修改？", "统一抽卡概率", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;
+			return ThemedMessageBox.Show("Discard the unsaved draw-rate changes?", "Draw Rates", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;
 		}
 		return true;
 	}

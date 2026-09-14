@@ -68,12 +68,12 @@ public sealed class FarcArchive
 				}
 				if (num == 0 || num > entry.CompressedSize)
 				{
-					throw new FgoFormatException($"{entry.Name} 含有无效分段长度：{num}");
+					throw new FgoFormatException($"{entry.Name} gives an invalid compressed chunk length: {num}");
 				}
 				list2.Add(checked((int)num));
 				if (list2.Count > 1000000)
 				{
-					throw new FgoFormatException(entry.Name + " 的压缩分段数量异常。");
+					throw new FgoFormatException(entry.Name + " is split into far too many compressed chunks.");
 				}
 			}
 			fileStream.Position -= 4L;
@@ -110,7 +110,7 @@ public sealed class FarcArchive
 		}
 		catch (Exception ex) when (!(ex is FgoFormatException) && !(ex is OutOfMemoryException))
 		{
-			throw new FgoFormatException("无法解压 " + entry.Name + "：" + ex.Message, ex);
+			throw new FgoFormatException("Could not decompress " + entry.Name + ": " + ex.Message, ex);
 		}
 		byte[] array = new byte[list.Sum((byte[] chunk) => chunk.Length)];
 		int num2 = 0;
@@ -121,7 +121,7 @@ public sealed class FarcArchive
 		}
 		if (entry.UncompressedSize > 0 && array.Length != entry.UncompressedSize)
 		{
-			throw new FgoFormatException($"{entry.Name} 解压尺寸不匹配：实际 {array.Length:N0}，预期 {entry.UncompressedSize:N0}");
+			throw new FgoFormatException($"{entry.Name} unpacked to the wrong size: got {array.Length:N0} bytes, expected {entry.UncompressedSize:N0}");
 		}
 		return array;
 	}
@@ -139,7 +139,7 @@ public sealed class FarcArchive
 		string magic = Magic;
 		if ((!(magic == "FARc") && !(magic == "FARC")) || 1 == 0)
 		{
-			throw new FgoFormatException("不是 FARC 文件：" + Magic);
+			throw new FgoFormatException("This is not a FARC file: " + Magic);
 		}
 		checked
 		{
@@ -152,7 +152,7 @@ public sealed class FarcArchive
 			ReadUInt32BigEndian(stream);
 			if ((num < 0 || num > 1000000) ? true : false)
 			{
-				throw new FgoFormatException($"FARC 条目数量异常：{num}");
+				throw new FgoFormatException($"The FARC file count is out of range: {num}");
 			}
 			List<FarcEntry> list = new List<FarcEntry>(num);
 			for (int i = 0; i < num; i = unchecked(i + 1))
@@ -185,7 +185,7 @@ public sealed class FarcArchive
 			int num = stream.ReadByte();
 			if (num < 0)
 			{
-				throw new FgoFormatException("FARC 条目名称被截断。");
+				throw new FgoFormatException("A FARC entry name runs off the end of the file.");
 			}
 			if (num == 0)
 			{

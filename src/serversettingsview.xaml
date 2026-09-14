@@ -2,8 +2,8 @@
 <UserControl x:Class="FGOLocalPlatform.ServerSettingsView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:fgolocalplatform="clr-namespace:FGOLocalPlatform;assembly=FGOLocalPlatform" Loaded="View_OnLoaded">
   <ScrollViewer VerticalScrollBarVisibility="Auto">
     <StackPanel Margin="20" MaxWidth="720" HorizontalAlignment="Stretch">
-      <TextBlock Text="本地服务器" FontSize="22" FontWeight="Bold" Margin="0,0,0,12" />
-      <TextBlock Text="auto 使用内置虚拟网络直连本机服务器，断网也可启动；填写其他 IPv4 地址时使用远程服务器。" TextWrapping="Wrap" Margin="0,0,0,16" />
+      <TextBlock Text="Local Server" FontSize="22" FontWeight="Bold" Margin="0,0,0,12" />
+      <TextBlock Text="auto reaches the server on this PC through the built-in virtual network and works with no internet. Enter another IPv4 address to use a remote server instead." TextWrapping="Wrap" Margin="0,0,0,16" />
       <Grid>
         <FrameworkElement.Resources>
           <ResourceDictionary>
@@ -13,7 +13,7 @@
           </ResourceDictionary>
         </FrameworkElement.Resources>
         <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="190" />
+          <ColumnDefinition Width="220" />
           <ColumnDefinition Width="280" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -23,25 +23,25 @@
           <RowDefinition Height="44" />
           <RowDefinition Height="44" />
         </Grid.RowDefinitions>
-        <TextBlock Text="服务器地址（auto 离线）" VerticalAlignment="Center" />
+        <TextBlock Text="Server address (auto = offline)" VerticalAlignment="Center" />
         <TextBox Name="HostBox" Grid.Column="1" Margin="0,5" VerticalContentAlignment="Center" />
-        <TextBlock Text="游戏 / ALL.Net 端口" Grid.Row="1" VerticalAlignment="Center" />
+        <TextBlock Text="Game / ALL.Net port" Grid.Row="1" VerticalAlignment="Center" />
         <TextBox Name="HttpBox" Grid.Row="1" Grid.Column="1" Margin="0,5" VerticalContentAlignment="Center" />
-        <TextBlock Text="计费 HTTPS 端口" Grid.Row="2" VerticalAlignment="Center" />
+        <TextBlock Text="Billing HTTPS port" Grid.Row="2" VerticalAlignment="Center" />
         <TextBox Name="BillingBox" Grid.Row="2" Grid.Column="1" Margin="0,5" VerticalContentAlignment="Center" />
-        <TextBlock Text="Aime 读卡端口" Grid.Row="3" VerticalAlignment="Center" />
+        <TextBlock Text="Aime card reader port" Grid.Row="3" VerticalAlignment="Center" />
         <TextBox Name="AimeBox" Grid.Row="3" Grid.Column="1" Margin="0,5" VerticalContentAlignment="Center" />
-        <TextBlock Text="本地数据库端口" Grid.Row="4" VerticalAlignment="Center" />
+        <TextBlock Text="Local database port" Grid.Row="4" VerticalAlignment="Center" />
         <TextBox Name="DatabaseBox" Grid.Row="4" Grid.Column="1" Margin="0,5" VerticalContentAlignment="Center" />
       </Grid>
       <WrapPanel Margin="0,16,0,16">
-        <Button Content="保存服务器设置" Width="160" Height="40" Padding="12,8" Margin="0,0,8,0" Click="Configure_OnClick" />
-        <Button Content="恢复默认值" Width="160" Height="40" Padding="12,8" Margin="0,0,8,0" Click="Defaults_OnClick" />
-        <Button Content="刷新配置状态" Width="160" Height="40" Padding="12,8" Click="Refresh_OnClick" />
+        <Button Content="Save Settings" Width="160" Height="40" Padding="12,8" Margin="0,0,8,0" Click="Configure_OnClick" />
+        <Button Content="Restore Defaults" Width="160" Height="40" Padding="12,8" Margin="0,0,8,0" Click="Defaults_OnClick" />
+        <Button Content="Refresh Status" Width="160" Height="40" Padding="12,8" Click="Refresh_OnClick" />
       </WrapPanel>
-      <TextBlock Text="端口范围 1–65535，各项不能重复。保存时会停止本地服务器，请先退出游戏。保存和打开前端都不会启动服务器。恢复默认值不会立即写入，点击“保存服务器设置”后生效。" TextWrapping="Wrap" Foreground="#FFB0C4DE" Margin="0,0,0,16" />
+      <TextBlock Text="Ports must be whole numbers from 1 to 65535 and no two services can share one. Saving stops the local server, so quit the game first. Neither saving nor opening this page starts the server. Restore Defaults only fills in the boxes - click Save Settings to apply them." TextWrapping="Wrap" Foreground="#FFB0C4DE" Margin="0,0,0,16" />
       <Border BorderBrush="#49364F" BorderThickness="1" Background="#141019" Padding="14">
-        <TextBlock Name="InfoText" Text="正在读取配置…" TextWrapping="Wrap" />
+        <TextBlock Name="InfoText" Text="Reading configuration..." TextWrapping="Wrap" />
       </Border>
     </StackPanel>
   </ScrollViewer>

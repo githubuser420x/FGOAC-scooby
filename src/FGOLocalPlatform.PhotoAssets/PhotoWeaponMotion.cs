@@ -21,7 +21,7 @@ public static class PhotoWeaponMotion
 		int num2 = ipc.ReadInt32(77888L);
 		if ((num & 1) != 0 || num2 < 0 || num2 > 10)
 		{
-			throw new IOException("武器快照正在更新，请重新选择动作");
+			throw new IOException("The weapon data is still updating - pick the motion again.");
 		}
 		List<PhotoWeaponRig> list = new List<PhotoWeaponRig>();
 		for (int i = 0; i < num2; i++)
@@ -43,7 +43,7 @@ public static class PhotoWeaponMotion
 		}
 		if (ipc.ReadInt32(8L) != num)
 		{
-			throw new IOException("武器快照正在更新，请重新选择动作");
+			throw new IOException("The weapon data is still updating - pick the motion again.");
 		}
 		return list.ToArray();
 	}
@@ -55,7 +55,7 @@ public static class PhotoWeaponMotion
 		int num = Array.IndexOf(array, (byte)0);
 		if (num < 0)
 		{
-			throw new IOException("武器骨架名称无效");
+			throw new IOException("The weapon bone name is not valid.");
 		}
 		return Encoding.UTF8.GetString(array, 0, num);
 	}

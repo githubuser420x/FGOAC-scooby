@@ -103,15 +103,15 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 				{
 					if (accountMode == "normal")
 					{
-						return "普通";
+						return "Normal";
 					}
 					return AccountMode;
 				}
-				return "全角色测试";
+				return "All Servants (test)";
 			}
 		}
 
-		public string DisplayText => $"{MasterName} (ID {AimeId}) · Lv.{MasterLevel} · {ModeLabel}{(IsCurrent ? "（当前）" : "")}";
+		public string DisplayText => $"{MasterName} (ID {AimeId}) - Lv.{MasterLevel} - {ModeLabel}{(IsCurrent ? " (current)" : "")}";
 
 		public override string ToString()
 		{
@@ -149,9 +149,9 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			{
 				if (CardTypeId != 2)
 				{
-					return "从者";
+					return "Servant";
 				}
-				return "概念礼装";
+				return "Craft Essence";
 			}
 		}
 
@@ -173,7 +173,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			{
 				if (DrawCount <= 1)
 				{
-					return "单抽";
+					return "Single";
 				}
 				return $"{DrawIndex}/{DrawCount}";
 			}
@@ -181,12 +181,12 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 
 		public string PoolLabel => LotteryType switch
 		{
-			2 => "友情点", 
-			3 => "战斗", 
+			2 => "Friend Point", 
+			3 => "Battle", 
 			5 => $"Pickup {LineupId}", 
-			6 => "Summon Point 单抽", 
-			7 => "Summon Point 十连", 
-			_ => (LineupId > 0) ? $"卡池 {LineupId}" : "历史记录", 
+			6 => "Summon Point x1", 
+			7 => "Summon Point x10", 
+			_ => (LineupId > 0) ? $"Pool {LineupId}" : "History", 
 		};
 	}
 
@@ -518,7 +518,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		windowClosing = true;
 		statusTimer.Stop();
 		launcherOutputTimer.Stop();
-		RuntimeStatusText.Text = "正在关闭前端并清理本地服务器…";
+		RuntimeStatusText.Text = "Closing the launcher and shutting down the local server...";
 		try
 		{
 			SaveLayoutSettings();
@@ -534,7 +534,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 				string fullPath = Path.GetFullPath(Path.Combine(GamePaths.GameRoot, "..", "Server", "Stop-FGOLocalServerWhenIdle.ps1"));
 				if (!File.Exists(fullPath))
 				{
-					throw new FileNotFoundException("缺少游戏退出后的服务器清理脚本", fullPath);
+					throw new FileNotFoundException("The server cleanup script that runs after the game exits is missing", fullPath);
 				}
 				ProcessStartInfo processStartInfo = new ProcessStartInfo(PowerShellHost.Executable)
 				{
@@ -556,18 +556,18 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 				{
 					processStartInfo.ArgumentList.Add(item);
 				}
-				using (Process.Start(processStartInfo) ?? throw new IOException("无法启动服务器退出清理程序"))
+				using (Process.Start(processStartInfo) ?? throw new IOException("Could not start the server cleanup process"))
 				{
 				}
 			}
 		}
 		catch (Exception ex)
 		{
-			AppendServerControlLog("关闭前端：" + ex.Message);
+			AppendServerControlLog("Closing the launcher: " + ex.Message);
 			windowClosing = false;
 			statusTimer.Start();
 			launcherOutputTimer.Start();
-			RuntimeStatusText.Text = "未能完全关闭服务器，前端已保留：" + ex.Message;
+			RuntimeStatusText.Text = "The server did not shut down completely and the launcher stayed open: " + ex.Message;
 			return;
 		}
 		closeReady = true;
@@ -609,7 +609,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		}
 		catch (Exception ex)
 		{
-			ThemedMessageBox.Show(this, "无法打开链接：" + ex.Message, "关于", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+			ThemedMessageBox.Show(this, "Could not open the link: " + ex.Message, "About", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 		}
 	}
 
@@ -656,14 +656,14 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		config.Save(Path.Combine(GamePaths.GameRoot, "deck.json"));
 		if (!GameCommunication.UpdateCards(cardCollection.SelectedCards))
 		{
-			RuntimeStatusText.Text = "共享卡组忙；游戏将回退读取 deck.json";
+			RuntimeStatusText.Text = "The shared deck buffer is busy - the game will read deck.json instead";
 		}
 		UpdateDeckStatus();
 	}
 
 	private void UpdateDeckStatus()
 	{
-		DeckStatusText.Text = $"已同步卡组：{cardCollection.SelectedCards.Count}/{30} 张 · FGO 11.00 格式 6";
+		DeckStatusText.Text = $"Deck synced: {cardCollection.SelectedCards.Count}/{30} cards - FGO 11.00 format 6";
 	}
 
 	private void Reload()
@@ -727,11 +727,11 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		int value2 = availableCardStacks.Count((CardStack stack) => stack.Card.CardTypeId == 2);
 		string value3 = selectedCardType switch
 		{
-			1 => $"从者 {value:N0}", 
-			2 => $"礼装 {value2:N0}", 
-			_ => $"从者 {value:N0} / 礼装 {value2:N0}", 
+			1 => $"Servants {value:N0}", 
+			2 => $"Craft Essences {value2:N0}", 
+			_ => $"Servants {value:N0} / Craft Essences {value2:N0}", 
 		};
-		CardCatalogSummaryText.Text = (ownedOnly ? $"{value3} · 可见 {count:N0} 种 · 双击选择类型与数量" : $"{value3} · 可见 {count:N0} 种 · 双击选择类型与数量");
+		CardCatalogSummaryText.Text = (ownedOnly ? $"{value3} - {count:N0} shown - double-click to pick art and quantity" : $"{value3} - {count:N0} shown - double-click to pick art and quantity");
 	}
 
 	private int SelectedCardTypeId()
@@ -882,9 +882,9 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		{
 			var (value, num) = await Task.Run(() => Card.WarmThumbnailCache(cards, delegate(int processed, int total)
 			{
-				((DispatcherObject)this).Dispatcher.BeginInvoke((Delegate)(Func<object>)(() => BuildThumbnailCacheButton.Content = $"缓存 {processed:N0}/{total:N0}"), Array.Empty<object>());
+				((DispatcherObject)this).Dispatcher.BeginInvoke((Delegate)(Func<object>)(() => BuildThumbnailCacheButton.Content = $"Caching {processed:N0}/{total:N0}"), Array.Empty<object>());
 			}));
-			BuildThumbnailCacheButton.Content = ((num == 0) ? $"缓存完成 +{value:N0}" : $"完成 +{value:N0} / 失败 {num:N0}");
+			BuildThumbnailCacheButton.Content = ((num == 0) ? $"Cached +{value:N0}" : $"Done +{value:N0} / failed {num:N0}");
 		}
 		finally
 		{
@@ -948,10 +948,10 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			bool gameRunning = (lastKnownGameRunning = IsThisGameRunning());
 			int[] configuredPorts = ServerSettingsView.ConfiguredPorts().Take(3).ToArray();
 			bool[] source = await Task.WhenAll(configuredPorts.Select(IsPortOpenAsync));
-			string text = (source.All((bool value) => value) ? ("服务器 " + string.Join('/', configuredPorts) + " 正常") : ("服务器端口 " + string.Join('/', source.Select((bool value) => (!value) ? "×" : "✓"))));
+			string text = (source.All((bool value) => value) ? ("Server " + string.Join('/', configuredPorts) + " OK") : ("Server ports " + string.Join('/', source.Select((bool value) => (!value) ? "down" : "up"))));
 			if (!serverConfiguring && !stoppingServer && !windowClosing)
 			{
-				RuntimeStatusText.Text = text + " · 游戏" + (gameRunning ? "运行中" : "未运行");
+				RuntimeStatusText.Text = text + " - Game " + (gameRunning ? "running" : "not running");
 			}
 			StartGameButton.IsEnabled = !gameRunning && !launcherProcessRunning && !serverConfiguring && !stoppingServer && !windowClosing;
 			StopGameButton.IsEnabled = gameRunning || launcherProcessRunning;
@@ -998,7 +998,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 	{
 		if (!File.Exists(path))
 		{
-			return "等待日志文件：" + path;
+			return "Waiting for the log file: " + path;
 		}
 		try
 		{
@@ -1015,11 +1015,11 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		}
 		catch (IOException ex)
 		{
-			return "日志暂时被占用：" + ex.Message;
+			return "The log file is busy right now: " + ex.Message;
 		}
 		catch (UnauthorizedAccessException ex2)
 		{
-			return "无法读取日志：" + ex2.Message;
+			return "Could not read the log: " + ex2.Message;
 		}
 	}
 
@@ -1092,7 +1092,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 
 	private static Process StartPowerShellScript(string scriptPath, params string[] arguments)
 	{
-		return Process.Start(CreatePowerShellStartInfo(scriptPath, redirectOutput: false, arguments)) ?? throw new InvalidOperationException("无法启动 " + scriptPath);
+		return Process.Start(CreatePowerShellStartInfo(scriptPath, redirectOutput: false, arguments)) ?? throw new InvalidOperationException("Could not start " + scriptPath);
 	}
 
 	private static CapturedProcess StartCapturedPowerShellScript(string scriptPath, Action<string, bool> onOutputLine, params string[] arguments)
@@ -1129,7 +1129,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		{
 			if (!process.Start())
 			{
-				throw new InvalidOperationException("无法启动 " + scriptPath);
+				throw new InvalidOperationException("Could not start " + scriptPath);
 			}
 			process.BeginOutputReadLine();
 			process.BeginErrorReadLine();
@@ -1164,7 +1164,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		launcherLogOwned = true;
 		injectionLogSnapshot = "";
 		InjectionLogTextBox.Clear();
-		AppendInjectionLog("[launcher] 启动 " + Path.GetFileName(launcherPath) + "；正在接收 stdout / stderr…" + Environment.NewLine);
+		AppendInjectionLog("[launcher] Starting " + Path.GetFileName(launcherPath) + "; receiving stdout / stderr..." + Environment.NewLine);
 		launcherOutputTimer.Start();
 	}
 
@@ -1173,7 +1173,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		string text = (standardError ? ("[stderr] " + line + Environment.NewLine) : (line + Environment.NewLine));
 		if (text.Length > 32768)
 		{
-			text = "[launcher] …单行输出已截断…" + Environment.NewLine + text.Substring(text.Length - 32768);
+			text = "[launcher] ...single line of output truncated..." + Environment.NewLine + text.Substring(text.Length - 32768);
 		}
 		lock (launcherOutputLock)
 		{
@@ -1190,7 +1190,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 
 	private void CompleteLauncherOutputCapture(int exitCode)
 	{
-		QueueLauncherOutput($"[launcher] PowerShell 已退出：{exitCode} (0x{(uint)exitCode:X8})", exitCode != 0);
+		QueueLauncherOutput($"[launcher] PowerShell exited: {exitCode} (0x{(uint)exitCode:X8})", exitCode != 0);
 		lock (launcherOutputLock)
 		{
 			launcherOutputCompleted = true;
@@ -1205,7 +1205,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		{
 			if (launcherDroppedLineCount > 0)
 			{
-				stringBuilder.Append("[launcher] 输出过快，界面已丢弃较早的 ").Append(launcherDroppedLineCount).Append(" 行；日志文件仍保留脚本写入的内容。")
+				stringBuilder.Append("[launcher] Output too fast - the panel dropped the oldest ").Append(launcherDroppedLineCount).Append(" lines; the log file still has everything the script wrote.")
 					.AppendLine();
 				launcherDroppedLineCount = 0;
 			}
@@ -1239,7 +1239,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			{
 				startIndex = num + 1;
 			}
-			InjectionLogTextBox.Text = "[launcher] …界面仅保留最新输出，完整记录请查看 logs…" + Environment.NewLine + text2.Substring(startIndex);
+			InjectionLogTextBox.Text = "[launcher] ...the panel keeps only the newest output, see logs for the full record..." + Environment.NewLine + text2.Substring(startIndex);
 		}
 		injectionLogSnapshot = InjectionLogTextBox.Text;
 		InjectionLogTextBox.CaretIndex = InjectionLogTextBox.Text.Length;
@@ -1254,7 +1254,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		}
 		if (Process.GetProcessesByName("ago").Length != 0 || launcherProcessRunning)
 		{
-			ThemedMessageBox.Show("请先退出游戏，再配置服务器。", "服务器设置");
+			ThemedMessageBox.Show("Quit the game before changing the server settings.", "Server Settings");
 			return;
 		}
 		serverConfiguring = true;
@@ -1272,7 +1272,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 				Path.GetFullPath(Path.Combine(GamePaths.GameRoot, "..", "Server"));
 				if (await RunServerCommandAsync(start: false) != 0)
 				{
-					throw new IOException("服务器未能停止，配置尚未修改。请查看 logs/server-control.log。");
+					throw new IOException("The server did not stop, so the settings were not changed - see logs/server-control.log.");
 				}
 				if (windowClosing)
 				{
@@ -1282,7 +1282,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 				await ServerSettingsPanel.ReloadAsync();
 				await RefreshRuntimeStatusAsync();
 				await RefreshAccountsAsync(showErrors: false);
-				ThemedMessageBox.Show("服务器设置已保存。点击“服务器启动 / 检查”或“启动游戏”时才会启动服务。", "服务器设置");
+				ThemedMessageBox.Show("Server settings saved. The server starts when you click Start / Check Server or Play.", "Server Settings");
 				goto end_IL_0091;
 				end_IL_00b4:;
 			}
@@ -1290,7 +1290,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			{
 				if (!windowClosing)
 				{
-					ThemedMessageBox.Show(ex.Message, "服务器设置", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+					ThemedMessageBox.Show(ex.Message, "Server Settings", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 				}
 				goto end_IL_0091;
 			}
@@ -1313,16 +1313,16 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		string fullPath = Path.GetFullPath(Path.Combine(GamePaths.GameRoot, "..", "Server", "Start-FGOLocalServer.ps1"));
 		if (!File.Exists(fullPath))
 		{
-			ThemedMessageBox.Show("服务器启动脚本不存在：\n" + fullPath, "FGO 本地平台", MessageBoxButton.OK, MessageBoxImage.Hand);
+			ThemedMessageBox.Show("The server start script is missing:\n" + fullPath, "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Hand);
 			return;
 		}
 		serverConfiguring = true;
-		RuntimeStatusText.Text = "正在启动并检查本地服务器…";
+		RuntimeStatusText.Text = "Starting and checking the local server...";
 		try
 		{
 			if (await RunServerCommandAsync(start: true) != 0 && !windowClosing)
 			{
-				ThemedMessageBox.Show(StartupDiagnostics.Explain(10) + "\n\n" + ReadTail(Path.Combine(GamePaths.LogsRoot, "server-control.log")), "服务器启动失败", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+				ThemedMessageBox.Show(StartupDiagnostics.Explain(10) + "\n\n" + ReadTail(Path.Combine(GamePaths.LogsRoot, "server-control.log")), "Server Did Not Start", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 			}
 		}
 		catch (OperationCanceledException)
@@ -1332,7 +1332,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		{
 			if (!windowClosing)
 			{
-				ThemedMessageBox.Show(ex2.Message, "服务器启动失败", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+				ThemedMessageBox.Show(ex2.Message, "Server Did Not Start", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 			}
 		}
 		finally
@@ -1362,7 +1362,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 	{
 		if (serverCommandTask != null)
 		{
-			throw new InvalidOperationException("服务器控制命令尚未结束。");
+			throw new InvalidOperationException("The previous server control command has not finished.");
 		}
 		using CancellationTokenSource cancellation = new CancellationTokenSource();
 		serverCommandCancellation = cancellation;
@@ -1383,7 +1383,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		string script = Path.GetFullPath(Path.Combine(GamePaths.GameRoot, "..", "Server", start ? "Start-FGOLocalServer.ps1" : "Stop-FGOLocalServer.ps1"));
 		if (!File.Exists(script))
 		{
-			throw new FileNotFoundException("服务器控制脚本不存在。", script);
+			throw new FileNotFoundException("The server control script is missing.", script);
 		}
 		await Task.Run(() => PowerShellHost.Executable).WaitAsync(TimeSpan.FromSeconds(15.0), cancellation);
 		cancellation.ThrowIfCancellationRequested();
@@ -1419,7 +1419,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			}
 			catch (Exception ex)
 			{
-				AppendServerControlLog("取消服务器控制：" + ex.Message);
+				AppendServerControlLog("Server control cancelled: " + ex.Message);
 			}
 			await Task.Yield();
 		}
@@ -1438,7 +1438,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			await CancelServerCommandAsync();
 			if (await RunServerCommandAsync(start: false) != 0)
 			{
-				throw new IOException("本地服务器未完全停止。请查看 logs/server-control.log；数据库会保留以避免强制终止写入。");
+				throw new IOException("The local server did not stop completely - see logs/server-control.log. The database is left running so writes are not cut off.");
 			}
 		}
 		finally
@@ -1455,7 +1455,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		}
 		if (IsThisGameRunning() || launcherProcessRunning)
 		{
-			ThemedMessageBox.Show("请先停止游戏，再停止本地服务器。", "FGO 本地平台", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+			ThemedMessageBox.Show("Stop the game before stopping the local server.", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 		}
 		else
 		{
@@ -1464,7 +1464,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 				return;
 			}
 			stoppingServer = true;
-			RuntimeStatusText.Text = "正在停止本地服务器…";
+			RuntimeStatusText.Text = "Stopping the local server...";
 			StartGameButton.IsEnabled = false;
 			try
 			{
@@ -1474,7 +1474,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			{
 				if (!windowClosing)
 				{
-					ThemedMessageBox.Show(ex.Message, "服务器停止失败", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+					ThemedMessageBox.Show(ex.Message, "Server Did Not Stop", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 				}
 			}
 			finally
@@ -1502,7 +1502,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		}
 		catch (Exception ex)
 		{
-			ThemedMessageBox.Show(this, "无法打开抽卡概率配置：\n" + ex.Message, "抽卡概率", MessageBoxButton.OK, MessageBoxImage.Hand);
+			ThemedMessageBox.Show(this, "Could not open the draw rate settings:\n" + ex.Message, "Draw Rates", MessageBoxButton.OK, MessageBoxImage.Hand);
 		}
 	}
 
@@ -1519,11 +1519,11 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 	{
 		if (!File.Exists(AccountToolPythonPath))
 		{
-			return AccountToolFailure("tool_missing", "未找到 Python 运行时：" + AccountToolPythonPath);
+			return AccountToolFailure("tool_missing", "Python runtime not found: " + AccountToolPythonPath);
 		}
 		if (!File.Exists(AccountToolScriptPath))
 		{
-			return AccountToolFailure("tool_missing", "未找到账号工具脚本：" + AccountToolScriptPath);
+			return AccountToolFailure("tool_missing", "Account tool script not found: " + AccountToolScriptPath);
 		}
 		ProcessStartInfo processStartInfo = new ProcessStartInfo
 		{
@@ -1545,7 +1545,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		{
 			processStartInfo.ArgumentList.Add(item);
 		}
-		using Process process = Process.Start(processStartInfo) ?? throw new InvalidOperationException("无法启动账号工具进程");
+		using Process process = Process.Start(processStartInfo) ?? throw new InvalidOperationException("Could not start the account tool process");
 		Task<string> stdoutTask = process.StandardOutput.ReadToEndAsync();
 		Task<string> stderrTask = process.StandardError.ReadToEndAsync();
 		using CancellationTokenSource timeout = new CancellationTokenSource(TimeSpan.FromSeconds(60.0));
@@ -1562,7 +1562,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			catch
 			{
 			}
-			return AccountToolFailure("timeout", "账号工具执行超时（60 秒）");
+			return AccountToolFailure("timeout", "The account tool timed out after 60 seconds");
 		}
 		string stdout = await stdoutTask;
 		string stderr = await stderrTask;
@@ -1579,7 +1579,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			return new AccountToolResult
 			{
 				Error = "bad_output",
-				Message = "账号工具未输出有效 JSON",
+				Message = "The account tool did not return valid JSON",
 				Stderr = stderr,
 				RawOutput = stdout
 			};
@@ -1630,8 +1630,8 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		}
 		catch (Exception ex)
 		{
-			AppendAccountLog("账号操作异常：" + ex.Message);
-			ThemedMessageBox.Show("账号操作失败：\n" + ex.Message, "FGO 本地平台", MessageBoxButton.OK, MessageBoxImage.Hand);
+			AppendAccountLog("Account operation error: " + ex.Message);
+			ThemedMessageBox.Show("Account operation failed:\n" + ex.Message, "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Hand);
 		}
 		finally
 		{
@@ -1661,13 +1661,13 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			lastKnownServerRunning = false;
 			AccountComboBox.ItemsSource = null;
 			ApplyOwnedCardFilter();
-			CurrentAccountText.Text = "账号工具不可用";
+			CurrentAccountText.Text = "Account tool unavailable";
 			CurrentAccessCodeText.Text = "—";
 			string text = (string.IsNullOrWhiteSpace(accountToolResult.Message) ? accountToolResult.Error : accountToolResult.Message);
-			AppendAccountLog("list 失败：" + text);
+			AppendAccountLog("list failed: " + text);
 			if (showErrors)
 			{
-				ThemedMessageBox.Show("无法读取本地账号列表：\n" + text, "FGO 本地平台", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+				ThemedMessageBox.Show("Could not read the local account list:\n" + text, "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 			}
 			return;
 		}
@@ -1714,9 +1714,9 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		AccountEntry accountEntry = list.FirstOrDefault((AccountEntry account) => account.IsCurrent);
 		AccountEntry accountEntry2 = (previouslySelectedAimeId.HasValue ? list.FirstOrDefault((AccountEntry account) => account.AimeId == previouslySelectedAimeId.Value) : null);
 		AccountComboBox.SelectedItem = accountEntry2 ?? accountEntry ?? ((list.Count > 0) ? list[0] : null);
-		CurrentAccountText.Text = ((accountEntry != null) ? $"{accountEntry.MasterName}（ID {accountEntry.AimeId}）" : ((list.Count == 0) ? "（暂无账号，可点击“新建账号”）" : "（未设置）"));
+		CurrentAccountText.Text = ((accountEntry != null) ? $"{accountEntry.MasterName} (ID {accountEntry.AimeId})" : ((list.Count == 0) ? "(no accounts yet - click New Account)" : "(not set)"));
 		CurrentAccessCodeText.Text = ((text2.Length > 0) ? text2 : "—");
-		AppendAccountLog($"已载入 {list.Count} 个本地账号；服务器{(lastKnownServerRunning ? "运行中" : "未运行")}");
+		AppendAccountLog($"Loaded {list.Count} local accounts; server {(lastKnownServerRunning ? "running" : "not running")}");
 		string accountProfilesPath = GetAccountProfilesPath();
 		if (File.Exists(accountProfilesPath))
 		{
@@ -1830,7 +1830,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		DeleteAccountButton.IsEnabled = selectedAccount != null && !lastKnownGameRunning && !accountToolRunning;
 		OwnedCardsOnlyCheckBox.IsEnabled = selectedAccount != null;
 		ApplyOwnedCardFilter();
-		CurrentSummonSummaryText.Text = ((selectedAccount == null) ? "Lv.1 · EXP 0 · 抽卡 0 次" : $"Lv.{selectedAccount.MasterLevel} · EXP {selectedAccount.MasterExp:N0} · 通关 {selectedAccount.ClearedQuestCount} · 已打印持卡 {selectedAccount.OwnedCardCount} 种 · 待打印 {selectedAccount.PendingPrintCount}");
+		CurrentSummonSummaryText.Text = ((selectedAccount == null) ? "Lv.1 - EXP 0 - 0 summons" : $"Lv.{selectedAccount.MasterLevel} - EXP {selectedAccount.MasterExp:N0} - {selectedAccount.ClearedQuestCount} quests cleared - {selectedAccount.OwnedCardCount} cards printed - {selectedAccount.PendingPrintCount} pending");
 	}
 
 	private void RefreshAccountDetails(AccountEntry? account)
@@ -1838,24 +1838,24 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		AccountDetailsTable.Items.Clear();
 		if (account != null)
 		{
-			string item = ((account.MasterNextLevelExp > 0) ? $"{account.MasterLevelExp:N0} / {account.MasterNextLevelExp:N0}（还需 {account.MasterExpToNext:N0}）" : "已达到当前等级上限");
+			string item = ((account.MasterNextLevelExp > 0) ? $"{account.MasterLevelExp:N0} / {account.MasterNextLevelExp:N0} ({account.MasterExpToNext:N0} to go)" : "Max level reached");
 			(string, string, string)[] array = new(string, string, string)[15]
 			{
-				("御主名", account.MasterName, "master"),
+				("Master Name", account.MasterName, "master"),
 				("Aime ID", account.AimeId.ToString(), ""),
-				("账号模式", account.ModeLabel, ""),
-				("御主等级", $"Lv.{account.MasterLevel}", "master"),
-				("累计经验", $"{account.MasterExp:N0}", ""),
-				("本级经验", item, ""),
+				("Account Mode", account.ModeLabel, ""),
+				("Master Level", $"Lv.{account.MasterLevel}", "master"),
+				("Total EXP", $"{account.MasterExp:N0}", ""),
+				("EXP This Level", item, ""),
 				("QP", $"{account.QpAmount:N0}", "qp"),
-				("友情点", $"{account.FriendPointAmount:N0}", "friend"),
-				("魔力棱镜", $"{account.ManaPrismAmount:N0}", "prism"),
-				("召唤点数", $"{account.SummonPointAmount:N0}", "summon"),
-				("已通关任务", $"{account.ClearedQuestCount} / 已记录 {account.TrackedQuestCount}", ""),
-				("持有从者", $"{account.ServantCount:N0}", "master"),
-				("已打印持有卡片", $"{account.OwnedCardCount:N0} 种 / {account.OwnedCardCopyCount:N0} 张", ""),
-				("待打印结果", $"{account.PendingPrintCount:N0}", ""),
-				("打印入库记录", $"近期 {account.SummonHistory.Count:N0} / 累计 {account.SummonResultCount:N0}", "")
+				("Friend Points", $"{account.FriendPointAmount:N0}", "friend"),
+				("Mana Prisms", $"{account.ManaPrismAmount:N0}", "prism"),
+				("Summon Points", $"{account.SummonPointAmount:N0}", "summon"),
+				("Quests Cleared", $"{account.ClearedQuestCount} / {account.TrackedQuestCount} tracked", ""),
+				("Servants Owned", $"{account.ServantCount:N0}", "master"),
+				("Printed Cards Owned", $"{account.OwnedCardCount:N0} unique / {account.OwnedCardCopyCount:N0} copies", ""),
+				("Prints Pending", $"{account.PendingPrintCount:N0}", ""),
+				("Print History", $"{account.SummonHistory.Count:N0} recent / {account.SummonResultCount:N0} total", "")
 			};
 			for (int i = 0; i < array.Length; i++)
 			{
@@ -1883,25 +1883,25 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			};
 			dataGrid.Columns.Add(new DataGridTextColumn
 			{
-				Header = "时间",
+				Header = "Time",
 				Binding = new Binding("ConfirmedAt"),
 				Width = 190.0
 			});
 			dataGrid.Columns.Add(new DataGridTextColumn
 			{
-				Header = "卡池",
+				Header = "Pool",
 				Binding = new Binding("PoolLabel"),
 				Width = 150.0
 			});
 			dataGrid.Columns.Add(new DataGridTextColumn
 			{
-				Header = "位置",
+				Header = "Position",
 				Binding = new Binding("DrawPosition"),
-				Width = 65.0
+				Width = 80.0
 			});
 			dataGrid.Columns.Add(new DataGridTextColumn
 			{
-				Header = "结果",
+				Header = "Result",
 				Binding = new Binding("DisplayName"),
 				Width = new DataGridLength(1.0, DataGridLengthUnitType.Star)
 			});
@@ -1913,20 +1913,20 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			});
 			dataGrid.Columns.Add(new DataGridTextColumn
 			{
-				Header = "类型",
+				Header = "Type",
 				Binding = new Binding("CardTypeLabel"),
-				Width = 90.0
+				Width = 115.0
 			});
 			dataGrid.Columns.Add(new DataGridTextColumn
 			{
-				Header = "对象 ID",
+				Header = "Entity ID",
 				Binding = new Binding("EntityId"),
 				Width = 80.0
 			});
 			Window obj = new Window
 			{
 				Owner = this,
-				Title = $"打印入库记录 · {selectedAccount.MasterName} (Aime {selectedAccount.AimeId})",
+				Title = $"Print History - {selectedAccount.MasterName} (Aime {selectedAccount.AimeId})",
 				Width = 1050.0,
 				Height = 580.0,
 				MinWidth = 760.0,
@@ -1943,12 +1943,12 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 
 	private static void ShowServerRunningAccountWarning()
 	{
-		ThemedMessageBox.Show("本地服务器正在运行，无法执行账号操作。\n请先点击顶部“服务器停止”按钮，再执行账号操作。", "FGO 本地平台", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+		ThemedMessageBox.Show("The local server is running, so this account operation cannot run.\nClick Stop Server at the top, then try again.", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 	}
 
 	private static void ShowGameRunningAccountWarning()
 	{
-		ThemedMessageBox.Show("游戏正在运行，无法切换、创建、删除、重置或修复账号。\n请先结束当前游戏会话，避免卡码与已登录存档不一致。", "FGO 本地平台", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+		ThemedMessageBox.Show("The game is running, so accounts cannot be switched, created, deleted, reset or repaired.\nEnd the current game session first, so the access code still matches the save that is logged in.", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 	}
 
 	private bool ReportAccountToolFailure(AccountToolResult result, string operation)
@@ -1958,7 +1958,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			return false;
 		}
 		string text = ((result.Error.Length > 0 && result.Message.Length > 0) ? (result.Error + ": " + result.Message) : ((result.Message.Length > 0) ? result.Message : result.Error));
-		AppendAccountLog(operation + " 失败：" + text);
+		AppendAccountLog(operation + " failed: " + text);
 		if (result.Stderr.Trim().Length > 0)
 		{
 			AppendAccountLog("stderr: " + result.Stderr.Trim());
@@ -1970,7 +1970,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		}
 		else
 		{
-			ThemedMessageBox.Show("账号操作（" + operation + "）失败：\n" + text, "FGO 本地平台", MessageBoxButton.OK, MessageBoxImage.Hand);
+			ThemedMessageBox.Show("Account operation (" + operation + ") failed:\n" + text, "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Hand);
 		}
 		return true;
 	}
@@ -1992,7 +1992,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		AccountEntry account = SelectedAccount;
 		if (account == null)
 		{
-			ThemedMessageBox.Show("请先在“选择”下拉框中选中一个账号。", "FGO 本地平台", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+			ThemedMessageBox.Show("Pick an account in the Select drop-down first.", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 			return;
 		}
 		await ExecuteAccountActionAsync(async delegate
@@ -2000,9 +2000,9 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			AccountToolResult result = await RunAccountToolAsync("use", "--aime-id", account.AimeId.ToString(), "--json");
 			if (!ReportAccountToolFailure(result, "use"))
 			{
-				AppendAccountLog($"已切换当前账号为 {account.MasterName} (ID {account.AimeId})，卡码已写入 DEVICE/aime.txt");
+				AppendAccountLog($"Current account set to {account.MasterName} (ID {account.AimeId}); access code written to DEVICE/aime.txt");
 				await RefreshAccountsAsync(showErrors: false);
-				ThemedMessageBox.Show($"已切换到账号「{account.MasterName}」(ID {account.AimeId})。", "FGO 本地平台", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+				ThemedMessageBox.Show($"Switched to the account {account.MasterName} (ID {account.AimeId}).", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 			}
 		});
 	}
@@ -2040,18 +2040,18 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			{
 				int aimeId = (accountToolResult.Root?["aime_id"]?.GetValue<int>()).GetValueOrDefault();
 				string accessCode = accountToolResult.Root?["access_code"]?.GetValue<string>() ?? "";
-				AppendAccountLog($"已创建账号 {name} (ID {aimeId})，模式 {mode}，卡码 {accessCode}");
+				AppendAccountLog($"Created account {name} (ID {aimeId}), mode {mode}, access code {accessCode}");
 				await RefreshAccountsAsync(showErrors: false);
 				SelectAccountById(aimeId);
-				ThemedMessageBox.Show($"账号创建成功：{name} (ID {aimeId})\n卡码：{accessCode}", "FGO 本地平台", MessageBoxButton.OK, MessageBoxImage.Asterisk);
-				if (ThemedMessageBox.Show("是否立即切换到新账号？", "FGO 本地平台", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+				ThemedMessageBox.Show($"Account created: {name} (ID {aimeId})\nAccess code: {accessCode}", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+				if (ThemedMessageBox.Show("Switch to the new account now?", "FGOA scooby", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
 				{
 					AccountToolResult result = await RunAccountToolAsync("use", "--aime-id", aimeId.ToString(), "--json");
 					if (!ReportAccountToolFailure(result, "use"))
 					{
-						AppendAccountLog($"已切换到新账号 {name} (ID {aimeId})");
+						AppendAccountLog($"Switched to the new account {name} (ID {aimeId})");
 						await RefreshAccountsAsync(showErrors: false);
-						ThemedMessageBox.Show($"已切换到新账号「{name}」(ID {aimeId})。", "FGO 本地平台", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+						ThemedMessageBox.Show($"Switched to the new account {name} (ID {aimeId}).", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 					}
 				}
 			}
@@ -2070,7 +2070,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		AccountEntry account = SelectedAccount;
 		if (account == null)
 		{
-			ThemedMessageBox.Show("请先在“选择”下拉框中选中要删除的账号。", "FGO 本地平台", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+			ThemedMessageBox.Show("Pick the account to delete in the Select drop-down first.", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 			return;
 		}
 		if (await IsPortOpenAsync(ServerSettingsView.ConfiguredPorts()[0]))
@@ -2080,8 +2080,8 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			return;
 		}
 		lastKnownServerRunning = false;
-		string text = (account.IsCurrent ? "\n\n该账号是当前账号。删除后程序会自动切换到剩余账号；若没有剩余账号则清空当前卡码。" : "");
-		if (ThemedMessageBox.Show($"确定永久删除账号“{account.MasterName}”(Aime ID {account.AimeId})吗？\n\n御主等级：Lv.{account.MasterLevel}\n已打印持卡：{account.OwnedCardCount} 种 / {account.OwnedCardCopyCount} 张\n已通关任务：{account.ClearedQuestCount}\n\n" + "账号存档、Aime 数据库身份、卡映射及账号备份残留都会永久删除，且不会保留可恢复的账号副本。" + text, "确认删除账号", MessageBoxButton.YesNo, MessageBoxImage.Exclamation, MessageBoxResult.No) != MessageBoxResult.Yes)
+		string text = (account.IsCurrent ? "\n\nThis is the current account. After it is deleted the launcher switches to a remaining account; if none are left the current access code is cleared." : "");
+		if (ThemedMessageBox.Show($"Permanently delete the account {account.MasterName} (Aime ID {account.AimeId})?\n\nMaster level: Lv.{account.MasterLevel}\nPrinted cards: {account.OwnedCardCount} unique / {account.OwnedCardCopyCount} copies\nQuests cleared: {account.ClearedQuestCount}\n\n" + "The save data, the Aime database identity, the card mapping and any leftover account backups are deleted permanently, and no recoverable copy is kept." + text, "Confirm Account Deletion", MessageBoxButton.YesNo, MessageBoxImage.Exclamation, MessageBoxResult.No) != MessageBoxResult.Yes)
 		{
 			return;
 		}
@@ -2094,14 +2094,14 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 				int replacementAimeId = (accountToolResult.Root?["replacement_aime_id"]?.GetValue<int>()).GetValueOrDefault();
 				JsonArray jsonArray = accountToolResult.Root?["backup_cleanup"]?["errors"] as JsonArray;
 				bool cleanupComplete = jsonArray == null || jsonArray.Count == 0;
-				AppendAccountLog(cleanupComplete ? $"已彻底删除账号 {account.MasterName} (ID {account.AimeId})；身份、卡映射及备份残留已清理" : $"账号 {account.MasterName} (ID {account.AimeId}) 主体已删除，但历史备份清理不完整");
+				AppendAccountLog(cleanupComplete ? $"Account {account.MasterName} (ID {account.AimeId}) fully deleted; identity, card mapping and leftover backups cleaned up" : $"Account {account.MasterName} (ID {account.AimeId}) was deleted, but some old backups were not cleaned up");
 				if (!cleanupComplete)
 				{
-					AppendAccountLog("账号主体已删除，但清理个别历史备份时发生错误：" + string.Join("；", jsonArray.Select((JsonNode node) => node?.GetValue<string>() ?? "未知错误")));
+					AppendAccountLog("The account was deleted, but some old backups could not be cleaned up: " + string.Join("; ", jsonArray.Select((JsonNode node) => node?.GetValue<string>() ?? "unknown error")));
 				}
 				await RefreshAccountsAsync(showErrors: false);
-				string value = ((!deletedCurrent) ? "" : ((replacementAimeId > 0) ? $"\n当前账号已自动切换到 Aime ID {replacementAimeId}。" : "\n当前卡码已清空；请先新建账号再启动游戏。"));
-				ThemedMessageBox.Show($"账号“{account.MasterName}”(ID {account.AimeId})已彻底删除。{value}\n\n" + (cleanupComplete ? "该账号的活动存档、Aime 身份、卡映射和账号备份残留均已清理；空出的最小 ID 会由后续新账号复用。" : "活动存档、Aime 身份和卡映射已删除，但个别历史备份清理失败；请查看右侧日志。空出的最小 ID仍会由后续新账号复用。"), "FGO 本地平台", MessageBoxButton.OK, cleanupComplete ? MessageBoxImage.Asterisk : MessageBoxImage.Exclamation);
+				string value = ((!deletedCurrent) ? "" : ((replacementAimeId > 0) ? $"\nThe current account switched automatically to Aime ID {replacementAimeId}." : "\nThe current access code is cleared - create a new account before starting the game."));
+				ThemedMessageBox.Show($"The account {account.MasterName} (ID {account.AimeId}) was fully deleted.{value}\n\n" + (cleanupComplete ? "Its save data, Aime identity, card mapping and leftover backups have all been cleaned up; the lowest free ID will be reused by the next new account." : "The save data, Aime identity and card mapping were deleted, but some old backups could not be cleaned up - see the log on the right. The lowest free ID will still be reused by the next new account."), "FGOA scooby", MessageBoxButton.OK, cleanupComplete ? MessageBoxImage.Asterisk : MessageBoxImage.Exclamation);
 			}
 		});
 	}
@@ -2129,8 +2129,8 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		}
 		string action = button.Tag.ToString();
 		string title = button.Content.ToString();
-		string value = ((action == "clear-gifts") ? "将删除全部未领取礼物，不会领取其中的奖励。保留其他进度，并在写入前备份存档。" : "将保留其他进度，并在写入前备份存档。");
-		if (ThemedMessageBox.Show(this, $"对账号「{account.MasterName}」(ID {account.AimeId}) 执行“{title}”？\n\n{value}", title, MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) != MessageBoxResult.Yes)
+		string value = ((action == "clear-gifts") ? "This deletes every unclaimed present without collecting the rewards inside. All other progress is kept, and the save is backed up before anything is written." : "All other progress is kept, and the save is backed up before anything is written.");
+		if (ThemedMessageBox.Show(this, $"Run {title} on the account {account.MasterName} (ID {account.AimeId})?\n\n{value}", title, MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) != MessageBoxResult.Yes)
 		{
 			return;
 		}
@@ -2139,10 +2139,10 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			AccountToolResult accountToolResult = await RunAccountToolAsync("upgrade", "--aime-id", account.AimeId.ToString(), "--action", action, "--json");
 			if (!ReportAccountToolFailure(accountToolResult, "upgrade"))
 			{
-				AppendAccountLog($"{title}完成：{account.MasterName}；备份：{accountToolResult.Root?["backup"]}");
+				AppendAccountLog($"{title} finished: {account.MasterName}; backup: {accountToolResult.Root?["backup"]}");
 				await RefreshAccountsAsync(showErrors: false);
 				SelectAccountById(account.AimeId);
-				ThemedMessageBox.Show(this, $"账号「{account.MasterName}」：{title}已完成。", title);
+				ThemedMessageBox.Show(this, $"Account {account.MasterName}: {title} finished.", title);
 			}
 		});
 	}
@@ -2159,7 +2159,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		AccountEntry account = SelectedAccount;
 		if (account == null)
 		{
-			ThemedMessageBox.Show("请先在“选择”下拉框中选中要重置的账号。", "FGO 本地平台", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+			ThemedMessageBox.Show("Pick the account to reset in the Select drop-down first.", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 			return;
 		}
 		if (await IsPortOpenAsync(ServerSettingsView.ConfiguredPorts()[0]))
@@ -2169,7 +2169,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			return;
 		}
 		lastKnownServerRunning = false;
-		if (ThemedMessageBox.Show($"确定将账号「{account.MasterName}」(ID {account.AimeId}) 重置为普通新账号吗？\n\n该操作将清空持有从者、点数、道具、打印入库记录与游戏进度。重置当前账号还会清空出战卡组，且不可撤销。", "FGO 本地平台", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) != MessageBoxResult.Yes)
+		if (ThemedMessageBox.Show($"Reset the account {account.MasterName} (ID {account.AimeId}) to a brand new normal account?\n\nThis clears owned Servants, points, items, print history and all game progress. Resetting the current account also clears the sortie deck, and it cannot be undone.", "FGOA scooby", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) != MessageBoxResult.Yes)
 		{
 			return;
 		}
@@ -2185,10 +2185,10 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 					cardListView.Refresh();
 					PublishDeck();
 				}
-				AppendAccountLog($"已将账号 {account.MasterName} (ID {account.AimeId}) 重置为普通新账号状态");
+				AppendAccountLog($"Account {account.MasterName} (ID {account.AimeId}) reset to a new normal account");
 				await RefreshAccountsAsync(showErrors: false);
 				SelectAccountById(account.AimeId);
-				ThemedMessageBox.Show("重置完成：账号「" + account.MasterName + "」已清空持有从者、资源与进度。", "FGO 本地平台", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+				ThemedMessageBox.Show("Reset finished: the account " + account.MasterName + " has had its Servants, resources and progress cleared.", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 			}
 		});
 	}
@@ -2205,7 +2205,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		AccountEntry account = SelectedAccount;
 		if (account == null)
 		{
-			ThemedMessageBox.Show("请先选中要修复的账号。", "FGO 本地平台", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+			ThemedMessageBox.Show("Pick the account to repair first.", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 			return;
 		}
 		if (await IsPortOpenAsync(ServerSettingsView.ConfiguredPorts()[0]))
@@ -2215,7 +2215,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			return;
 		}
 		lastKnownServerRunning = false;
-		if (ThemedMessageBox.Show("将从历史柜机通信记录修复账号「" + account.MasterName + "」的经验、素材、羁绊和任务进度。\n\n操作前会自动备份账号文件，是否继续？", "FGO 本地平台", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+		if (ThemedMessageBox.Show("This rebuilds the EXP, materials, Bond and quest progress of the account " + account.MasterName + " from the recorded cabinet traffic.\n\nThe account files are backed up first. Continue?", "FGOA scooby", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
 		{
 			return;
 		}
@@ -2226,10 +2226,10 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			{
 				int captures = (accountToolResult.Root?["repair"]?["captures"]?.GetValue<int>()).GetValueOrDefault();
 				int questRows = (accountToolResult.Root?["repair"]?["quest_rows"]?.GetValue<int>()).GetValueOrDefault();
-				AppendAccountLog($"账号 {account.AimeId} 历史结算修复完成：{captures} 个结算，{questRows} 个任务状态");
+				AppendAccountLog($"Account {account.AimeId} repaired from history: {captures} results, {questRows} quest states");
 				await RefreshAccountsAsync(showErrors: false);
 				SelectAccountById(account.AimeId);
-				ThemedMessageBox.Show($"修复完成：处理 {captures} 个历史结算、{questRows} 个任务状态。", "FGO 本地平台", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+				ThemedMessageBox.Show($"Repair finished: {captures} past results and {questRows} quest states processed.", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 			}
 		});
 	}
@@ -2239,7 +2239,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		AccountEntry account = SelectedAccount;
 		if (account == null)
 		{
-			ThemedMessageBox.Show("请先选中要接收福利的账号。", "FGO 本地平台", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+			ThemedMessageBox.Show("Pick the account that should receive the bonus items first.", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 			return;
 		}
 		await ExecuteAccountActionAsync(async delegate
@@ -2268,7 +2268,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 				}
 				if (entries.Count == 0)
 				{
-					ThemedMessageBox.Show("安装数据中没有可下发的福利道具。", "FGO 本地平台", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+					ThemedMessageBox.Show("The installed data has no bonus items that can be granted.", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 				}
 				else
 				{
@@ -2285,14 +2285,14 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 					};
 					table.Columns.Add(new DataGridTextColumn
 					{
-						Header = "分类",
+						Header = "Category",
 						Binding = new Binding("Category"),
 						Width = 120.0,
 						IsReadOnly = true
 					});
 					table.Columns.Add(new DataGridTextColumn
 					{
-						Header = "道具",
+						Header = "Item",
 						Binding = new Binding("Name"),
 						Width = new DataGridLength(1.0, DataGridLengthUnitType.Star),
 						IsReadOnly = true
@@ -2306,7 +2306,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 					});
 					table.Columns.Add(new DataGridTextColumn
 					{
-						Header = "当前",
+						Header = "Current",
 						Binding = new Binding("Current")
 						{
 							StringFormat = "N0"
@@ -2316,7 +2316,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 					});
 					table.Columns.Add(new DataGridTextColumn
 					{
-						Header = "上限",
+						Header = "Max",
 						Binding = new Binding("MaxAmount")
 						{
 							StringFormat = "N0"
@@ -2326,7 +2326,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 					});
 					table.Columns.Add(new DataGridTextColumn
 					{
-						Header = "下发数量（填写）",
+						Header = "Amount to Grant",
 						Binding = new Binding("GrantText")
 						{
 							Mode = BindingMode.TwoWay,
@@ -2337,13 +2337,13 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 					});
 					Button button = new Button
 					{
-						Content = "发送到礼物箱",
-						MinWidth = 110.0,
+						Content = "Send to Present Box",
+						MinWidth = 165.0,
 						Margin = new Thickness(5.0)
 					};
 					Button element = new Button
 					{
-						Content = "取消",
+						Content = "Cancel",
 						MinWidth = 90.0,
 						Margin = new Thickness(5.0),
 						IsCancel = true
@@ -2358,12 +2358,12 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 					stackPanel.Children.Add(button);
 					Button button2 = new Button
 					{
-						Content = "全部补满",
+						Content = "Fill All to Max",
 						Margin = new Thickness(5.0)
 					};
 					Button button3 = new Button
 					{
-						Content = "全部清零",
+						Content = "Clear All",
 						Margin = new Thickness(5.0)
 					};
 					stackPanel.Children.Insert(0, button2);
@@ -2391,7 +2391,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 					DockPanel dockPanel = new DockPanel();
 					TextBlock element2 = new TextBlock
 					{
-						Text = "填写数量或全部补满；0 表示不发送。服务器在玩家下一次请求时送入礼物箱，领取后入库。按库存及待领取福利截断至上限。仅列出已核实礼物协议的道具。",
+						Text = "Enter an amount or use Fill All to Max; 0 sends nothing. The server puts the items in the Present Box on the game's next request, and they reach your inventory once you claim them. Amounts are capped at the maximum, counting what you already hold and what is still waiting in the Present Box. Only items with a verified gift protocol are listed.",
 						Margin = new Thickness(12.0, 10.0, 12.0, 0.0),
 						Foreground = Brushes.LightGray,
 						TextWrapping = TextWrapping.Wrap
@@ -2404,7 +2404,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 					Window dialog = new Window
 					{
 						Owner = this,
-						Title = $"福利下发 · {account.MasterName} (Aime {account.AimeId})",
+						Title = $"Grant Bonus Items - {account.MasterName} (Aime {account.AimeId})",
 						Width = 980.0,
 						Height = 680.0,
 						MinWidth = 760.0,
@@ -2423,14 +2423,14 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 						{
 							if (!int.TryParse(item4.GrantText, NumberStyles.None, CultureInfo.InvariantCulture, out var result))
 							{
-								ThemedMessageBox.Show("数量必须为 0～2,147,483,647 的整数。", "福利礼物箱");
+								ThemedMessageBox.Show("The amount must be a whole number from 0 to 2,147,483,647.", "Bonus Items");
 								return;
 							}
 							item4.GrantAmount = result;
 						}
 						if (!entries.Any((BenefitGrantEntry item) => item.GrantAmount > 0))
 						{
-							ThemedMessageBox.Show("请至少为一种道具填写大于 0 的下发数量。", "FGO 本地平台", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+							ThemedMessageBox.Show("Enter an amount greater than 0 for at least one item.", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 						}
 						else
 						{
@@ -2461,18 +2461,18 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 								{
 									if (item6 is JsonObject jsonObject2)
 									{
-										string value = jsonObject2["name"]?.GetValue<string>() ?? "道具";
+										string value = jsonObject2["name"]?.GetValue<string>() ?? "Item";
 										int value2 = jsonObject2["applied"]?.GetValue<int>() ?? 0;
 										jsonObject2["after"]?.GetValue<int>();
 										jsonObject2["clamped"]?.GetValue<bool>();
-										summary.Add($"{value}：申请 {value2:N0}");
+										summary.Add($"{value}: requested {value2:N0}");
 									}
 								}
 							}
-							AppendAccountLog($"已向账号 {account.AimeId} 下发 {summary.Count} 种福利道具");
+							AppendAccountLog($"Granted {summary.Count} bonus items to account {account.AimeId}");
 							await RefreshAccountsAsync(showErrors: false);
 							SelectAccountById(account.AimeId);
-							ThemedMessageBox.Show("已提交礼物队列；请在游戏中重新打开礼物箱领取。实际发放按上限截断。\n首次更新服务器代码需要重启服务器一次。\n\n" + string.Join("\n", summary), "FGO 本地平台", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+							ThemedMessageBox.Show("Queued for the Present Box - reopen the Present Box in game to claim. The amount actually granted is capped at the maximum.\nAfter a first-time server code update the server has to be restarted once.\n\n" + string.Join("\n", summary), "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 						}
 					}
 				}
@@ -2532,7 +2532,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		LogPanelColumn.MinWidth = ((!collapsed) ? 310 : 0);
 		LogPanelColumn.Width = new GridLength(collapsed ? 0.0 : expandedLogWidth);
 		LogSplitterColumn.Width = new GridLength((!collapsed) ? 7 : 0);
-		ToggleLogsButton.Content = (collapsed ? "◀ 展开日志" : "收起日志 ▶");
+		ToggleLogsButton.Content = (collapsed ? "◀ Show Logs" : "Hide Logs ▶");
 	}
 
 	private void ToggleLogs_OnClick(object sender, RoutedEventArgs e)
@@ -2758,7 +2758,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		MonitorComboBox.Items.Clear();
 		MonitorComboBox.Items.Add(new ComboBoxItem
 		{
-			Content = "跟随主屏幕",
+			Content = "Follow Primary Display",
 			Tag = ""
 		});
 		bool flag = string.IsNullOrEmpty(device);
@@ -2775,7 +2775,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		{
 			MonitorComboBox.Items.Add(new ComboBoxItem
 			{
-				Content = device + "（已断开，使用主屏）",
+				Content = device + " (disconnected - using the primary display)",
 				Tag = device
 			});
 		}
@@ -2843,7 +2843,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		}
 		catch (Exception ex)
 		{
-			RuntimeStatusText.Text = "显示设置读取失败：" + ex.Message;
+			RuntimeStatusText.Text = "Could not read the display settings: " + ex.Message;
 		}
 		SelectTag(DisplayModeComboBox, value);
 		PopulateMonitors(device);
@@ -2861,7 +2861,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 	{
 		if (SaveLauncherSettings(out string _, out int _, out int _, out string _, out int _))
 		{
-			RuntimeStatusText.Text = "控制设置已保存，下次启动游戏生效。";
+			RuntimeStatusText.Text = "Control settings saved - they take effect the next time the game starts.";
 		}
 	}
 
@@ -2893,7 +2893,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		height = 0;
 		if (!int.TryParse(CustomWidthTextBox.Text, out width) || !int.TryParse(CustomHeightTextBox.Text, out height) || width < 480 || width > 7680 || height < 480 || height > 7680)
 		{
-			ThemedMessageBox.Show("请在宽、高输入框中填写 480–7680 范围内的整数，例如 1920×1080、720×1280 或 1080×2560。", "FGO 本地平台", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+			ThemedMessageBox.Show("Enter whole numbers from 480 to 7680 in the width and height boxes, for example 1920x1080, 720x1280 or 1080x2560.", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 			return false;
 		}
 		try
@@ -2979,7 +2979,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		}
 		catch (Exception ex)
 		{
-			ThemedMessageBox.Show("无法保存启动设置：\n" + ex.Message, "FGO 本地平台", MessageBoxButton.OK, MessageBoxImage.Hand);
+			ThemedMessageBox.Show("Could not save the launch settings:\n" + ex.Message, "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Hand);
 			return false;
 		}
 	}
@@ -3023,7 +3023,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 	private void HideUiKeyButton_OnClick(object sender, RoutedEventArgs e)
 	{
 		bindingHideUiKey = true;
-		HideUiKeyButton.Content = "请按键（Esc 取消）";
+		HideUiKeyButton.Content = "Press a key (Esc to cancel)";
 		HideUiKeyButton.Focus();
 	}
 
@@ -3070,7 +3070,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 	{
 		if (SaveLauncherSettings(out string _, out int _, out int _, out string _, out int _))
 		{
-			RuntimeStatusText.Text = "画面设置已保存，下次启动游戏生效。";
+			RuntimeStatusText.Text = "Graphics settings saved - they take effect the next time the game starts.";
 		}
 	}
 
@@ -3091,26 +3091,26 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			return;
 		}
 		PublishDeck();
-		if (!SaveLauncherSettings(out string displayMode, out int width, out int height, out string inputMode, out int targetFps) || (cardCollection.SelectedCards.Count == 0 && ThemedMessageBox.Show("当前卡组为空，仍要启动游戏吗？", "FGO 本地平台", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) != MessageBoxResult.Yes))
+		if (!SaveLauncherSettings(out string displayMode, out int width, out int height, out string inputMode, out int targetFps) || (cardCollection.SelectedCards.Count == 0 && ThemedMessageBox.Show("The deck is empty. Start the game anyway?", "FGOA scooby", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) != MessageBoxResult.Yes))
 		{
 			return;
 		}
 		string launcher = Path.Combine(GamePaths.GameRoot, "FGO_Launcher.ps1");
 		if (!File.Exists(launcher))
 		{
-			ThemedMessageBox.Show("启动脚本不存在：\n" + launcher, "FGO 本地平台", MessageBoxButton.OK, MessageBoxImage.Hand);
+			ThemedMessageBox.Show("The launch script is missing:\n" + launcher, "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Hand);
 			return;
 		}
 		launcherCancellationRequested = false;
 		launcherProcessRunning = true;
 		StopGameButton.IsEnabled = true;
 		StartGameButton.IsEnabled = false;
-		RuntimeStatusText.Text = $"正在启动 {displayMode} {width}x{height} @ {targetFps} FPS；卡组已同步";
+		RuntimeStatusText.Text = $"Starting {displayMode} {width}x{height} @ {targetFps} FPS; deck synced";
 		BeginLauncherOutputCapture(launcher);
 		CapturedProcess launcherProcess;
 		try
 		{
-			QueueLauncherOutput("[launcher] 正在检查 PowerShell 运行环境……", standardError: false);
+			QueueLauncherOutput("[launcher] Checking the PowerShell runtime...", standardError: false);
 			await Task.Run(() => PowerShellHost.Executable).WaitAsync(TimeSpan.FromSeconds(15.0));
 			if (launcherCancellationRequested || windowClosing)
 			{
@@ -3119,17 +3119,17 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 				await RefreshRuntimeStatusAsync();
 				return;
 			}
-			QueueLauncherOutput("[launcher] 运行环境就绪，正在启动游戏脚本……", standardError: false);
+			QueueLauncherOutput("[launcher] Runtime ready, starting the game script...", standardError: false);
 			launcherProcess = StartCapturedPowerShellScript(launcher, QueueLauncherOutput, "-DisplayMode", displayMode, "-ResolutionWidth", width.ToString(), "-ResolutionHeight", height.ToString(), "-InputMode", inputMode, "-TargetFps", targetFps.ToString());
 		}
 		catch (Exception ex)
 		{
 			launcherProcessRunning = false;
-			QueueLauncherOutput("[launcher] 无法启动 PowerShell：" + ex.Message, standardError: true);
+			QueueLauncherOutput("[launcher] Could not start PowerShell: " + ex.Message, standardError: true);
 			CompleteLauncherOutputCapture(-1);
 			StartGameButton.IsEnabled = true;
-			RuntimeStatusText.Text = "启动器未能启动";
-			ThemedMessageBox.Show("无法启动游戏脚本：\n" + ex.Message, "FGO 本地平台", MessageBoxButton.OK, MessageBoxImage.Hand);
+			RuntimeStatusText.Text = "The launcher did not start";
+			ThemedMessageBox.Show("Could not start the game script:\n" + ex.Message, "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Hand);
 			return;
 		}
 		runningLauncher = launcherProcess;
@@ -3151,13 +3151,13 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			}
 			else
 			{
-				QueueLauncherOutput("[launcher] 等待 stdout / stderr 收尾超时，末尾少量输出可能不完整。", standardError: true);
+				QueueLauncherOutput("[launcher] Timed out waiting for stdout / stderr to finish - the last few lines may be incomplete.", standardError: true);
 			}
 			exitCode = launcherProcess.Process.ExitCode;
 		}
 		catch (Exception ex)
 		{
-			QueueLauncherOutput("[launcher] 监视启动器失败：" + ex.Message, standardError: true);
+			QueueLauncherOutput("[launcher] Could not monitor the launcher: " + ex.Message, standardError: true);
 		}
 		finally
 		{
@@ -3172,7 +3172,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		await RefreshRuntimeStatusAsync();
 		if (exitCode != 0 && !launcherCancellationRequested && !windowClosing)
 		{
-			string text = $"启动器代码 {exitCode}：{StartupDiagnostics.Explain(exitCode)}；详细输出见“注入与游戏日志”。";
+			string text = $"Launcher code {exitCode}: {StartupDiagnostics.Explain(exitCode)}; the full output is in the Game Log panel.";
 			RuntimeStatusText.Text = text;
 			QueueLauncherOutput(text, standardError: true);
 		}
@@ -3196,7 +3196,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 
 	private async void StopGameButton_OnClick(object sender, RoutedEventArgs e)
 	{
-		if (ThemedMessageBox.Show("确定停止当前游戏会话吗？", "FGO 本地平台", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+		if (ThemedMessageBox.Show("Stop the current game session?", "FGOA scooby", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
 		{
 			return;
 		}
@@ -3245,7 +3245,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		string text = Path.Combine(GamePaths.GameRoot, "manuals", filename);
 		if (!File.Exists(text))
 		{
-			ThemedMessageBox.Show("操作说明图片不存在：\n" + text, title, MessageBoxButton.OK, MessageBoxImage.Hand);
+			ThemedMessageBox.Show("The controls guide image is missing:\n" + text, title, MessageBoxButton.OK, MessageBoxImage.Hand);
 			return;
 		}
 		BitmapImage source = new BitmapImage(new Uri(text, UriKind.Absolute));
@@ -3278,12 +3278,12 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 
 	private void KeyboardGuideButton_OnClick(object sender, RoutedEventArgs e)
 	{
-		ShowGuide("keyboard-controls.png", "FGO 键盘操作说明");
+		ShowGuide("keyboard-controls.png", "FGO Keyboard Controls");
 	}
 
 	private void ControllerGuideButton_OnClick(object sender, RoutedEventArgs e)
 	{
-		ShowGuide("controller-controls.png", "FGO 手柄操作说明");
+		ShowGuide("controller-controls.png", "FGO Controller Controls");
 	}
 
 	private void CardList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

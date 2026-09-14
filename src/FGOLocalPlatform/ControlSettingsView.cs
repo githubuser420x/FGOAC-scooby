@@ -66,13 +66,13 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 		("R3", "r3", 128),
 		("Options", "options", 16),
 		("Create", "create", 32),
-		("十字键上", "dpadUp", 1),
-		("十字键下", "dpadDown", 2),
-		("十字键左", "dpadLeft", 4),
-		("十字键右", "dpadRight", 8),
+		("D-Pad Up", "dpadUp", 1),
+		("D-Pad Down", "dpadDown", 2),
+		("D-Pad Left", "dpadLeft", 4),
+		("D-Pad Right", "dpadRight", 8),
 		("PS", "ps", 1024),
-		("触摸板按下", "touchpad", 262144),
-		("静音键", "mute", 524288)
+		("Touchpad Click", "touchpad", 262144),
+		("Mute", "mute", 524288)
 	};
 
 	private readonly List<CalibrationBinding> dualSenseCalibration = new List<CalibrationBinding>();
@@ -161,7 +161,7 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 	{
 		List<Choice> list = new List<Choice>
 		{
-			new Choice("禁用", 0)
+			new Choice("Disabled", 0)
 		};
 		(string, string, int)[] physicalButtons = PhysicalButtons;
 		for (int i = 0; i < physicalButtons.Length; i++)
@@ -213,10 +213,10 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 					text2 = "RT";
 					break;
 				case 64:
-					text2 = "左摇杆按下";
+					text2 = "Left Stick Click";
 					break;
 				case 128:
-					text2 = "右摇杆按下";
+					text2 = "Right Stick Click";
 					break;
 				case 16:
 					text2 = "Start";
@@ -233,8 +233,8 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 			string name = text;
 			list.Add(new Choice(name, tuple.Item3));
 		}
-		list.Insert(5, new Choice(dualSense ? "× 或 ○" : "A 或 B", 12288));
-		list.Insert(6, new Choice(dualSense ? "□ 或 △" : "X 或 Y", 49152));
+		list.Insert(5, new Choice(dualSense ? "× or ○" : "A or B", 12288));
+		list.Insert(6, new Choice(dualSense ? "□ or △" : "X or Y", 49152));
 		return list;
 	}
 
@@ -249,15 +249,15 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 		Expander dualSenseCalibrationPanel = DualSenseCalibrationPanel;
 		Visibility visibility = (DualSenseHelp.Visibility = ((!isDualSenseMode) ? Visibility.Collapsed : Visibility.Visible));
 		dualSenseCalibrationPanel.Visibility = visibility;
-		ControllerMappingTitle.Text = (isDualSenseMode ? "PS5 DualSense 手柄映射" : "XInput 手柄映射");
-		ControllerDeadzoneHelp.Text = "死区范围 0–32766，默认 7849。" + (isDualSenseMode ? "L2 / R2" : "LT / RT") + " 按下阈值为 64。技能按键模拟原生按下与松开；需要选人时仍使用原游戏触摸界面。冷却与封印规则不变。";
+		ControllerMappingTitle.Text = (isDualSenseMode ? "PS5 DualSense Controller Mapping" : "XInput Controller Mapping");
+		ControllerDeadzoneHelp.Text = "Deadzone range is 0-32766, default 7849. " + (isDualSenseMode ? "L2 / R2" : "LT / RT") + " press threshold is 64. Skill buttons simulate a real press and release; use the game's own touch interface when you need to pick a target. Cooldown and seal rules are unchanged.";
 		foreach (Mapping item in mappings.Where((Mapping item) => item.Section == "xinput"))
 		{
 			int value = item.Value;
 			List<Choice> list = ControllerChoices(isDualSenseMode);
 			if (!list.Any((Choice item) => item.Value == value))
 			{
-				list.Add(new Choice($"自定义 0x{value:X}", value));
+				list.Add(new Choice($"Custom 0x{value:X}", value));
 			}
 			item.Selector.ItemsSource = list;
 			item.Value = value;
@@ -305,7 +305,7 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 		calibrationSawNeutral = false;
 		calibrationDeadline = DateTime.UtcNow.AddSeconds(10.0);
 		RefreshCalibrationButtons();
-		StatusText.Text = "正在校正 " + binding.Label + "：请松开所有按键，再按下对应的实体键。";
+		StatusText.Text = "Calibrating " + binding.Label + " - release every button, then press the physical button you want.";
 		calibrationTimer.Start();
 	}
 
@@ -319,7 +319,7 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 		if (DateTime.UtcNow >= calibrationDeadline)
 		{
 			CancelCalibration();
-			StatusText.Text = "校正超时，原按键保持不变。请确认已保存 PS5 模式并连接手柄。";
+			StatusText.Text = "Calibration timed out and nothing changed - save PS5 mode and connect the controller, then try again.";
 			return;
 		}
 		try
@@ -335,7 +335,7 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 					CalibrationBinding calibrationBinding = pendingCalibration;
 					calibrationBinding.Value = (int)controls;
 					CancelCalibration();
-					StatusText.Text = $"已将 {calibrationBinding.Label} 校正为实体键 {PhysicalButtonName(calibrationBinding.Value)}，点击保存后生效。";
+					StatusText.Text = $"{calibrationBinding.Label} now uses the physical button {PhysicalButtonName(calibrationBinding.Value)} - click Save to apply.";
 				}
 			}
 		}
@@ -355,7 +355,7 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 	{
 		foreach (CalibrationBinding item in dualSenseCalibration)
 		{
-			item.Button.Content = ((pendingCalibration == item) ? "松开按键，再按实体键…" : ("当前实体键：" + PhysicalButtonName(item.Value)));
+			item.Button.Content = ((pendingCalibration == item) ? "Release, then press the button..." : ("Current button: " + PhysicalButtonName(item.Value)));
 		}
 	}
 
@@ -379,16 +379,16 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 	private void ResetCalibration_OnClick(object sender, RoutedEventArgs e)
 	{
 		ResetDualSenseCalibration();
-		StatusText.Text = "已复位默认实体按键，点击保存后生效。";
+		StatusText.Text = "Physical buttons reset to defaults - click Save to apply.";
 	}
 
 	private static string MissingControllerMessage(bool ds)
 	{
 		if (!ds)
 		{
-			return "未找到该序号的 XInput 手柄，请检查连接与手柄序号。";
+			return "No XInput controller found on that number - check the connection and the controller number.";
 		}
-		return "未找到该序号的 DualSense，请检查 USB/蓝牙连接并先保存 PS5 手柄模式。";
+		return "No DualSense found on that number - check the USB or Bluetooth connection and save PS5 mode first.";
 	}
 
 	private void DetectController_OnClick(object sender, RoutedEventArgs e)
@@ -402,8 +402,8 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 			StatusText.Text = num2 switch
 			{
 				1167u => MissingControllerMessage(IsDualSenseMode), 
-				0u => $"已检测到第 {num + 1} 个 {(IsDualSenseMode ? "DualSense" : "XInput")} 手柄。", 
-				_ => $"检测手柄失败：{num2}。", 
+				0u => $"Found {(IsDualSenseMode ? "DualSense" : "XInput")} controller {num + 1}.", 
+				_ => $"Controller check failed with error {num2}.", 
 			};
 		}
 		catch (Exception ex) when (ControllerInput.IsLoadError(ex))
@@ -477,12 +477,12 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 		}
 		List<Choice> list = new List<Choice>
 		{
-			new Choice("禁用", 0),
-			new Choice("鼠标左键", 1),
-			new Choice("鼠标右键", 2),
-			new Choice("鼠标中键", 4),
-			new Choice("鼠标侧键 1", 5),
-			new Choice("鼠标侧键 2", 6)
+			new Choice("Disabled", 0),
+			new Choice("Left Mouse Button", 1),
+			new Choice("Right Mouse Button", 2),
+			new Choice("Middle Mouse Button", 4),
+			new Choice("Mouse Button 4", 5),
+			new Choice("Mouse Button 5", 6)
 		};
 		for (int j = 8; j <= 254; j++)
 		{
@@ -494,18 +494,18 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 		}
 		array = new(string, string, int)[12]
 		{
-			("向上", "up", 87),
-			("向下", "down", 83),
-			("向左", "left", 65),
-			("向右", "right", 68),
-			("攻击", "attack", 2),
-			("冲刺", "dash", 160),
-			("切换目标", "target", 70),
-			("宝具", "np", 32),
-			("镜头归中", "camera", 67),
-			("从者技能 1", "skill1", 49),
-			("从者技能 2", "skill2", 50),
-			("从者技能 3", "skill3", 51)
+			("Move Up", "up", 87),
+			("Move Down", "down", 83),
+			("Move Left", "left", 65),
+			("Move Right", "right", 68),
+			("Attack", "attack", 2),
+			("Dash", "dash", 160),
+			("Switch Lock-on", "target", 70),
+			("Noble Phantasm", "np", 32),
+			("Center Camera", "camera", 67),
+			("Servant Skill 1", "skill1", 49),
+			("Servant Skill 2", "skill2", 50),
+			("Servant Skill 3", "skill3", 51)
 		};
 		for (int i = 0; i < array.Length; i++)
 		{
@@ -514,46 +514,46 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 		}
 		List<Choice> choices = new List<Choice>
 		{
-			new Choice("禁用", 0),
+			new Choice("Disabled", 0),
 			new Choice("A", 4096),
 			new Choice("B", 8192),
 			new Choice("X", 16384),
 			new Choice("Y", 32768),
-			new Choice("A 或 B", 12288),
-			new Choice("X 或 Y", 49152),
+			new Choice("A or B", 12288),
+			new Choice("X or Y", 49152),
 			new Choice("LB", 256),
 			new Choice("RB", 512),
 			new Choice("LT", 65536),
 			new Choice("RT", 131072),
-			new Choice("左摇杆按下", 64),
-			new Choice("右摇杆按下", 128),
+			new Choice("Left Stick Click", 64),
+			new Choice("Right Stick Click", 128),
 			new Choice("Start", 16),
 			new Choice("Back", 32),
-			new Choice("十字键上", 1),
-			new Choice("十字键下", 2),
-			new Choice("十字键左", 4),
-			new Choice("十字键右", 8)
+			new Choice("D-Pad Up", 1),
+			new Choice("D-Pad Down", 2),
+			new Choice("D-Pad Left", 4),
+			new Choice("D-Pad Right", 8)
 		};
 		array = new(string, string, int)[8]
 		{
-			("攻击", "attack", 12288),
-			("冲刺", "dash", 65536),
-			("切换目标", "target", 256),
-			("宝具", "np", 49152),
-			("镜头归中", "camera", 64),
-			("从者技能 1", "skill1", 0),
-			("从者技能 2", "skill2", 0),
-			("从者技能 3", "skill3", 0)
+			("Attack", "attack", 12288),
+			("Dash", "dash", 65536),
+			("Switch Lock-on", "target", 256),
+			("Noble Phantasm", "np", 49152),
+			("Center Camera", "camera", 64),
+			("Servant Skill 1", "skill1", 0),
+			("Servant Skill 2", "skill2", 0),
+			("Servant Skill 3", "skill3", 0)
 		};
 		for (int i = 0; i < array.Length; i++)
 		{
 			(string, string, int) tuple3 = array[i];
 			AddMapping(ControllerMappings, tuple3.Item1, "xinput", tuple3.Item2, tuple3.Item3, choices);
 		}
-		AddMapping(CommonMappings, "测试菜单", "io4", "test", 112, list);
-		AddMapping(CommonMappings, "服务键", "io4", "service", 113, list);
-		AddMapping(CommonMappings, "投币", "io4", "coin", 114, list);
-		AddMapping(CommonMappings, "读卡", "aime", "scan", 13, list);
+		AddMapping(CommonMappings, "Test Menu", "io4", "test", 112, list);
+		AddMapping(CommonMappings, "Service", "io4", "service", 113, list);
+		AddMapping(CommonMappings, "Insert Coin", "io4", "coin", 114, list);
+		AddMapping(CommonMappings, "Card Read", "aime", "scan", 13, list);
 		InitializeDualSense();
 		LoadBindings(iniPath);
 	}
@@ -606,7 +606,7 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 			List<Choice> list = (List<Choice>)mapping.Selector.ItemsSource;
 			if (!list.Any((Choice choice) => choice.Value == value))
 			{
-				list.Add(new Choice($"自定义 0x{value:X}", value));
+				list.Add(new Choice($"Custom 0x{value:X}", value));
 			}
 			mapping.Value = value;
 		}
@@ -626,17 +626,17 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 	{
 		if (!int.TryParse(DeadzoneInput.Text, out var result) || result < 0 || result > 32766)
 		{
-			StatusText.Text = "摇杆死区必须为 0–32766 的整数。";
+			StatusText.Text = "Stick deadzone must be a whole number from 0 to 32766.";
 			return false;
 		}
 		if (mappings.Any((Mapping mapping) => mapping.KeyButton == null && !(mapping.Selector.SelectedValue is int)))
 		{
-			StatusText.Text = "请选择每个动作的按键。";
+			StatusText.Text = "Choose a button for every action.";
 			return false;
 		}
 		if (IsDualSenseMode && !ControllerInput.DualSenseRuntimePresent)
 		{
-			StatusText.Text = "缺少 DualSense 输入组件，请重新应用完整更新包（App 内的 fgoio_dualsense.dll 和 xinput1_4.dll）。";
+			StatusText.Text = "The DualSense input files are missing - reinstall the full update package (fgoio_dualsense.dll and xinput1_4.dll in the App folder).";
 			return false;
 		}
 		try
@@ -656,12 +656,12 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 			}
 			SaveDualSenseBindings();
 			Write("io4", "mode", (InputModeSelector.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "keyboard");
-			StatusText.Text = "控制映射已保存，下次启动游戏生效。";
+			StatusText.Text = "Controls saved - they take effect the next time the game starts.";
 			return true;
 		}
 		catch (Exception ex)
 		{
-			StatusText.Text = "保存失败：" + ex.Message;
+			StatusText.Text = "Could not save: " + ex.Message;
 			return false;
 		}
 	}
@@ -702,7 +702,7 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 			item.Slider.Value = item.Default;
 		}
 		DeadzoneInput.Text = "7849";
-		StatusText.Text = "已恢复默认映射，点击保存后生效。";
+		StatusText.Text = "Default mapping restored - click Save to apply.";
 	}
 
 	private void Save_OnClick(object sender, RoutedEventArgs e)
@@ -726,8 +726,8 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 			StatusText.Text = num switch
 			{
 				1167u => MissingControllerMessage(dualSense), 
-				0u => "已发送测试震动。", 
-				_ => $"震动发送失败：{num}。", 
+				0u => "Test rumble sent.", 
+				_ => $"Rumble failed with error {num}.", 
 			};
 			if (num == 0)
 			{

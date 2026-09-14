@@ -98,6 +98,6 @@ internal static class ControllerInput
 
 	internal static string LoadErrorMessage(Exception ex)
 	{
-		return "手柄输入组件无法加载，请重新应用完整更新包。详情：" + ex.Message;
+		return "The controller input component could not be loaded - reinstall the full update package. Details: " + ex.Message;
 	}
 }

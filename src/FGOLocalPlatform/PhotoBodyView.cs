@@ -42,7 +42,7 @@ public sealed class PhotoBodyView : StackPanel, IDisposable
 
 	private readonly Button play = new Button
 	{
-		Content = "播放动作",
+		Content = "Play Motion",
 		Margin = new Thickness(0.0, 8.0, 0.0, 8.0)
 	};
 
@@ -109,14 +109,14 @@ public sealed class PhotoBodyView : StackPanel, IDisposable
 		PhotoMotionUi.Configure(clips);
 		base.Children.Add(new TextBlock
 		{
-			Text = "身体动画",
+			Text = "Body Animation",
 			FontSize = 16.0,
 			FontWeight = FontWeights.Bold,
 			Margin = new Thickness(0.0, 0.0, 0.0, 8.0)
 		});
 		base.Children.Add(new TextBlock
 		{
-			Text = "使用上方面部动画区域所选角色。切换角色会保留已编辑姿势；只列出与当前骨架匹配的动作。",
+			Text = "Uses the character picked in Face Animation above. Switching characters keeps the pose you edited, and only motions that fit the current skeleton are listed.",
 			TextWrapping = TextWrapping.Wrap
 		});
 		base.Children.Add(clips);
@@ -125,7 +125,7 @@ public sealed class PhotoBodyView : StackPanel, IDisposable
 		base.Children.Add(play);
 		Button button = new Button
 		{
-			Content = "恢复原动作",
+			Content = "Restore Original Motion",
 			Margin = new Thickness(0.0, 4.0, 0.0, 8.0)
 		};
 		base.Children.Add(button);
@@ -139,7 +139,7 @@ public sealed class PhotoBodyView : StackPanel, IDisposable
 		};
 		frame.ValueChanged += delegate
 		{
-			time.Text = $"{frame.Value / 60.0:F2} 秒";
+			time.Text = $"{frame.Value / 60.0:F2} s";
 			if (!syncing)
 			{
 				dirty = true;
@@ -169,7 +169,7 @@ public sealed class PhotoBodyView : StackPanel, IDisposable
 				}
 				clock.Restart();
 				playing = true;
-				play.Content = "暂停动作";
+				play.Content = "Pause Motion";
 				timer.Start();
 			}
 		};
@@ -201,7 +201,7 @@ public sealed class PhotoBodyView : StackPanel, IDisposable
 			saved.Clear();
 			actor = 0uL;
 			loaded = false;
-			status.Text = "进入摄影后选择角色。";
+			status.Text = "Enter photo mode, then pick a character.";
 			return;
 		}
 		try
@@ -213,7 +213,7 @@ public sealed class PhotoBodyView : StackPanel, IDisposable
 				if (ipc.ReadInt32(0L) != 1111705414 || ipc.ReadInt32(4L) != 2)
 				{
 					Dispose();
-					status.Text = "动作接口版本不匹配，请重启游戏";
+					status.Text = "The motion interface version does not match - restart the game.";
 					return;
 				}
 			}
@@ -239,7 +239,7 @@ public sealed class PhotoBodyView : StackPanel, IDisposable
 			}
 			if (actor == 0L)
 			{
-				status.Text = "请先在“面部表情”中选择角色。";
+				status.Text = "Pick a character in Face Animation first.";
 				return;
 			}
 			int num = ipc.ReadInt32(8L);
@@ -262,7 +262,7 @@ public sealed class PhotoBodyView : StackPanel, IDisposable
 					int num6 = Array.IndexOf(array3, (byte)0);
 					if (num6 < 0)
 					{
-						throw new IOException("骨骼名称无效");
+						throw new IOException("The bone name is not valid.");
 					}
 					array[i] = new PhotoRigBone(ipc.ReadInt32(num5), ipc.ReadInt32(num5 + 4), Encoding.ASCII.GetString(array3, 0, num6));
 				}
@@ -288,38 +288,38 @@ public sealed class PhotoBodyView : StackPanel, IDisposable
 				TextBlock textBlock = status;
 				textBlock.Text = num7 switch
 				{
-					-3 => "角色骨架已变化，请重新选择动作", 
-					-4 => "动作姿态未通过检查", 
-					_ => "当前角色姿态不可用", 
+					-3 => "The character's skeleton changed - pick the motion again.", 
+					-4 => "The motion pose failed its check.", 
+					_ => "This character's pose cannot be edited.", 
 				};
 			}
 			else if (num7 == 2)
 			{
-				status.Text = (playing ? "正在播放" : "动作已应用");
+				status.Text = (playing ? "Playing" : "Motion applied");
 			}
 		}
 		catch (FileNotFoundException)
 		{
-			status.Text = "当前游戏尚未加载身体动作模块。";
+			status.Text = "The running game has not loaded the body motion module.";
 		}
 		catch (IOException)
 		{
 			Dispose();
-			status.Text = "动作连接已断开。";
+			status.Text = "The motion connection was lost.";
 		}
 	}
 
 	private async void LoadCatalog(string token)
 	{
 		int version = ++loadVersion;
-		status.Text = "正在读取匹配动作…";
+		status.Text = "Reading matching motions...";
 		PhotoRigBone[] currentBones = bones;
 		int type = jointType;
 		try
 		{
 			if (token.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
 			{
-				throw new IOException("角色资源名无效");
+				throw new IOException("The character asset name is not valid.");
 			}
 			string path = Path.Combine(root, "rom", "mot", "mot_" + token.ToLowerInvariant() + ".farc");
 			PhotoBodyMotionEntry[] array = await Task.Run(() => (from e in PhotoBodyMotionCatalog.List(path, type, currentBones)
@@ -340,13 +340,13 @@ public sealed class PhotoBodyView : StackPanel, IDisposable
 				frame.Value = previous.Frame;
 			}
 			syncing = false;
-			status.Text = $"可选动作 {array.Length} 条。";
+			status.Text = $"{array.Length} motions available.";
 		}
 		catch (Exception ex) when (((ex is IOException || ex is FgoFormatException || ex is UnauthorizedAccessException) ? 1 : 0) != 0)
 		{
 			if (version == loadVersion)
 			{
-				status.Text = "无法读取动作：" + ex.Message;
+				status.Text = "Could not read the motions: " + ex.Message;
 			}
 		}
 	}
@@ -429,7 +429,7 @@ public sealed class PhotoBodyView : StackPanel, IDisposable
 			catch (IOException)
 			{
 				Dispose();
-				status.Text = "动作连接已断开。";
+				status.Text = "The motion connection was lost.";
 			}
 		}
 	}
@@ -439,7 +439,7 @@ public sealed class PhotoBodyView : StackPanel, IDisposable
 		playing = false;
 		timer.Stop();
 		clock.Stop();
-		play.Content = "播放动作";
+		play.Content = "Play Motion";
 	}
 
 	public void Dispose()

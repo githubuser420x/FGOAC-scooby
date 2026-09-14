@@ -56,11 +56,11 @@ public partial class AudioSettingsView : UserControl, IComponentConnector
 					}
 				}
 			}
-			StatusText.Text = "拖动滑块调整音量，设置会自动保留。";
+			StatusText.Text = "Drag a slider to set the volume; your settings are kept automatically.";
 		}
 		catch (Exception ex)
 		{
-			StatusText.Text = "读取音量设置失败：" + ex.Message;
+			StatusText.Text = "Could not read the volume settings: " + ex.Message;
 		}
 		VoiceSlider.Value = dictionary["voice"];
 		BgmSlider.Value = dictionary["bgm"];
@@ -92,12 +92,12 @@ public partial class AudioSettingsView : UserControl, IComponentConnector
 			string contents = $"[audio]\nbgm={(int)BgmSlider.Value}\nvoice={(int)VoiceSlider.Value}\neffects={(int)EffectsSlider.Value}\n";
 			File.WriteAllText(text, contents, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
 			File.Move(text, settingsPath, overwrite: true);
-			StatusText.Text = "已保存 · 游戏运行时实时应用，下次启动也会保留。";
+			StatusText.Text = "Saved - applied live while the game is running, and kept for next time.";
 			return true;
 		}
 		catch (Exception ex)
 		{
-			StatusText.Text = "保存音量设置失败：" + ex.Message;
+			StatusText.Text = "Could not save the volume settings: " + ex.Message;
 			return false;
 		}
 		finally

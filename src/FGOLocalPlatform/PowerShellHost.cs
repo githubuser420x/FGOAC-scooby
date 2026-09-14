@@ -65,6 +65,6 @@ internal static class PowerShellHost
 			{
 			}
 		}
-		throw new IOException("未找到可运行的 64 位 PowerShell。支持系统自带 Windows PowerShell 5.1 或 PowerShell 7；请启用其中一种，或将便携版 pwsh.exe 所在目录加入 PATH。无需安装指定的 7.x 小版本。");
+		throw new IOException("No 64-bit PowerShell was found - enable the built-in Windows PowerShell 5.1, install PowerShell 7, or add the folder holding a portable pwsh.exe to PATH. Any 7.x version will do.");
 	}
 }

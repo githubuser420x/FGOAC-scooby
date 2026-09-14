@@ -18,9 +18,9 @@ public static class FaceMotionCatalog
 		List<(string, string)> list = new List<(string, string)>();
 		if (match.Success)
 		{
-			list.Add((Path.Combine(path, "FACE_" + match.Value.ToUpperInvariant() + ".farc"), "角色专属"));
+			list.Add((Path.Combine(path, "FACE_" + match.Value.ToUpperInvariant() + ".farc"), "Character-specific"));
 		}
-		list.Add((Path.Combine(path, "FACE_CMN.farc"), "通用表情"));
+		list.Add((Path.Combine(path, "FACE_CMN.farc"), "Shared expressions"));
 		List<FaceMotionEntry> list2 = new List<FaceMotionEntry>();
 		HashSet<string> hashSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 		FgoFaceMotionParser fgoFaceMotionParser = new FgoFaceMotionParser();

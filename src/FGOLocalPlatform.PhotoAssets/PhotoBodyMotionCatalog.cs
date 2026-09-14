@@ -65,7 +65,7 @@ public static class PhotoBodyMotionCatalog
 			{
 				FgoMotion fgoMotion = new FgoMotionParser().Parse(farcArchive.Read(item), item.Name);
 				bool flag = IsCompatible(fgoMotion, jointType, bones);
-				list.Add(new PhotoBodyMotionEntry(farcArchive.Path, item.Name, fgoMotion.SkeletonName, fgoMotion.FrameCount, flag, flag ? "骨架匹配" : "骨架不匹配"));
+				list.Add(new PhotoBodyMotionEntry(farcArchive.Path, item.Name, fgoMotion.SkeletonName, fgoMotion.FrameCount, flag, flag ? "Skeleton matches" : "Skeleton does not match"));
 			}
 			catch (FgoFormatException ex)
 			{
@@ -78,11 +78,11 @@ public static class PhotoBodyMotionCatalog
 	public static FgoMotion Load(PhotoBodyMotionEntry entry, int jointType, IReadOnlyList<PhotoRigBone> bones)
 	{
 		FarcArchive farcArchive = new FarcArchive(entry.ArchivePath);
-		FarcEntry farcEntry = farcArchive.Entries.SingleOrDefault((FarcEntry e) => e.Name == entry.EntryName) ?? throw new FgoFormatException("动作条目已不存在");
+		FarcEntry farcEntry = farcArchive.Entries.SingleOrDefault((FarcEntry e) => e.Name == entry.EntryName) ?? throw new FgoFormatException("That motion is no longer in the archive.");
 		FgoMotion fgoMotion = new FgoMotionParser().Parse(farcArchive.Read(farcEntry), farcEntry.Name);
 		if (!IsCompatible(fgoMotion, jointType, bones))
 		{
-			throw new FgoFormatException("动作与当前角色骨架不兼容");
+			throw new FgoFormatException("This motion does not fit the character's skeleton.");
 		}
 		return fgoMotion;
 	}
@@ -91,7 +91,7 @@ public static class PhotoBodyMotionCatalog
 	{
 		if (!float.IsFinite(frame) || original.Length != motion.Tracks.Count * 10)
 		{
-			throw new ArgumentException("动画时间或原始姿态无效");
+			throw new ArgumentException("The animation time or the original pose is not valid.");
 		}
 		float[] array = original.ToArray();
 		frame = Math.Clamp(frame, 0f, Math.Max(0, motion.FrameCount - 1));
@@ -123,7 +123,7 @@ public static class PhotoBodyMotionCatalog
 		}
 		if (array.Any((float v) => !float.IsFinite(v)))
 		{
-			throw new FgoFormatException("动作姿态包含非有限数值");
+			throw new FgoFormatException("The motion pose holds values that are not finite numbers.");
 		}
 		return array;
 	}

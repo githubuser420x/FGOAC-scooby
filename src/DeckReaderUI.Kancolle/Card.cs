@@ -64,9 +64,9 @@ public class Card
 		{
 			if (CardTypeId != 2)
 			{
-				return "从者";
+				return "Servant";
 			}
-			return "概念礼装";
+			return "Craft Essence";
 		}
 	}
 
@@ -76,7 +76,7 @@ public class Card
 
 	public int CopyNumber { get; } = 1;
 
-	public string CopyLabel => $"{CardTypeLabel} · 第 {CopyNumber} 张";
+	public string CopyLabel => $"{CardTypeLabel} - Copy {CopyNumber}";
 
 	public TrcMetadata? Trc { get; }
 

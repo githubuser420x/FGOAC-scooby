@@ -34,7 +34,7 @@ internal static class ProcessCompletion
 			{
 				throw;
 			}
-			throw new TimeoutException($"操作超过 {timeout.TotalSeconds:0} 秒，已结束控制命令。请查看 logs/server-control.log。");
+			throw new TimeoutException($"The operation took longer than {timeout.TotalSeconds:0} seconds and the control command was stopped - see logs/server-control.log for details.");
 		}
 	}
 }

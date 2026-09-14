@@ -15,7 +15,7 @@ public sealed class EasterEggSettingsView : StackPanel
 
 	public ToggleButton EnabledCheckBox { get; } = new ToggleButton
 	{
-		Content = "彩蛋",
+		Content = "Easter Egg",
 		FontSize = 15.0,
 		Foreground = Brushes.White,
 		MinWidth = 110.0,
@@ -47,7 +47,7 @@ public sealed class EasterEggSettingsView : StackPanel
 		stackPanel.Children.Add(EnabledCheckBox);
 		stackPanel.Children.Add(new TextBlock
 		{
-			Text = "打开后进入游戏看看？",
+			Text = "Turn it on, then take a look in game.",
 			Margin = new Thickness(12.0, 0.0, 0.0, 0.0),
 			VerticalAlignment = VerticalAlignment.Center,
 			Foreground = Brushes.LightGray,
@@ -71,7 +71,7 @@ public sealed class EasterEggSettingsView : StackPanel
 		}
 		catch (IOException ex)
 		{
-			StatusText.Text = "读取彩蛋设置失败：" + ex.Message;
+			StatusText.Text = "Could not read the Easter egg setting: " + ex.Message;
 			StatusText.Visibility = Visibility.Visible;
 		}
 		EnabledCheckBox.Click += delegate
@@ -94,7 +94,7 @@ public sealed class EasterEggSettingsView : StackPanel
 		}
 		catch (Exception ex)
 		{
-			StatusText.Text = "保存彩蛋设置失败：" + ex.Message;
+			StatusText.Text = "Could not save the Easter egg setting: " + ex.Message;
 			StatusText.Visibility = Visibility.Visible;
 			return false;
 		}

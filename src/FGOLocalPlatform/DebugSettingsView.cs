@@ -46,11 +46,11 @@ public partial class DebugSettingsView : UserControl, IComponentConnector
 					}
 				}
 			}
-			StatusText.Text = "设置已读取；新增昏倒选项需加载新版游戏钩子，实际覆盖范围待实战验证。";
+			StatusText.Text = "Settings loaded - the new stun option needs the updated game hook, and how far it reaches still needs testing in battle.";
 		}
 		catch (Exception ex)
 		{
-			StatusText.Text = "读取预设失败：" + ex.Message;
+			StatusText.Text = "Could not read the presets: " + ex.Message;
 		}
 		ready = true;
 	}
@@ -77,12 +77,12 @@ public partial class DebugSettingsView : UserControl, IComponentConnector
 			stringBuilder.Append("freeze_enemy=0\nenemy_evade=0\nenemy_flee=0\nenemy_guard=0\n");
 			File.WriteAllText(text, stringBuilder.ToString(), new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
 			File.Move(text, settingsPath, overwrite: true);
-			StatusText.Text = "设置已保存；已加载新版游戏钩子时，战斗开关约一秒后生效。";
+			StatusText.Text = "Settings saved - with the updated game hook loaded, the battle toggles take effect about a second later.";
 			return true;
 		}
 		catch (Exception ex)
 		{
-			StatusText.Text = "保存预设失败：" + ex.Message;
+			StatusText.Text = "Could not save the presets: " + ex.Message;
 			return false;
 		}
 	}

@@ -19,11 +19,11 @@ internal static class CardNames
 
 	public static Names Get(Card card)
 	{
-		return Entries.GetValueOrDefault(CardFormState.EntityKey(card)) ?? new Names(card.Trc?.Name ?? card.DisplayName, "暂无译名");
+		return Entries.GetValueOrDefault(CardFormState.EntityKey(card)) ?? new Names(card.Trc?.Name ?? card.DisplayName, "Name not available");
 	}
 
 	public static string Chinese(int kind, int id)
 	{
-		return Entries.GetValueOrDefault($"{((kind == 1) ? "SVT" : "CE")}{id:D5}")?.Chinese ?? "暂无译名";
+		return Entries.GetValueOrDefault($"{((kind == 1) ? "SVT" : "CE")}{id:D5}")?.Chinese ?? "Name not available";
 	}
 }

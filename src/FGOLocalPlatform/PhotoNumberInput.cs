@@ -26,7 +26,7 @@ public static class PhotoNumberInput
 			Background = new SolidColorBrush(Color.FromRgb(23, 18, 27)),
 			BorderBrush = new SolidColorBrush(Color.FromRgb(86, 65, 93)),
 			BorderThickness = new Thickness(1.0),
-			ToolTip = "输入数值后按 Enter 或点击别处应用；Esc 撤销输入。超出范围时取最近有效值。"
+			ToolTip = "Type a value and press Enter, or click elsewhere, to apply it; Esc undoes what you typed. A value outside the range snaps to the nearest one allowed."
 		};
 		slider.ValueChanged += delegate
 		{
@@ -89,7 +89,7 @@ public static class PhotoNumberInput
 			{
 				(UIElement)new TextBlock
 				{
-					Text = "时间（秒）",
+					Text = "Time (s)",
 					VerticalAlignment = VerticalAlignment.Center,
 					Margin = new Thickness(0.0, 0.0, 8.0, 0.0)
 				},

@@ -35,7 +35,7 @@ internal static class RuntimeDiagnostics
 		{
 			processStartInfo.ArgumentList.Add(item);
 		}
-		using Process process = Process.Start(processStartInfo) ?? throw new IOException("无法运行环境检查。");
+		using Process process = Process.Start(processStartInfo) ?? throw new IOException("Could not start the environment check.");
 		Task<string> output = process.StandardOutput.ReadToEndAsync();
 		Task<string> error = process.StandardError.ReadToEndAsync();
 		using CancellationTokenSource timeout = new CancellationTokenSource(TimeSpan.FromSeconds(45.0));
@@ -46,9 +46,9 @@ internal static class RuntimeDiagnostics
 		catch (OperationCanceledException)
 		{
 			process.Kill(entireProcessTree: true);
-			throw new IOException("环境检查超过 45 秒，请查看安全软件是否阻止脚本或内置 Python。");
+			throw new IOException("The environment check took longer than 45 seconds. Check whether your antivirus is blocking PowerShell or the bundled Python, then run it again.");
 		}
-		string text = $"检查时间：{DateTime.Now:yyyy-MM-dd HH:mm:ss}\n脚本程序：{PowerShellHost.Executable}\n\n";
+		string text = $"Checked at {DateTime.Now:yyyy-MM-dd HH:mm:ss}\nScript host: {PowerShellHost.Executable}\n\n";
 		string result = text + await output;
 		string text2 = await error;
 		if (!string.IsNullOrWhiteSpace(text2))

@@ -53,12 +53,12 @@ public partial class CursorSettingsView : UserControl, IComponentConnector
 			if (File.Exists(path2))
 			{
 				artwork = CursorArtwork.Load(path2);
-				ImageName.Text = "已保存的自定义图片";
+				ImageName.Text = "Saved custom image";
 			}
 		}
 		catch (Exception ex)
 		{
-			Status.Text = "无法读取已保存的指针设置：" + ex.Message;
+			Status.Text = "Could not read the saved pointer settings: " + ex.Message;
 		}
 		Mode.SelectedIndex = Math.Clamp((int)GetPrivateProfileInt("touch", "cursorStyle", 0, ini), 0, 2);
 		try
@@ -77,13 +77,13 @@ public partial class CursorSettingsView : UserControl, IComponentConnector
 					byte[] bytes = CursorArtwork.Build(artwork, (int)SizeSlider.Value, (int)OutlineSlider.Value, HotX.Value / 100.0, HotY.Value / 100.0);
 					File.WriteAllBytes(text + ".tmp", bytes);
 					File.Move(text + ".tmp", text, overwrite: true);
-					Status.Text = "已升级旧版光标颜色格式，下次启动游戏生效。";
+					Status.Text = "Upgraded the old cursor color format - it takes effect the next time the game starts.";
 				}
 			}
 		}
 		catch (Exception ex2)
 		{
-			Status.Text = "光标格式升级失败，请重新保存：" + ex2.Message;
+			Status.Text = "Could not upgrade the cursor format, save again: " + ex2.Message;
 		}
 		ready = true;
 		RefreshPreview();
@@ -93,8 +93,8 @@ public partial class CursorSettingsView : UserControl, IComponentConnector
 	{
 		OpenFileDialog openFileDialog = new OpenFileDialog
 		{
-			Filter = "图片|*.png;*.jpg;*.jpeg;*.bmp",
-			Title = "选择游戏指针图片"
+			Filter = "Images|*.png;*.jpg;*.jpeg;*.bmp",
+			Title = "Choose a pointer image"
 		};
 		if (openFileDialog.ShowDialog() != true)
 		{
@@ -109,7 +109,7 @@ public partial class CursorSettingsView : UserControl, IComponentConnector
 		}
 		catch (Exception ex)
 		{
-			Status.Text = "无法打开图片：" + ex.Message;
+			Status.Text = "Could not open the image: " + ex.Message;
 		}
 	}
 
@@ -118,7 +118,7 @@ public partial class CursorSettingsView : UserControl, IComponentConnector
 		if (ready)
 		{
 			RefreshPreview();
-			Status.Text = "设置尚未保存。";
+			Status.Text = "Settings are not saved yet.";
 		}
 	}
 
@@ -145,7 +145,7 @@ public partial class CursorSettingsView : UserControl, IComponentConnector
 			{
 				if (artwork == null)
 				{
-					throw new InvalidOperationException("请先选择一张指针图片。");
+					throw new InvalidOperationException("Choose a pointer image first.");
 				}
 				byte[] bytes = CursorArtwork.Build(artwork, (int)SizeSlider.Value, (int)OutlineSlider.Value, HotX.Value / 100.0, HotY.Value / 100.0);
 				Directory.CreateDirectory(directory);
@@ -180,11 +180,11 @@ public partial class CursorSettingsView : UserControl, IComponentConnector
 					throw new Win32Exception(Marshal.GetLastWin32Error());
 				}
 			}
-			Status.Text = "指针设置已保存，下次启动游戏生效。";
+			Status.Text = "Pointer settings saved - they take effect the next time the game starts.";
 		}
 		catch (Exception ex)
 		{
-			Status.Text = "保存失败：" + ex.Message;
+			Status.Text = "Could not save: " + ex.Message;
 		}
 	}
 }
