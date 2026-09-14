@@ -144,7 +144,7 @@ public sealed class SummonCardOption : INotifyPropertyChanged
 				bitmapImage.DecodePixelWidth = 100;
 				bitmapImage.UriSource = new Uri(ImagePath);
 				bitmapImage.EndInit();
-				((Freezable)bitmapImage).Freeze();
+				bitmapImage.Freeze();
 				icon = bitmapImage;
 			}
 			catch (Exception ex) when (((ex is IOException || ex is NotSupportedException) ? 1 : 0) != 0)

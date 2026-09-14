@@ -15,15 +15,14 @@ internal static class CursorArtwork
 		bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
 		bitmapImage.UriSource = new Uri(Path.GetFullPath(path));
 		bitmapImage.EndInit();
-		((Freezable)bitmapImage).Freeze();
+		bitmapImage.Freeze();
 		return bitmapImage;
 	}
 
 	private static byte[] Pixels(BitmapSource image, int size, int outline)
 	{
-		//IL_0070: Unknown result type (might be due to invalid IL or missing references)
 		DrawingVisual drawingVisual = new DrawingVisual();
-		RenderOptions.SetBitmapScalingMode((DependencyObject)(object)drawingVisual, BitmapScalingMode.HighQuality);
+		RenderOptions.SetBitmapScalingMode(drawingVisual, BitmapScalingMode.HighQuality);
 		using (DrawingContext drawingContext = drawingVisual.RenderOpen())
 		{
 			double num = Math.Min((double)(size - 2 * outline) / (double)image.PixelWidth, (double)(size - 2 * outline) / (double)image.PixelHeight);
@@ -106,7 +105,7 @@ internal static class CursorArtwork
 			}
 		}
 		BitmapSource bitmapSource = BitmapSource.Create(size, size, 96.0, 96.0, PixelFormats.Bgra32, null, array, size * 4);
-		((Freezable)bitmapSource).Freeze();
+		bitmapSource.Freeze();
 		return bitmapSource;
 	}
 

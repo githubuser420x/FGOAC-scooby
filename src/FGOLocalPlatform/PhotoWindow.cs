@@ -243,9 +243,6 @@ public sealed class PhotoWindow : UserControl
 
 	public PhotoWindow(Window owner, string configPath, int? gamePid)
 	{
-		//IL_009b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00a0: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00b9: Expected O, but got Unknown
 		this.owner = owner;
 		faceView = new PhotoFaceView(Path.GetDirectoryName(configPath));
 		bodyView = new PhotoBodyView(Path.GetDirectoryName(configPath), faceView);
@@ -535,24 +532,10 @@ public sealed class PhotoWindow : UserControl
 			};
 			button3.PreviewKeyDown += delegate(object _, KeyEventArgs e)
 			{
-				//IL_0011: Unknown result type (might be due to invalid IL or missing references)
-				//IL_001b: Invalid comparison between Unknown and I4
-				//IL_0026: Unknown result type (might be due to invalid IL or missing references)
-				//IL_001e: Unknown result type (might be due to invalid IL or missing references)
-				//IL_002b: Unknown result type (might be due to invalid IL or missing references)
-				//IL_002c: Unknown result type (might be due to invalid IL or missing references)
-				//IL_002f: Unknown result type (might be due to invalid IL or missing references)
-				//IL_0031: Invalid comparison between Unknown and I4
-				//IL_0033: Unknown result type (might be due to invalid IL or missing references)
-				//IL_0036: Unknown result type (might be due to invalid IL or missing references)
-				//IL_0038: Invalid comparison between Unknown and I4
-				//IL_0044: Unknown result type (might be due to invalid IL or missing references)
-				//IL_0047: Invalid comparison between Unknown and I4
-				//IL_005a: Unknown result type (might be due to invalid IL or missing references)
 				if (binding)
 				{
 					e.Handled = true;
-					Key val = (((int)e.Key == 156) ? e.SystemKey : e.Key);
+					Key val = ((e.Key == Key.System) ? e.SystemKey : e.Key);
 					if ((uint)(val - 70) > 1u && (uint)(val - 116) > 5u)
 					{
 						if ((int)val != 13)
@@ -648,8 +631,6 @@ public sealed class PhotoWindow : UserControl
 
 	private static string KeyLabel(int key)
 	{
-		//IL_000b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0010: Unknown result type (might be due to invalid IL or missing references)
 		return key switch
 		{
 			32 => "Space", 
@@ -1088,11 +1069,7 @@ public sealed class PhotoWindow : UserControl
 		}
 		overlay.PreviewKeyDown += delegate(object _, KeyEventArgs e)
 		{
-			//IL_0001: Unknown result type (might be due to invalid IL or missing references)
-			//IL_000b: Invalid comparison between Unknown and I4
-			//IL_0016: Unknown result type (might be due to invalid IL or missing references)
-			//IL_000e: Unknown result type (might be due to invalid IL or missing references)
-			if (KeyInterop.VirtualKeyFromKey(((int)e.Key == 156) ? e.SystemKey : e.Key) == keys[0])
+			if (KeyInterop.VirtualKeyFromKey((e.Key == Key.System) ? e.SystemKey : e.Key) == keys[0])
 			{
 				Send(1);
 				e.Handled = true;

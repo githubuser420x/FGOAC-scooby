@@ -101,9 +101,6 @@ public sealed class PhotoBodyView : StackPanel, IDisposable
 
 	public PhotoBodyView(string gameRoot, PhotoFaceView actorSelection)
 	{
-		//IL_00aa: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00af: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00c8: Expected O, but got Unknown
 		root = gameRoot;
 		selection = actorSelection;
 		PhotoMotionUi.Configure(clips);

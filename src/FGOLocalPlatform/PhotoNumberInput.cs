@@ -41,16 +41,12 @@ public static class PhotoNumberInput
 		};
 		box.PreviewKeyDown += delegate(object _, KeyEventArgs e)
 		{
-			//IL_0001: Unknown result type (might be due to invalid IL or missing references)
-			//IL_0007: Invalid comparison between Unknown and I4
-			//IL_0018: Unknown result type (might be due to invalid IL or missing references)
-			//IL_001f: Invalid comparison between Unknown and I4
-			if ((int)e.Key == 6)
+			if (e.Key == Key.Return)
 			{
 				Commit();
 				e.Handled = true;
 			}
-			else if ((int)e.Key == 13)
+			else if (e.Key == Key.Escape)
 			{
 				Refresh();
 				e.Handled = true;
@@ -68,7 +64,7 @@ public static class PhotoNumberInput
 					result = slider.Minimum + Math.Round((result - slider.Minimum) / slider.TickFrequency) * slider.TickFrequency;
 				}
 				beforeCommit?.Invoke();
-				((DependencyObject)slider).SetCurrentValue(RangeBase.ValueProperty, (object)Math.Clamp(result, slider.Minimum, slider.Maximum));
+				slider.SetCurrentValue(RangeBase.ValueProperty, (object)Math.Clamp(result, slider.Minimum, slider.Maximum));
 			}
 			Refresh();
 		}

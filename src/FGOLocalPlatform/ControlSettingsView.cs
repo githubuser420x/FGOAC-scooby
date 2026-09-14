@@ -427,13 +427,6 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 
 	public unsafe ControlSettingsView()
 	{
-		//IL_000c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0011: Unknown result type (might be due to invalid IL or missing references)
-		//IL_002a: Expected O, but got Unknown
-		//IL_02f0: Unknown result type (might be due to invalid IL or missing references)
-		//IL_02f5: Unknown result type (might be due to invalid IL or missing references)
-		//IL_02f7: Unknown result type (might be due to invalid IL or missing references)
-		//IL_02fb: Unknown result type (might be due to invalid IL or missing references)
 		InitializeComponent();
 		(string, string, int)[] array = new(string, string, int)[4]
 		{

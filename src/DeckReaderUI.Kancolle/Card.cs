@@ -220,7 +220,7 @@ public class Card
 		bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
 		bitmapImage.UriSource = new Uri(System.IO.Path.GetFullPath(path));
 		bitmapImage.EndInit();
-		((Freezable)bitmapImage).Freeze();
+		bitmapImage.Freeze();
 		return bitmapImage;
 	}
 
@@ -234,7 +234,7 @@ public class Card
 		bitmapImage.DecodePixelWidth = 144;
 		bitmapImage.UriSource = new Uri(uriString, UriKind.Absolute);
 		bitmapImage.EndInit();
-		((Freezable)bitmapImage).Freeze();
+		bitmapImage.Freeze();
 		return bitmapImage;
 	}
 
@@ -264,7 +264,7 @@ public class Card
 			BitmapSource bitmapSource = BitmapDecoder.Create(bitmapStream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad).Frames[0];
 			double num = Math.Min(160.0 / (double)bitmapSource.PixelWidth, 224.0 / (double)bitmapSource.PixelHeight);
 			BitmapSource bitmapSource2 = ((num < 1.0) ? new TransformedBitmap(bitmapSource, new ScaleTransform(num, num)) : bitmapSource);
-			((Freezable)bitmapSource2).Freeze();
+			bitmapSource2.Freeze();
 			JpegBitmapEncoder jpegBitmapEncoder = new JpegBitmapEncoder
 			{
 				QualityLevel = 84

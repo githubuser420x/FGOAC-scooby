@@ -24,9 +24,6 @@ public partial class AudioSettingsView : UserControl, IComponentConnector
 
 	public AudioSettingsView(string path)
 	{
-		//IL_0014: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0019: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0032: Expected O, but got Unknown
 		settingsPath = path;
 		InitializeComponent();
 		saveTimer = new DispatcherTimer

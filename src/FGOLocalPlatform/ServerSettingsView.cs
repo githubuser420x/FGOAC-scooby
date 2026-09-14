@@ -114,7 +114,6 @@ public partial class ServerSettingsView : UserControl, IComponentConnector
 
 	public async Task ReloadAsync()
 	{
-		_ = 1;
 		try
 		{
 			JsonNode config = await RunTool("show");
@@ -146,7 +145,6 @@ public partial class ServerSettingsView : UserControl, IComponentConnector
 				bool open = false;
 				using TcpClient socket = new TcpClient();
 				using CancellationTokenSource timeout = new CancellationTokenSource(500);
-				_ = 1;
 				try
 				{
 					await socket.ConnectAsync("127.0.0.1", port, timeout.Token);

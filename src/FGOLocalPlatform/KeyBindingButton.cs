@@ -59,24 +59,13 @@ public sealed class KeyBindingButton : Button
 
 	protected override void OnPreviewKeyDown(KeyEventArgs e)
 	{
-		//IL_0018: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0022: Invalid comparison between Unknown and I4
-		//IL_0042: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0025: Unknown result type (might be due to invalid IL or missing references)
-		//IL_002f: Invalid comparison between Unknown and I4
-		//IL_0047: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0048: Unknown result type (might be due to invalid IL or missing references)
-		//IL_004b: Invalid comparison between Unknown and I4
-		//IL_003a: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0032: Unknown result type (might be due to invalid IL or missing references)
-		//IL_005a: Unknown result type (might be due to invalid IL or missing references)
 		if (!listening)
 		{
 			base.OnPreviewKeyDown(e);
 			return;
 		}
 		e.Handled = true;
-		Key val = (((int)e.Key == 156) ? e.SystemKey : (((int)e.Key == 155) ? e.ImeProcessedKey : e.Key));
+		Key val = ((e.Key == Key.System) ? e.SystemKey : ((e.Key == Key.ImeProcessed) ? e.ImeProcessedKey : e.Key));
 		if ((int)val == 13)
 		{
 			Value = value;
@@ -110,9 +99,6 @@ public sealed class KeyBindingButton : Button
 
 	public static string KeyName(int vk)
 	{
-		//IL_046e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0476: Unknown result type (might be due to invalid IL or missing references)
-		//IL_047b: Unknown result type (might be due to invalid IL or missing references)
 		switch (vk)
 		{
 		case 0:

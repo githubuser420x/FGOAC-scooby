@@ -26,8 +26,6 @@ internal static class ThemedMessageBox
 	/// </summary>
 	public static MessageBoxResult Show(Window? owner, string message, string caption = "FGOAC scooby", MessageBoxButton buttons = MessageBoxButton.OK, MessageBoxImage image = MessageBoxImage.None, MessageBoxResult defaultResult = MessageBoxResult.None, bool foreground = false)
 	{
-		//IL_01c5: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01ca: Unknown result type (might be due to invalid IL or missing references)
 		if (owner == null)
 		{
 			owner = Application.Current?.Windows.OfType<Window>().FirstOrDefault((Window w) => w.IsActive);
@@ -189,13 +187,7 @@ internal static class ThemedMessageBox
 		};
 		dialog.PreviewKeyDown += delegate(object _, KeyEventArgs e)
 		{
-			//IL_0001: Unknown result type (might be due to invalid IL or missing references)
-			//IL_0008: Invalid comparison between Unknown and I4
-			//IL_000b: Unknown result type (might be due to invalid IL or missing references)
-			//IL_0012: Invalid comparison between Unknown and I4
-			//IL_0015: Unknown result type (might be due to invalid IL or missing references)
-			//IL_001c: Invalid comparison between Unknown and I4
-			MessageBoxResult messageBoxResult = (((int)e.Key == 68) ? MessageBoxResult.Yes : (((int)e.Key == 57 || ((int)e.Key == 13 && buttons == MessageBoxButton.YesNo)) ? MessageBoxResult.No : MessageBoxResult.None));
+			MessageBoxResult messageBoxResult = ((e.Key == Key.Y) ? MessageBoxResult.Yes : ((e.Key == Key.N || (e.Key == Key.Escape && buttons == MessageBoxButton.YesNo)) ? MessageBoxResult.No : MessageBoxResult.None));
 			if (messageBoxResult != MessageBoxResult.None && Enumerable.Contains(choices, messageBoxResult))
 			{
 				result = messageBoxResult;

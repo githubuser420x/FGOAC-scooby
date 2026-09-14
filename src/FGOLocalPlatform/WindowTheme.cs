@@ -20,8 +20,8 @@ internal static class WindowTheme
 		window.FontSize = 14.0;
 		window.UseLayoutRounding = true;
 		window.SnapsToDevicePixels = true;
-		TextOptions.SetTextFormattingMode((DependencyObject)(object)window, (TextFormattingMode)1);
-		TextOptions.SetTextRenderingMode((DependencyObject)(object)window, TextRenderingMode.ClearType);
+		TextOptions.SetTextFormattingMode(window, TextFormattingMode.Display);
+		TextOptions.SetTextRenderingMode(window, TextRenderingMode.ClearType);
 		window.SourceInitialized += delegate
 		{
 			EnableDarkTitleBar(window);

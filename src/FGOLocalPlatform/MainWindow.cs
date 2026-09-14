@@ -446,12 +446,6 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 
 	public MainWindow()
 	{
-		//IL_01fa: Unknown result type (might be due to invalid IL or missing references)
-		//IL_01ff: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0218: Expected O, but got Unknown
-		//IL_0230: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0235: Unknown result type (might be due to invalid IL or missing references)
-		//IL_024e: Expected O, but got Unknown
 		InitializeComponent();
 		ApplyProtectedBranding();
 		// The channel name is hashed from the game folder, the same way the launch script hands it
@@ -974,9 +968,9 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		ClearIconSelection();
 		CardList.ItemTemplate = (useIcons ? cardIconRowTemplate : cardListItemTemplate);
 		CardList.ItemsPanel = cardListItemsPanel;
-		ScrollViewer.SetCanContentScroll((DependencyObject)(object)CardList, canContentScroll: true);
-		VirtualizingPanel.SetIsVirtualizing((DependencyObject)(object)CardList, value: true);
-		VirtualizingPanel.SetVirtualizationMode((DependencyObject)(object)CardList, VirtualizationMode.Recycling);
+		ScrollViewer.SetCanContentScroll(CardList, canContentScroll: true);
+		VirtualizingPanel.SetIsVirtualizing(CardList, value: true);
+		VirtualizingPanel.SetVirtualizationMode(CardList, VirtualizationMode.Recycling);
 		SetViewButtonState(ListViewModeButton, !useIcons);
 		SetViewButtonState(IconViewModeButton, useIcons);
 		UpdateCardItemsSource();
@@ -986,8 +980,8 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 	{
 		if (!active)
 		{
-			((DependencyObject)button).ClearValue(Control.BackgroundProperty);
-			((DependencyObject)button).ClearValue(Control.BorderBrushProperty);
+			button.ClearValue(Control.BackgroundProperty);
+			button.ClearValue(Control.BorderBrushProperty);
 		}
 		else
 		{
@@ -1022,8 +1016,6 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 
 	private void CardList_OnSizeChanged(object sender, SizeChangedEventArgs e)
 	{
-		//IL_0014: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0019: Unknown result type (might be due to invalid IL or missing references)
 		if (iconCardView)
 		{
 			Size newSize = e.NewSize;
@@ -1041,8 +1033,8 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			Card card = tag.Card;
 			if (selectedIconButton != null && selectedIconButton != button)
 			{
-				((DependencyObject)selectedIconButton).ClearValue(Control.BackgroundProperty);
-				((DependencyObject)selectedIconButton).ClearValue(Control.BorderBrushProperty);
+				selectedIconButton.ClearValue(Control.BackgroundProperty);
+				selectedIconButton.ClearValue(Control.BorderBrushProperty);
 			}
 			selectedIconCard = card;
 			selectedIconButton = button;
@@ -1063,8 +1055,8 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 	{
 		if (selectedIconButton != null)
 		{
-			((DependencyObject)selectedIconButton).ClearValue(Control.BackgroundProperty);
-			((DependencyObject)selectedIconButton).ClearValue(Control.BorderBrushProperty);
+			selectedIconButton.ClearValue(Control.BackgroundProperty);
+			selectedIconButton.ClearValue(Control.BorderBrushProperty);
 		}
 		selectedIconButton = null;
 		selectedIconCard = null;
@@ -2775,9 +2767,6 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 
 	private void SaveLayoutSettings()
 	{
-		//IL_007b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_005c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0080: Unknown result type (might be due to invalid IL or missing references)
 		string text = Path.Combine(GamePaths.GameRoot, "fgo-launcher.json");
 		try
 		{
@@ -3215,8 +3204,6 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 
 	private void UpdateHideUiKeyLabel()
 	{
-		//IL_000c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0011: Unknown result type (might be due to invalid IL or missing references)
 		HideUiKeyButton.Content = ((object)KeyInterop.KeyFromVirtualKey(hideUiVirtualKey)/*cast due to constrained. prefix*/).ToString();
 	}
 
@@ -3235,26 +3222,12 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 
 	private void HideUiKeyButton_OnPreviewKeyDown(object sender, KeyEventArgs e)
 	{
-		//IL_0011: Unknown result type (might be due to invalid IL or missing references)
-		//IL_001b: Invalid comparison between Unknown and I4
-		//IL_0026: Unknown result type (might be due to invalid IL or missing references)
-		//IL_001e: Unknown result type (might be due to invalid IL or missing references)
-		//IL_002b: Unknown result type (might be due to invalid IL or missing references)
-		//IL_002c: Unknown result type (might be due to invalid IL or missing references)
-		//IL_002f: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0031: Invalid comparison between Unknown and I4
-		//IL_0033: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0036: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0038: Invalid comparison between Unknown and I4
-		//IL_0044: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0047: Invalid comparison between Unknown and I4
-		//IL_004a: Unknown result type (might be due to invalid IL or missing references)
 		if (!bindingHideUiKey)
 		{
 			return;
 		}
 		e.Handled = true;
-		Key val = (((int)e.Key == 156) ? e.SystemKey : e.Key);
+		Key val = ((e.Key == Key.System) ? e.SystemKey : e.Key);
 		if ((uint)(val - 70) > 1u && (uint)(val - 116) > 5u)
 		{
 			if ((int)val != 13)
@@ -3505,9 +3478,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 
 	private void CardsPathTextBox_OnKeyDown(object sender, KeyEventArgs e)
 	{
-		//IL_0001: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0007: Invalid comparison between Unknown and I4
-		if ((int)e.Key == 6)
+		if (e.Key == Key.Return)
 		{
 			Reload();
 		}

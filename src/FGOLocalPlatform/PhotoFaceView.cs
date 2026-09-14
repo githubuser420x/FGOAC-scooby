@@ -80,9 +80,6 @@ public sealed class PhotoFaceView : StackPanel, IDisposable
 
 	public PhotoFaceView(string root)
 	{
-		//IL_00ce: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00d3: Unknown result type (might be due to invalid IL or missing references)
-		//IL_00ec: Expected O, but got Unknown
 		gameRoot = root;
 		playbackTimer.Tick += delegate
 		{
