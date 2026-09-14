@@ -2932,10 +2932,15 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 				device = jsonObject["monitorDevice"]?.GetValue<string>() ?? "";
 				ChineseEnabledCheckBox.IsChecked = jsonObject["chineseEnabled"]?.GetValue<bool>() ?? false;
 				GpuCompatCheckBox.IsChecked = GpuCompat.IsInstalled;
-				GpuCompatCheckBox.IsEnabled = GpuCompat.SourceAvailable || GpuCompat.IsInstalled;
+				bool nvidiaPresent = GpuCompat.HasNvidiaAdapter();
+				GpuCompatCheckBox.IsEnabled = GpuCompat.IsInstalled || (GpuCompat.SourceAvailable && !nvidiaPresent);
 				if (!GpuCompat.SourceAvailable)
 				{
 					GpuCompatHelpText.Text = "The layer's file is missing: " + GpuCompat.SourcePath;
+				}
+				else if (nvidiaPresent && !GpuCompat.IsInstalled)
+				{
+					GpuCompatHelpText.Text = "Not available on this PC: an NVIDIA card is present, and on NVIDIA the layer turns the game into a white window. It is for AMD and Intel only.";
 				}
 				if (jsonObject["graphics"] is JsonObject jsonObject2)
 				{

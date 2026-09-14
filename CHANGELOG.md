@@ -16,6 +16,7 @@ installer that puts them there.
 - AMD and Intel graphics. The package carries a community OpenGL compatibility layer
   (`compat\fgoglcompat.dll`) that translates the game's NVIDIA-only extensions. The launcher turns
   it on by itself on a PC without an NVIDIA card, and a switch on the Display page controls it.
+  On a PC with an NVIDIA card the switch is greyed out: there the layer only produces a white window.
 - Drag and drop in the deck editor. Drag a card from the library into the deck to add one copy,
   drag a deck card to reorder it, or drag it back into the library to remove it. Double-click
   still opens the type-and-quantity dialog.

@@ -23,7 +23,7 @@ carries no game files: it is applied on top of an FGO Arcade local platform inst
 | --- | --- |
 | The game | An existing **FGO Arcade local platform V1.01** install (Cloud23333's package) - the folder that holds `App` and `Server` |
 | OS | Windows 10 or 11, 64-bit |
-| GPU | NVIDIA on a current driver. AMD and Intel run through the bundled compatibility layer, which the launcher turns on by itself on a PC without an NVIDIA card |
+| GPU | NVIDIA on a current driver. AMD and Intel run through the bundled compatibility layer, which the launcher turns on by itself on a PC without an NVIDIA card (and keeps off on NVIDIA, where it does not work) |
 | Drive | Any drive **except E: or Y:** - see the table further down |
 | Rights | Administrator: one Windows prompt when the launcher starts |
 

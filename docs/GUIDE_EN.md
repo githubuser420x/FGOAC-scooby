@@ -16,7 +16,7 @@ V1.01 package) and is applied on top of it.
 | Requirement | Notes |
 | --- | --- |
 | OS | Windows 10 or 11, 64-bit |
-| GPU | NVIDIA on a current driver. AMD and Intel run through the bundled compatibility layer (Settings > Display), turned on by itself when no NVIDIA card is found |
+| GPU | NVIDIA on a current driver. AMD and Intel run through the bundled compatibility layer (Settings > Display), turned on by itself when no NVIDIA card is found and greyed out on NVIDIA, where it does not work |
 | .NET / Python | Not needed - both are bundled with the install |
 | PowerShell | 5.1 (built into Windows) or 7 |
 | Rights | Administrator (one UAC prompt) |
