@@ -12,7 +12,7 @@ installer that puts them there.
 ## [1.1.0] - 2026-09-14
 
 First public release, for Cloud23333's FGO Arcade local platform V1.01. Earlier version numbers were
-internal builds and were never published.
+internal builds.
 
 ### What is in it
 
@@ -52,6 +52,6 @@ internal builds and were never published.
 ### Known limits
 
 - No online play and no matchmaking; everything runs against the local server.
-- The co-op event banners, the co-op result screens, the event shops from 0029 on and the summon
+- The co-op event banners, the co-op result screens, the later event shops and the summon
   screen's title art are still Japanese. They are artwork, not text. A few lines in event stories
   are still Japanese as well.

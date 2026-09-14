@@ -6,7 +6,7 @@ manifest.json. Every file under payload\ is listed by the path it takes inside t
 install, so payload\App\zh\rom\... becomes App\zh\rom\... . "FGOAC scooby.exe" lists itself,
 because the package is unzipped into the install folder and the exe is already in place.
 
-  .\Build-Manifest.ps1 -PackageRoot D:\FGOA\release\FGOAC-scooby-v1.0 -Version 1.0
+  .\Build-Manifest.ps1 -PackageRoot D:\FGOA\release\FGOAC-scooby-v1.1.0 -Version 1.1.0
 
 Exit codes: 0 manifest written, 1 unexpected error, 2 package root is not a staged package.
 #>

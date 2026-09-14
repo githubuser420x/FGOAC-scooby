@@ -60,7 +60,7 @@ package as it stands.
   is a no-op. Then `-Rollback` and confirm the install is back as it was.
 - Run the published exe once and open each of the five pages.
 
-Never test against the install you play on.
+Test against a copy, not the install you play on.
 
 ## 4. Tag and publish
 
@@ -83,8 +83,7 @@ skips both, and the updater will not see it.
 
 ## 5. After publishing
 
-- Open the release page and confirm both assets are attached and the zip's size looks right; the
-  full package is around 630 MB.
+- Open the release page and confirm both assets are attached and the zip's size matches the local one.
 - Start a launcher from the previous version and confirm it offers the update, fetches it and
   applies it.
 - Add a new empty `[Unreleased]` section at the top of `CHANGELOG.md`.

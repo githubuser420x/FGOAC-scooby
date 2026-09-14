@@ -27,7 +27,7 @@ The launcher needs administrator rights because the game does.
 | `overlay\` | English replacements for files that live outside the assembly, laid out by their path relative to the install root |
 | `patch\` | the installer players run, and the manifest builder it checks against |
 | `docs\` | player guide, developer notes, release steps |
-| `package\` | the README and changelog that ship inside the release zip |
+| `package\` | the README that ships inside the release zip |
 
 `docs\DEVELOPING.md` says where `src\` comes from, the compile fixes the decompile needs and what
 the translation must never change. Read it before your first change to `src\`.
@@ -43,8 +43,8 @@ you were on and the log files; the template lists which ones.
 ## House style
 
 - **Plain English.** Short sentences. An error message says what failed, then what to do about it.
-- **ASCII only** in source, scripts, commit messages and documentation. The one place non-ASCII text
-  is expected is Japanese card and quest names in data files that are deliberately left untranslated.
+- **ASCII in documentation and commit messages.** Source keeps the symbols the interface needs, and
+  data files keep the Japanese names that are deliberately left untranslated.
 - **Commit messages** are short, factual and in the present tense: what the change does. No
   trailers or signatures.
 - **One logical change per commit.** A rename and a behaviour change are two commits.

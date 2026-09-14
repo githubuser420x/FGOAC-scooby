@@ -46,7 +46,7 @@ public partial class DebugSettingsView : UserControl, IComponentConnector
 					}
 				}
 			}
-			StatusText.Text = "Settings loaded - the new stun option needs the updated game hook, and how far it reaches still needs testing in battle.";
+			StatusText.Text = "Settings loaded.";
 		}
 		catch (Exception ex)
 		{

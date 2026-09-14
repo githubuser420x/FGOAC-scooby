@@ -30,7 +30,7 @@ The deliverable is a self-contained single-file host published from `src\` and n
 publish.cmd
 ```
 
-Requirements: the .NET SDK (10.0.303 is what this is developed on; it builds the `net6.0-windows`
+Requirements: the .NET SDK (10.x; it builds the `net6.0-windows`
 target and restores the 6.0 reference and runtime packs from nuget.org on the first run) and
 Windows 10 or 11 x64. The one package dependency, `ZstdSharp.Port` 0.8.8, comes from nuget.org
 too, so nothing has to be present on the machine beyond the SDK. The published host carries its
@@ -48,7 +48,7 @@ process name the diagnostics tooling looks for is still `FGOLocalPlatform`. Only
 ## Re-deriving from a new author release
 
 When the author ships a new `FGOLocalPlatform.dll`, the English build has to be re-derived rather
-than patched — his `FGOLocalPlatform.exe` is a self-contained single-file bundle that carries its own
+than patched - his `FGOLocalPlatform.exe` is a self-contained single-file bundle that carries its own
 copy of the managed assembly and ignores the sibling DLL.
 
 1. Decompile the new assembly with `ilspycmd` 10.1, installed as a dotnet global tool
@@ -67,7 +67,7 @@ copy of the managed assembly and ignores the sibling DLL.
 | --- | --- | --- |
 | 1 | `FGOLocalPlatform.csproj` | `TargetFramework` `net6.0` -> `net6.0-windows` (`UseWPF` requires the Windows TFM) |
 | 2 | `FGOLocalPlatform.csproj` | add `ApplicationDefinition` for `app.xaml` and `Page` items for the other 12 XAML files; explicit `Compile` items with `EnableDefaultItems=false` |
-| 3 | `FGOLocalPlatform.csproj` | `platform.ico`, `aprilfoolfgofirsthassan.ico`, `assets\crying-emoji.png` from `EmbeddedResource` to `Resource` (they are addressed by pack URI, which reads `.g.resources`). The two JSON tables stay `EmbeddedResource` — they are read with `GetManifestResourceStream` |
+| 3 | `FGOLocalPlatform.csproj` | `platform.ico` from `EmbeddedResource` to `Resource` (they are addressed by pack URI, which reads `.g.resources`). The two JSON tables stay `EmbeddedResource` - they are read with `GetManifestResourceStream` |
 | 4 | XAML file names | `FGOLocalPlatform.MainWindow.xaml` -> `mainwindow.xaml`, and the same for the other 11: the resource key comes from the file path and the originals are `mainwindow.baml` etc. at the root |
 | 5 | `app.xaml` | add `StartupUri="MainWindow.xaml"`; the original sets it in the generated `App.InitializeComponent`, which the BAML decompiler does not reproduce |
 | 6 | `MainWindow.cs`, `ThemedMessageBox.cs` | 6 occurrences of `((Rect)(ref x)).Height` / `((Size)(ref x)).Width` reduced to `x.Height` / `x.Width` |
@@ -91,7 +91,7 @@ unwired handlers, so expect to remove them again.
   must stay in `1920x1080` form.
 - The JSON keys and field names of `FGOLocalPlatform.CardNames.json` (`SVT#####` / `CE#####`,
   `Japanese` / `Chinese`) and `FGOLocalPlatform.CraftEffects.json` (`CE#####`, `Normal`,
-  `NormalJapanese`, `Maximum`, `MaximumJapanese`) — English goes into the existing `Chinese`,
+  `NormalJapanese`, `Maximum`, `MaximumJapanese`) - English goes into the existing `Chinese`,
   `Normal` and `Maximum` fields.
 - Config keys and enum values shared with `FGO_Launcher.ps1` and the author's tooling
   (`windowed` / `borderless` / `exclusive`, `keyboard` / `xinput`, `16:9`, the `graphics` block).
@@ -130,9 +130,7 @@ which waits for it to close, moves the staged file into place and starts it agai
 - `docs\GUIDE_EN.pdf` is printed from `docs\GUIDE_EN.md`: the markdown rendered to an HTML page with the
   guide's own stylesheet, then Chrome headless with `--print-to-pdf`. Reprint it whenever the markdown
   changes; the package carries both.
-- There is no bundled typeface. Everything is set in Segoe UI, which every supported Windows has;
-  the game's own SEGA Skip face was tried for the wordmark and dropped because it has no hinting
-  and renders soft at interface sizes.
+- There is no bundled typeface. Everything is set in Segoe UI, which every supported Windows has.
 
 ## Overlay
 
@@ -149,7 +147,7 @@ development are left alone.
 | `Server\Stop-FGOLocalServerWhenIdle.ps1` | also recognises `FGOAC scooby.exe` as a running front end |
 | `Server\tools\fgo_account.py` | every `message` it emits is shown verbatim by the account page |
 | `Server\tools\fgo_server_config.py` | port and address validation errors on the server page |
-| `Server\artemis\titles\fgo\data\summon_candidates.json` | the acquisition notes shown in the Draw Rates status line. The Japanese card names and quest titles in that file stay as they are — the column they feed is labelled Japanese Name |
+| `Server\artemis\titles\fgo\data\summon_candidates.json` | the acquisition notes shown in the Draw Rates status line. The Japanese card names and quest titles in that file stay as they are - the column they feed is labelled Japanese Name |
 
 ## The English patch
 

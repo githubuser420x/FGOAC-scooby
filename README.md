@@ -63,7 +63,7 @@ sortie step by step, the exchange shops and troubleshooting.
 - **No online play.** Everything runs against the local server; there is no matchmaking, and no
   official service left to connect to.
 - **A few event screens are still Japanese** - the co-op event banners, the co-op result screens and
-  the event shops from 0029 on. They are artwork rather than text, and nothing else is affected.
+  the later event shops. They are artwork rather than text, and nothing else is affected.
 
 ## The launcher
 
