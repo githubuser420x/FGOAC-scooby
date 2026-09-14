@@ -72,11 +72,15 @@ copy of the managed assembly and ignores the sibling DLL.
 | 5 | `app.xaml` | add `StartupUri="MainWindow.xaml"`; the original sets it in the generated `App.InitializeComponent`, which the BAML decompiler does not reproduce |
 | 6 | `MainWindow.cs`, `ThemedMessageBox.cs` | 6 occurrences of `((Rect)(ref x)).Height` / `((Size)(ref x)).Width` reduced to `x.Height` / `x.Width` |
 | 7 | `MainWindow.cs` | remove the generated `_CreateDelegate` helper (PresentationBuildTasks regenerates it from `mainwindow.xaml`) |
-| 8 | `PhotoWindow.cs`, `MainWindow.cs` | `(val - 70 > 1 && val - 116 > 5) \|\| 1 == 0` -> `(uint)(val - 70) > 1u && (uint)(val - 116) > 5u`. Semantic fix: the original excludes `Key.LWin`/`Key.RWin` and the six modifier keys from key binding; the signed rendering rejects almost every key |
+| 8 | `PhotoWindow.cs`, `MainWindow.cs` | `(val - 70 > 1 && val - 116 > 5) \|\| 1 == 0` -> `val != Key.LWin && val != Key.RWin && (val < Key.LeftShift || val > Key.RightAlt)`. Semantic fix: the original excludes `Key.LWin`/`Key.RWin` and the six modifier keys from key binding; the signed rendering rejects almost every key |
 | 9 | `MainWindow.cs` | remove the dead `int num; _ = num - 1; _ = 1;` |
 | 10 | `MainWindow.cs` | `new(string, double)[10]` -> `new (string Name, double Value)[10]`; the LINQ query below it addresses `item.Name` / `item.Value` |
 
-Expect about 165 `CS8632` warnings and zero errors.
+Expect zero errors and zero warnings: the project builds with `Nullable` set to `annotations`, so the
+decompile's `?` annotations compile without `CS8632`, and the only suppression left is a `#pragma` around
+the XInput structures. A fresh decompile also brings back the leftovers the tree has been scrubbed of:
+`//IL_` comments, numeric `Key` codes, `(DependencyObject)(object)` casts, `_ = 1;` statements and the
+unwired handlers, so expect to remove them again.
 
 ### Things the translation must not change
 
@@ -123,6 +127,9 @@ which waits for it to close, moves the staged file into place and starts it agai
 - `src\platform.ico` is the game's own icon, icon group 0 of `App\ago.exe`, pulled out by
   `src\assets\extract-icon.ps1`. It is the executable icon, the window icon and the mark in the top
   bar. The game ships one 32x32 frame, so that is what the file holds.
+- `docs\GUIDE_EN.pdf` is printed from `docs\GUIDE_EN.md`: the markdown rendered to an HTML page with the
+  guide's own stylesheet, then Chrome headless with `--print-to-pdf`. Reprint it whenever the markdown
+  changes; the package carries both.
 - There is no bundled typeface. Everything is set in Segoe UI, which every supported Windows has;
   the game's own SEGA Skip face was tried for the wordmark and dropped because it has no hinting
   and renders soft at interface sizes.
