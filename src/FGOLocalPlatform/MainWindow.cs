@@ -504,7 +504,8 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		statusTimer.Start();
 		base.Loaded += async delegate
 		{
-			PhotoSettings_OnClick(this, new RoutedEventArgs());
+			// Photo mode opens the game's model archives, so it is built when its tab is first
+			// shown rather than on every start.
 			await RefreshRuntimeStatusAsync();
 			await RefreshLogPanelsAsync();
 			await RefreshAccountsAsync(showErrors: false);

@@ -84,6 +84,37 @@ Expect about 165 `CS8632` warnings and zero errors.
 - Interpolation holes in format strings, `StringFormat` placeholders, and the `|` in the
   `OpenFileDialog` filter.
 
+## Publishing a release
+
+The launcher checks `https://api.github.com/repos/<owner>/<repo>/releases/latest` once per start and
+installs from the release's own assets, so a release has to carry both of them:
+
+1. Set the version in `src\FGOLocalPlatform.csproj` (`<Version>`). Nothing else holds a version
+   number: the About page and the updater read it from the assembly, and `package.ps1` reads it back
+   off the built launcher.
+2. `publish.cmd`, then `package.ps1`. That writes `D:\FGOA\release\FGOAC-scooby-v<ver>.zip` and
+   `FGOAC-scooby-v<ver>.zip.sha256` beside it.
+3. Tag the commit `v<ver>` (for example `v1.1.0`) and push the tag.
+4. Create the GitHub release on that tag and upload **both** files as assets: the
+   `FGOAC-scooby-v<ver>.zip` and its `.zip.sha256`. The updater looks for an asset whose name starts
+   with `FGOAC-scooby-v` and ends in `.zip`, and for the `.zip.sha256` beside it; a release missing
+   either one is logged in `logs\update.log` and skipped rather than half-installed.
+5. `src\FGOLocalPlatform\UpdateSettings.cs` holds the owner and repository the launcher asks. They
+   are placeholders (`githubuser420x` / `FGOAC-scooby`) until the repository exists.
+
+Updating a running launcher: the patch script cannot overwrite the executable that is running it, so
+it stages the new one as `FGOAC scooby.exe.new`. The launcher then writes `%TEMP%\update-swap.cmd`,
+which waits for it to close, moves the staged file into place and starts it again.
+
+## Assets that are not code
+
+- `src\platform.ico` is the game's own icon, icon group 0 of `App\ago.exe`, pulled out by
+  `src\assets\extract-icon.ps1`. It is the executable icon, the window icon and the mark in the top
+  bar. The game ships one 32x32 frame, so that is what the file holds.
+- The display typeface is the game's `App\rom\font\SEGA_Skip-B.ttf`, loaded from the install at
+  startup by `GameFont` and published as the `DisplayFont` resource. Nothing is bundled: if the file
+  is missing the resource keeps its Segoe UI fallback and the launcher still runs.
+
 ## Overlay
 
 `overlay\` mirrors the install root. The release packager copies it over an existing V1.01 install
