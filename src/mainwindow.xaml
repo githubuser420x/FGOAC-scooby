@@ -281,7 +281,7 @@
                     <ColumnDefinition Width="*" />
                   </Grid.ColumnDefinitions>
                   <TextBlock Text="1" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource IceBrush}" />
-                  <TextBlock Grid.Column="1" FontSize="14" LineHeight="20" TextWrapping="Wrap" Foreground="{StaticResource TextBrush}" Text="Your account Master is ready, with every Servant." />
+                  <TextBlock Grid.Column="1" FontSize="14" LineHeight="20" TextWrapping="Wrap" Foreground="{StaticResource TextBrush}" Text="An account called Master is already set up for you, and it owns every Servant." />
                 </Grid>
                 <Grid Height="30">
                   <Grid.ColumnDefinitions>
@@ -289,7 +289,7 @@
                     <ColumnDefinition Width="*" />
                   </Grid.ColumnDefinitions>
                   <TextBlock Text="2" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource IceBrush}" />
-                  <TextBlock Grid.Column="1" FontSize="14" LineHeight="20" TextWrapping="Wrap" Foreground="{StaticResource TextBrush}" Text="Cards and Deck: pick up to 30 cards. They reach the game on Play." />
+                  <TextBlock Grid.Column="1" FontSize="14" LineHeight="20" TextWrapping="Wrap" Foreground="{StaticResource TextBrush}" Text="Go to Cards and Deck and choose up to 30 cards. The deck is sent to the game when you press Play." />
                 </Grid>
                 <Grid Height="30">
                   <Grid.ColumnDefinitions>
@@ -297,7 +297,7 @@
                     <ColumnDefinition Width="*" />
                   </Grid.ColumnDefinitions>
                   <TextBlock Text="3" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource IceBrush}" />
-                  <TextBlock Grid.Column="1" FontSize="14" LineHeight="20" TextWrapping="Wrap" Foreground="{StaticResource TextBrush}" Text="Settings: monitor, resolution and controls." />
+                  <TextBlock Grid.Column="1" FontSize="14" LineHeight="20" TextWrapping="Wrap" Foreground="{StaticResource TextBrush}" Text="Go to Settings to choose the monitor, the resolution and the controls." />
                 </Grid>
                 <Grid Height="30">
                   <Grid.ColumnDefinitions>
@@ -305,7 +305,7 @@
                     <ColumnDefinition Width="*" />
                   </Grid.ColumnDefinitions>
                   <TextBlock Text="4" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource IceBrush}" />
-                  <TextBlock Grid.Column="1" FontSize="14" LineHeight="20" TextWrapping="Wrap" Foreground="{StaticResource TextBrush}" Text="Press Play. The title screen takes about a minute." />
+                  <TextBlock Grid.Column="1" FontSize="14" LineHeight="20" TextWrapping="Wrap" Foreground="{StaticResource TextBrush}" Text="Press Play. The title screen appears after about a minute." />
                 </Grid>
                 </StackPanel>
               </Grid>
