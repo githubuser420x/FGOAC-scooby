@@ -98,3 +98,4 @@ during development.
 | `Server\Stop-FGOLocalServerWhenIdle.ps1` | also recognises `FGOA scooby.exe` as a running front end |
 | `Server\tools\fgo_account.py` | every `message` it emits is shown verbatim by the account page |
 | `Server\tools\fgo_server_config.py` | port and address validation errors on the server page |
+| `Server\artemis\titles\fgo\data\summon_candidates.json` | the acquisition notes shown in the Draw Rates status line. The Japanese card names and quest titles in that file stay as they are — the column they feed is labelled Japanese Name |
