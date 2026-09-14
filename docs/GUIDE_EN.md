@@ -56,8 +56,9 @@ Essences come from the launcher instead:
 
 - **Account page**: select an account and use One-Click Inventory and Growth to grant a full set of
   Servants, Craft Essences, levels, bond, costumes, and clear rewards at once.
-- **Cards and Deck page**: build a deck by hand from the full card library; it is published to the
-  game every time you press Play.
+- **Cards and Deck page**: build a deck from the full card library. Drag a card into the deck to add
+  one copy, or double-click it to choose its art and how many copies; drag a deck card to reorder it,
+  or back into the library to remove it. The deck is published to the game every time you press Play.
 - **Draw Rates page**: this only sets the weight the local server uses if a card is drawn through the
   in-game summon screen - it does not grant anything by itself. Since the summon screen does not draw,
   this page has no practical effect unless you are testing the server's own summon logic.

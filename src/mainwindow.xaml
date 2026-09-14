@@ -389,7 +389,7 @@
                       <ColumnDefinition Name="CardListColumn" Width="*" MinWidth="360" />
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,0,10">
-                      <TextBlock Text="Pick Servants and Craft Essences - double-click a card to choose its art and how many copies" FontSize="13" Foreground="{StaticResource TextSoftBrush}" Margin="0,0,0,8" />
+                      <TextBlock Text="Drag cards into the deck, or double-click one to pick its art and quantity. Drag a deck card to reorder it, or back to the library to remove it." FontSize="13" Foreground="{StaticResource TextSoftBrush}" Margin="0,0,0,8" />
                       <DockPanel LastChildFill="True">
                         <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
                           <TextBlock Text="Show" Foreground="{StaticResource TextSoftBrush}" VerticalAlignment="Center" Margin="0,0,6,0" />
@@ -413,7 +413,7 @@
                         <TextBox Name="SearchTextBox" Margin="0,3" VerticalContentAlignment="Center" ToolTip="Filter as you type by card name, id or file name. Clear the box to show everything again." TextChanged="CardPickerSearchBox_OnTextChanged" />
                       </DockPanel>
                     </StackPanel>
-                    <ListView Name="CardList" Grid.Row="1" Grid.Column="0" BorderThickness="1" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="True" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.ScrollUnit="Pixel" SelectionChanged="CardList_OnSelectionChanged" MouseDoubleClick="CardList_OnMouseDoubleClick">
+                    <ListView Name="CardList" Grid.Row="1" Grid.Column="0" BorderThickness="1" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="True" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.ScrollUnit="Pixel" SelectionChanged="CardList_OnSelectionChanged" MouseDoubleClick="CardList_OnMouseDoubleClick" AllowDrop="True" PreviewMouseLeftButtonDown="CardDrag_OnPreviewMouseLeftButtonDown" PreviewMouseMove="CardDrag_OnPreviewMouseMove" PreviewMouseLeftButtonUp="CardDrag_OnPreviewMouseLeftButtonUp" DragOver="Library_OnDragOver" Drop="Library_OnDrop">
                       <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                           <VirtualizingStackPanel />
@@ -457,7 +457,7 @@
                         <TextBlock Name="DeckStatusText" DockPanel.Dock="Left" Foreground="{StaticResource IceBrush}" VerticalAlignment="Center" Margin="10,0" />
                         <Button DockPanel.Dock="Right" Content="Clear Deck" MinHeight="26" Padding="10,2" Margin="3,4" Click="ClearButton_OnClick" />
                       </DockPanel>
-                      <ListView Name="SelectedCardList" Grid.Row="1" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled" SelectionChanged="SelectedCardList_OnSelectionChanged" MouseDoubleClick="SelectedCardList_OnMouseDoubleClick">
+                      <ListView Name="SelectedCardList" Grid.Row="1" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled" SelectionChanged="SelectedCardList_OnSelectionChanged" MouseDoubleClick="SelectedCardList_OnMouseDoubleClick" AllowDrop="True" PreviewMouseLeftButtonDown="CardDrag_OnPreviewMouseLeftButtonDown" PreviewMouseMove="CardDrag_OnPreviewMouseMove" PreviewMouseLeftButtonUp="CardDrag_OnPreviewMouseLeftButtonUp" DragOver="Deck_OnDragOver" Drop="Deck_OnDrop">
                         <ItemsControl.ItemsPanel>
                           <ItemsPanelTemplate>
                             <WrapPanel Orientation="Horizontal" />

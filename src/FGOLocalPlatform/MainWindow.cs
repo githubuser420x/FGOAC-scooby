@@ -915,7 +915,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			2 => $"Craft Essences {value2:N0}", 
 			_ => $"Servants {value:N0} / Craft Essences {value2:N0}", 
 		};
-		CardCatalogSummaryText.Text = (ownedOnly ? $"{value3} - {count:N0} shown - double-click to pick art and quantity" : $"{value3} - {count:N0} shown - double-click to pick art and quantity");
+		CardCatalogSummaryText.Text = $"{value3} - {count:N0} shown - drag into the deck, or double-click to pick art and quantity";
 	}
 
 	private int SelectedCardTypeId()

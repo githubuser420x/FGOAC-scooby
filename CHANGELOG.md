@@ -13,6 +13,9 @@ installer that puts them there.
 
 ### Added
 
+- Drag and drop in the deck editor. Drag a card from the library into the deck to add one copy,
+  drag a deck card to reorder it, or drag it back into the library to remove it. Double-click
+  still opens the type-and-quantity dialog.
 - An updater. The launcher asks GitHub Releases whether a newer version exists and offers to fetch
   and apply it, so a player who installed once keeps getting the translation fixes.
 
