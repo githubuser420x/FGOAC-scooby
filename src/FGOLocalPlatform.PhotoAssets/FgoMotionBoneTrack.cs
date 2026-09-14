@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace FGOLocalPlatform.PhotoAssets;
 
@@ -20,8 +19,28 @@ public sealed class FgoMotionBoneTrack
 
 	public IReadOnlyList<FgoMotionChannel> Channels { get; init; } = Array.Empty<FgoMotionChannel>();
 
+	// Index loops rather than LINQ: this runs for every bone of every frame while a motion plays.
 	public FgoMotionChannel? Find(ushort type)
 	{
-		return Channels.FirstOrDefault((FgoMotionChannel channel) => channel.Type == type);
+		for (int i = 0; i < Channels.Count; i++)
+		{
+			if (Channels[i].Type == type)
+			{
+				return Channels[i];
+			}
+		}
+		return null;
+	}
+
+	public FgoMotionChannel? FindRotation()
+	{
+		for (int i = 0; i < Channels.Count; i++)
+		{
+			if (Channels[i].IsRotation)
+			{
+				return Channels[i];
+			}
+		}
+		return null;
 	}
 }

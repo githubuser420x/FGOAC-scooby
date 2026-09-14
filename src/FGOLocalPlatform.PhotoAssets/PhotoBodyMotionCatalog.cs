@@ -111,7 +111,7 @@ public static class PhotoBodyMotionCatalog
 					array[num + 7 + num2] = fgoMotionChannel2.EvaluateScalar(frame);
 				}
 			}
-			FgoMotionChannel fgoMotionChannel3 = track.Channels.FirstOrDefault((FgoMotionChannel c) => c.IsRotation);
+			FgoMotionChannel fgoMotionChannel3 = track.FindRotation();
 			if (fgoMotionChannel3 != null && fgoMotionChannel3.Frames.Length != 0 && fgoMotionChannel3.PackedValues.Length != 0)
 			{
 				Quaternion quaternion = fgoMotionChannel3.EvaluateRotation(frame);
@@ -121,9 +121,12 @@ public static class PhotoBodyMotionCatalog
 				array[num + 3] = quaternion.W;
 			}
 		}
-		if (array.Any((float v) => !float.IsFinite(v)))
+		foreach (float value in array)
 		{
-			throw new FgoFormatException("The motion pose holds values that are not finite numbers.");
+			if (!float.IsFinite(value))
+			{
+				throw new FgoFormatException("The motion pose holds values that are not finite numbers.");
+			}
 		}
 		return array;
 	}
