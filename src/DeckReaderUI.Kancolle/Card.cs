@@ -40,17 +40,22 @@ public class Card
 	// image is kept as long as something still holds it rather than decoded again on every pass.
 	private WeakReference<BitmapImage> thumbnail;
 
+	private readonly object thumbnailLock = new object();
+
 	public BitmapImage Thumbnail
 	{
 		get
 		{
-			if (thumbnail != null && thumbnail.TryGetTarget(out BitmapImage cached))
+			lock (thumbnailLock)
 			{
-				return cached;
+				if (thumbnail != null && thumbnail.TryGetTarget(out BitmapImage cached))
+				{
+					return cached;
+				}
+				BitmapImage loaded = LoadThumbnail(Path);
+				thumbnail = new WeakReference<BitmapImage>(loaded);
+				return loaded;
 			}
-			BitmapImage loaded = LoadThumbnail(Path);
-			thumbnail = new WeakReference<BitmapImage>(loaded);
-			return loaded;
 		}
 	}
 

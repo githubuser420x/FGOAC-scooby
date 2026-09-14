@@ -449,6 +449,8 @@ public sealed class FgoMotionChannel
 		{
 			return Quaternion.Identity;
 		}
-		return new Quaternion(value.X / num, value.Y / num, value.Z / num, value.W / num);
+		// A blended rotation is only a rotation again at unit length.
+		float length = MathF.Sqrt(num);
+		return new Quaternion(value.X / length, value.Y / length, value.Z / length, value.W / length);
 	}
 }

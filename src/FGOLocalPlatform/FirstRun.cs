@@ -194,6 +194,18 @@ internal sealed class FirstRun
 		using Process process = Process.Start(processStartInfo) ?? throw new IOException("The patch installer did not start.");
 		Task<string> errorTask = process.StandardError.ReadToEndAsync();
 		using CancellationTokenSource timeout = new CancellationTokenSource(TimeSpan.FromMinutes(30.0));
+		// The output loop below cannot take the token, so the deadline ends the process instead,
+		// which closes the pipe and lets the loop finish.
+		using CancellationTokenRegistration killOnTimeout = timeout.Token.Register(delegate
+		{
+			try
+			{
+				process.Kill(entireProcessTree: true);
+			}
+			catch
+			{
+			}
+		});
 		string? line;
 		while ((line = await process.StandardOutput.ReadLineAsync()) != null)
 		{

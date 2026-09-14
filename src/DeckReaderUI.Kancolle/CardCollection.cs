@@ -44,6 +44,11 @@ public class CardCollection
 		{
 			foreach (string selectedFile in selectedFiles)
 			{
+				// The shared buffer holds thirty cards; anything past that in deck.json goes back to the library.
+				if (SelectedCards.Count >= 30)
+				{
+					break;
+				}
 				string fullPath = System.IO.Path.GetFullPath(selectedFile);
 				int num2 = ((num >= array2.Length) ? 1 : Math.Clamp(array2[num], 1, 30));
 				num++;

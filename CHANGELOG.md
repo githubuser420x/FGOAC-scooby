@@ -36,6 +36,30 @@ installer that puts them there.
 - The application icon is redrawn at every size from 16 to 256 rather than resampled from one
   bitmap.
 
+### Fixed
+
+- The updater could check for a release but never install one: a ten-second client timeout also cut off
+  the download of the release zip.
+- Deck changes made while the game was running did not reach it in the shipped layout, because the
+  shared-memory channel was named from the launcher's folder rather than the game's.
+- Starting the launcher before the local server showed an empty card library with the owned-cards
+  filter stuck on.
+- A hand-edited settings file with a bad port value produced an error box every two seconds.
+- Stop Game could stay greyed out for the whole session after the launcher looked at the game
+  process while it was still starting.
+- Clicking a slider to the right of its thumb did nothing; the check box rows only took a click on
+  the box or the words.
+- A stop of the local server that failed at once left the window unable to close.
+- A patch installer that stalled could hang the first run with every control disabled.
+- A failed start-up check no longer opens the main window on top of its own error.
+- Use Selected Account now refuses to switch accounts while the local server is running, like the
+  other account actions.
+- The window size and position read back wrongly on systems with a comma decimal separator; a
+  deck file with more than thirty cards, or one that cannot be published, no longer stops the
+  window from opening; Stop Game no longer touches a game running from a sibling folder; the
+  Photo Mode tab survives a game process that has just exited and a hand-edited hotkey list;
+  blended rotations in photo mode are normalised to unit length.
+
 ## [1.0.1] - 2026-09-14
 
 ### Added

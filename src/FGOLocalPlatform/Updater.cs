@@ -28,9 +28,11 @@ internal static class Updater
 
 	private static HttpClient CreateClient()
 	{
+		// No client-wide timeout: it would also cut off the download of a release zip that takes
+		// minutes. The small API calls carry their own ten-second token.
 		HttpClient client = new HttpClient
 		{
-			Timeout = TimeSpan.FromSeconds(10.0)
+			Timeout = Timeout.InfiniteTimeSpan
 		};
 		// GitHub rejects an API request that does not name the program making it.
 		client.DefaultRequestHeaders.Add("User-Agent", "FGOAC-scooby/" + UpdateSettings.Version);
@@ -45,7 +47,8 @@ internal static class Updater
 	public static async Task<Release> CheckAsync()
 	{
 		Log("Checking " + UpdateSettings.LatestReleaseApiUrl);
-		string json = await Client.GetStringAsync(UpdateSettings.LatestReleaseApiUrl);
+		using CancellationTokenSource timeout = new CancellationTokenSource(TimeSpan.FromSeconds(10.0));
+		string json = await Client.GetStringAsync(UpdateSettings.LatestReleaseApiUrl, timeout.Token);
 		JsonNode node = JsonNode.Parse(json);
 		string tag = (string)node?["tag_name"] ?? "";
 		Version latest = ParseVersion(tag);

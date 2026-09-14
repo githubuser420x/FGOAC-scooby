@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.CodeDom.Compiler;
 using System.Collections;
 using System.Collections.Generic;
@@ -454,6 +454,9 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		//IL_024e: Expected O, but got Unknown
 		InitializeComponent();
 		ApplyProtectedBranding();
+		// The channel name is hashed from the game folder, the same way the launch script hands it
+		// to the hook, so the root has to be right before the channel is opened.
+		GameCommunication.GameRoot = GamePaths.GameRoot;
 		GameCommunication.Initialize();
 		config = Config.Load(Path.Combine(GamePaths.GameRoot, "deck.json"));
 		GamePaths.ResolveMovedCards(config, GamePaths.GameRoot);
@@ -472,7 +475,15 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		SearchTextBox.Text = "";
 		LoadLauncherSettings();
 		LoadLayoutSettings();
-		PublishDeck();
+		try
+		{
+			PublishDeck();
+		}
+		catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException || ex is InvalidDataException || ex is InvalidOperationException)
+		{
+			// A deck that cannot be published must not keep the window from opening.
+			RuntimeStatusText.Text = "The deck could not be published: " + ex.Message;
+		}
 		UpdateDeckStatus();
 		OwnedCardsOnlyCheckBox.IsChecked = true;
 		SetCardViewMode(useIcons: true);
@@ -650,11 +661,12 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 					try
 					{
 						isOurs = string.Equals(process.MainModule?.FileName, b, StringComparison.OrdinalIgnoreCase);
+						GameProcessCache[process.Id] = isOurs;
 					}
 					catch (Exception ex) when (((ex is Win32Exception || ex is InvalidOperationException) ? 1 : 0) != 0)
 					{
+						// The module list is not readable while the game is still starting; ask again next tick.
 					}
-					GameProcessCache[process.Id] = isOurs;
 				}
 				found |= isOurs;
 			}
@@ -669,6 +681,13 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 	private Updater.Release availableUpdate;
 
 	private DateTime statusHoldUntil = DateTime.MinValue;
+
+	/// <summary>A status sentence the player should get to read before the two-second tick replaces it.</summary>
+	private void HoldStatus(string text)
+	{
+		RuntimeStatusText.Text = text;
+		statusHoldUntil = DateTime.UtcNow.AddSeconds(12.0);
+	}
 
 	/// <summary>
 	/// Looks for a newer release. On startup a failure says nothing on screen and only reaches
@@ -826,7 +845,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		config.Save(Path.Combine(GamePaths.GameRoot, "deck.json"));
 		if (!GameCommunication.UpdateCards(cardCollection.SelectedCards))
 		{
-			RuntimeStatusText.Text = "The shared deck buffer is busy - the game will read deck.json instead";
+			HoldStatus("The shared deck buffer is busy - the game will read deck.json instead");
 		}
 		UpdateDeckStatus();
 	}
@@ -874,7 +893,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			selectedCardListView.Refresh();
 			PublishDeck();
 		}
-		bool ownedOnly = OwnedCardsOnlyCheckBox.IsChecked == true;
+		bool ownedOnly = OwnedCardsOnlyCheckBox.IsChecked == true && selectedAccount != null;
 		availableCardStacks.Clear();
 		availableCardStacks.AddRange(CardStack.BuildEntities(cardCollection.Cards.Concat(cardCollection.SelectedCards)));
 		selectedCardStacks.Clear();
@@ -1609,25 +1628,35 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		}
 	}
 
-	private Task StopLocalServerAsync()
+	private async Task StopLocalServerAsync()
 	{
-		return stopServerTask ?? (stopServerTask = StopLocalServerCoreAsync());
+		// One stop at a time: a second caller joins the stop already under way. The shared task is
+		// released here, after it settles, so a stop that fails at once cannot stay pinned.
+		Task pending = stopServerTask;
+		if (pending == null)
+		{
+			pending = StopLocalServerCoreAsync();
+			stopServerTask = pending;
+		}
+		try
+		{
+			await pending;
+		}
+		finally
+		{
+			if (stopServerTask == pending)
+			{
+				stopServerTask = null;
+			}
+		}
 	}
 
 	private async Task StopLocalServerCoreAsync()
 	{
-		_ = 1;
-		try
+		await CancelServerCommandAsync();
+		if (await RunServerCommandAsync(start: false) != 0)
 		{
-			await CancelServerCommandAsync();
-			if (await RunServerCommandAsync(start: false) != 0)
-			{
-				throw new IOException("The local server did not stop completely - see logs/server-control.log. The database is left running so writes are not cut off.");
-			}
-		}
-		finally
-		{
-			stopServerTask = null;
+			throw new IOException("The local server did not stop completely - see logs/server-control.log. The database is left running so writes are not cut off.");
 		}
 	}
 
@@ -2173,6 +2202,13 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			ShowGameRunningAccountWarning();
 			return;
 		}
+		if (await IsPortOpenAsync(ServerSettingsView.ConfiguredPorts()[0]))
+		{
+			lastKnownServerRunning = true;
+			ShowServerRunningAccountWarning();
+			return;
+		}
+		lastKnownServerRunning = false;
 		AccountEntry account = SelectedAccount;
 		if (account == null)
 		{
@@ -2700,7 +2736,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 
 	private static double ReadLayoutNumber(JsonObject layout, string name, double fallback, double minimum, double maximum)
 	{
-		if (!double.TryParse(layout[name]?.ToString(), out var result))
+		if (!double.TryParse(layout[name]?.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out var result))
 		{
 			return fallback;
 		}
@@ -3051,7 +3087,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 	{
 		if (SaveLauncherSettings(out string _, out int _, out int _, out string _, out int _))
 		{
-			RuntimeStatusText.Text = "Control settings saved - they take effect the next time the game starts.";
+			HoldStatus("Control settings saved - they take effect the next time the game starts.");
 		}
 	}
 
@@ -3195,7 +3231,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 						break;
 					}
 				}
-				catch (Win32Exception)
+				catch (Exception ex) when (ex is Win32Exception || ex is InvalidOperationException)
 				{
 				}
 			}
@@ -3269,10 +3305,10 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		}
 		catch (Exception ex)
 		{
-			RuntimeStatusText.Text = "The graphics compatibility layer could not be changed: " + ex.Message;
+			HoldStatus("The graphics compatibility layer could not be changed: " + ex.Message);
 			return;
 		}
-		RuntimeStatusText.Text = "Graphics settings saved - they take effect the next time the game starts.";
+		HoldStatus("Graphics settings saved - they take effect the next time the game starts.");
 	}
 
 	private void ResetDamageUi_OnClick(object sender, RoutedEventArgs e)
@@ -3403,7 +3439,8 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			return;
 		}
 		CancelPendingLauncher();
-		string gameRoot = Path.GetFullPath(GamePaths.GameRoot);
+		// With the separator, a sibling folder such as AppBackup does not match.
+		string gameRoot = Path.GetFullPath(GamePaths.GameRoot).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
 		Process[] processesByName = Process.GetProcessesByName("ago");
 		foreach (Process process in processesByName)
 		{

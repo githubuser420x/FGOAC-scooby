@@ -23,7 +23,7 @@
                 <RepeatButton Command="Slider.IncreaseLarge" Focusable="False">
                   <Control.Template>
                     <ControlTemplate TargetType="{x:Type RepeatButton}">
-                      <Border Background="{x:Null}" />
+                      <Border Background="Transparent" />
                     </ControlTemplate>
                   </Control.Template>
                 </RepeatButton>

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,14 +29,25 @@ public partial class ServerSettingsView : UserControl, IComponentConnector
 	public static int[] ConfiguredPorts()
 	{
 		string path = Path.Combine(GamePaths.GameRoot, "fgo-launcher.json");
-		JsonNode jsonNode = ((!File.Exists(path)) ? null : JsonNode.Parse(File.ReadAllText(path))?["serverPorts"]);
-		return new int[4]
+		int[] ports = new int[4] { 80, 8443, 22345, 3307 };
+		// Called from the status tick every two seconds, so a hand-edited settings file must not
+		// throw here: the defaults stand until the file reads again.
+		try
 		{
-			jsonNode?["http"]?.GetValue<int>() ?? 80,
-			jsonNode?["billing"]?.GetValue<int>() ?? 8443,
-			jsonNode?["aime"]?.GetValue<int>() ?? 22345,
-			jsonNode?["database"]?.GetValue<int>() ?? 3307
-		};
+			JsonNode jsonNode = ((!File.Exists(path)) ? null : JsonNode.Parse(File.ReadAllText(path))?["serverPorts"]);
+			string[] names = new string[4] { "http", "billing", "aime", "database" };
+			for (int i = 0; i < names.Length; i++)
+			{
+				if (jsonNode?[names[i]] is JsonValue value && value.TryGetValue(out int port))
+				{
+					ports[i] = port;
+				}
+			}
+		}
+		catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException || ex is JsonException)
+		{
+		}
+		return ports;
 	}
 
 	public string[] ApplyArguments()

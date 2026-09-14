@@ -288,7 +288,7 @@ public sealed class PhotoWindow : UserControl
 			{
 				for (int j = 0; j < Math.Min(keys.Length, jsonArray.Count); j++)
 				{
-					int? num = jsonArray[j]?.GetValue<int>();
+					int? num = ((jsonArray[j] is JsonValue keyValue && keyValue.TryGetValue(out int parsed)) ? parsed : null);
 					if (num.HasValue)
 					{
 						int valueOrDefault = num.GetValueOrDefault();
