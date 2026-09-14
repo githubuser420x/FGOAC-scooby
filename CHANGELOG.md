@@ -1,4 +1,4 @@
-# Changelog
+﻿# Changelog
 
 All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project follows
@@ -23,9 +23,10 @@ installer that puts them there.
   replaces the firewall rules the old name created.
 - The interface is redrawn. The Chinese front end's visual identity is gone - the skewed white
   header polygon, its purple palette, its flat buttons and tab strip, its icons and its footer
-  notice - and in its place is a navy and gold theme taken from the cabinet's own screens. The
-  navigation is deliberately unchanged, because it works. `docs/DESIGN.md` is the plan it was built
-  from.
+  notice. In its place is a graphite window with one ice-blue accent, Segoe UI throughout with the
+  cabinet's own face kept for the wordmark and Play, the five sections in a sidebar with their
+  sub-pages as a strip of tabs, and a Check for updates button in the header of every page.
+  `docs/DESIGN.md` is the plan it was built from.
 - The application icon is redrawn at every size from 16 to 256 rather than resampled from one
   bitmap.
 

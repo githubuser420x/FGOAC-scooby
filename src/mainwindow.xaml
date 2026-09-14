@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Window x:Class="FGOLocalPlatform.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:kancolle="clr-namespace:DeckReaderUI.Kancolle" xmlns:local="clr-namespace:FGOLocalPlatform" xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework" Title="" Icon="platform.ico" Width="1280" Height="800" MinWidth="1060" MinHeight="680" WindowStyle="None" ResizeMode="CanResize" Background="{StaticResource NightBottomBrush}" Foreground="{StaticResource TextBrush}" FontFamily="{StaticResource UiFont}" FontSize="14" Closing="MainWindow_OnClosing">
+<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="FGOLocalPlatform.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:kancolle="clr-namespace:DeckReaderUI.Kancolle" xmlns:local="clr-namespace:FGOLocalPlatform" xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework" Title="" Icon="platform.ico" Width="1280" Height="800" MinWidth="1060" MinHeight="680" WindowStyle="None" ResizeMode="CanResize" Background="{StaticResource GroundBrush}" Foreground="{StaticResource TextBrush}" FontFamily="{StaticResource UiFont}" FontSize="14" UseLayoutRounding="True" SnapsToDevicePixels="True" TextOptions.TextFormattingMode="Display" TextOptions.TextRenderingMode="ClearType" Closing="MainWindow_OnClosing">
   <shell:WindowChrome.WindowChrome>
     <shell:WindowChrome CaptionHeight="32" ResizeBorderThickness="7" GlassFrameThickness="0" CornerRadius="0" UseAeroCaptionButtons="False" />
   </shell:WindowChrome.WindowChrome>
@@ -15,8 +15,8 @@
       </Style>
       <Style x:Key="OwnedOnlyToggleStyle" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource SwitchToggleStyle}">
         <Setter Property="Content" Value="Owned cards only" />
-        <Setter Property="MinHeight" Value="34" />
-        <Setter Property="Padding" Value="11,5" />
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="Padding" Value="11,4" />
       </Style>
       <Style x:Key="EnglishTextToggleStyle" TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource SwitchToggleStyle}">
         <Setter Property="Content" Value="English text off" />
@@ -27,13 +27,11 @@
         </Style.Triggers>
       </Style>
       <Style x:Key="CaptionButtonStyle" TargetType="{x:Type Button}">
-        <Setter Property="Width" Value="44" />
-        <Setter Property="Height" Value="31" />
+        <Setter Property="Width" Value="46" />
+        <Setter Property="Height" Value="32" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
-        <Setter Property="Background" Value="#00FFFFFF" />
-        <Setter Property="BorderBrush" Value="#00FFFFFF" />
-        <Setter Property="BorderThickness" Value="0,0,0,2" />
+        <Setter Property="Background" Value="{StaticResource GroundBrush}" />
         <Setter Property="Foreground" Value="{StaticResource TextSoftBrush}" />
         <Setter Property="Focusable" Value="False" />
         <Setter Property="FrameworkElement.Cursor" Value="Arrow" />
@@ -43,18 +41,16 @@
         <Setter Property="Template">
           <Setter.Value>
             <ControlTemplate TargetType="{x:Type Button}">
-              <Border Name="CaptionSurface" Background="{TemplateBinding Control.Background}" BorderBrush="{TemplateBinding Control.BorderBrush}" BorderThickness="{TemplateBinding Control.BorderThickness}" SnapsToDevicePixels="True">
+              <Border Name="CaptionSurface" Background="{TemplateBinding Control.Background}" SnapsToDevicePixels="True">
                 <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="True" />
               </Border>
               <ControlTemplate.Triggers>
                 <Trigger Property="UIElement.IsMouseOver" Value="True">
                   <Setter TargetName="CaptionSurface" Property="Border.Background" Value="{StaticResource PlateHighBrush}" />
-                  <Setter TargetName="CaptionSurface" Property="Border.BorderBrush" Value="{StaticResource IceBrush}" />
                   <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
                 </Trigger>
                 <Trigger Property="IsPressed" Value="True">
-                  <Setter TargetName="CaptionSurface" Property="Border.Background" Value="{StaticResource IceDeepBrush}" />
-                  <Setter TargetName="CaptionSurface" Property="Border.BorderBrush" Value="{StaticResource IceBrush}" />
+                  <Setter TargetName="CaptionSurface" Property="Border.Background" Value="{StaticResource PlateBrush}" />
                   <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
                 </Trigger>
               </ControlTemplate.Triggers>
@@ -62,23 +58,37 @@
           </Setter.Value>
         </Setter>
       </Style>
+      <!-- Close is the one caption button that turns red under the pointer, as Windows draws it. -->
       <Style x:Key="CloseCaptionButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource CaptionButtonStyle}">
-        <Setter Property="Foreground" Value="{StaticResource TextSoftBrush}" />
+        <Setter Property="Template">
+          <Setter.Value>
+            <ControlTemplate TargetType="{x:Type Button}">
+              <Border Name="CaptionSurface" Background="{TemplateBinding Control.Background}" SnapsToDevicePixels="True">
+                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="True" />
+              </Border>
+              <ControlTemplate.Triggers>
+                <Trigger Property="UIElement.IsMouseOver" Value="True">
+                  <Setter TargetName="CaptionSurface" Property="Border.Background" Value="{StaticResource CloseHoverBrush}" />
+                  <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+                </Trigger>
+              </ControlTemplate.Triggers>
+            </ControlTemplate>
+          </Setter.Value>
+        </Setter>
       </Style>
       <Style x:Key="PanelSplitterStyle" TargetType="{x:Type GridSplitter}">
-        <Setter Property="Background" Value="{StaticResource PlateBrush}" />
+        <Setter Property="Background" Value="{StaticResource GroundBrush}" />
         <Setter Property="GridSplitter.ShowsPreview" Value="True" />
         <Setter Property="UIElement.SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
           <Setter.Value>
             <ControlTemplate TargetType="{x:Type GridSplitter}">
               <Grid Background="{TemplateBinding Control.Background}">
-                <Border Name="Grip" Background="{StaticResource IceDeepBrush}" Opacity="0.7" HorizontalAlignment="Center" VerticalAlignment="Center" Width="2" Height="30" />
+                <Border Name="Grip" Background="{StaticResource LineBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="1" Height="30" />
               </Grid>
               <ControlTemplate.Triggers>
                 <Trigger Property="UIElement.IsMouseOver" Value="True">
                   <Setter TargetName="Grip" Property="Border.Background" Value="{StaticResource IceBrush}" />
-                  <Setter TargetName="Grip" Property="UIElement.Opacity" Value="1" />
                 </Trigger>
               </ControlTemplate.Triggers>
             </ControlTemplate>
@@ -90,12 +100,11 @@
           <Setter.Value>
             <ControlTemplate TargetType="{x:Type GridSplitter}">
               <Grid Background="{TemplateBinding Control.Background}">
-                <Border Name="Grip" Background="{StaticResource IceDeepBrush}" Opacity="0.7" HorizontalAlignment="Center" VerticalAlignment="Center" Width="30" Height="2" />
+                <Border Name="Grip" Background="{StaticResource LineBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="30" Height="1" />
               </Grid>
               <ControlTemplate.Triggers>
                 <Trigger Property="UIElement.IsMouseOver" Value="True">
                   <Setter TargetName="Grip" Property="Border.Background" Value="{StaticResource IceBrush}" />
-                  <Setter TargetName="Grip" Property="UIElement.Opacity" Value="1" />
                 </Trigger>
               </ControlTemplate.Triggers>
             </ControlTemplate>
@@ -111,26 +120,20 @@
           </ItemsControl.ItemsPanel>
           <ItemsControl.ItemTemplate>
             <DataTemplate x:Key="{DataTemplateKey {x:Type local:CardStack}}" DataType="{x:Type local:CardStack}">
-              <Button Width="144" Height="188" Margin="0" Padding="0" Background="#00FFFFFF" BorderBrush="#00FFFFFF" BorderThickness="0" HorizontalContentAlignment="Stretch" Tag="{Binding}" Click="IconCardButton_OnClick" MouseDoubleClick="IconCardButton_OnMouseDoubleClick">
+              <Button Width="144" Height="188" Margin="0" Padding="0" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalContentAlignment="Stretch" Tag="{Binding}" Click="IconCardButton_OnClick" MouseDoubleClick="IconCardButton_OnMouseDoubleClick">
                 <Grid Margin="2" Width="140" Height="184">
                   <Grid.RowDefinitions>
                     <RowDefinition Height="126" />
                     <RowDefinition Height="58" />
                   </Grid.RowDefinitions>
-                  <Border Background="{StaticResource NightBottomBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" Padding="3">
+                  <Border Background="{StaticResource PlateLowBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" Padding="3">
                     <Image Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Thumbnail}" />
                   </Border>
-                  <Border Grid.Row="1" Background="#E8101D36" BorderBrush="{StaticResource IceDimBrush}" BorderThickness="1,0,1,1" Padding="5,2">
+                  <Border Grid.Row="1" Background="{StaticResource PlateBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1,0,1,1" Padding="6,3">
                     <StackPanel VerticalAlignment="Center">
-                      <Viewbox Height="18" Stretch="Uniform" StretchDirection="DownOnly">
-                        <TextBlock TextAlignment="Center" Foreground="{StaticResource TextBrush}" FontSize="12" FontWeight="SemiBold" Text="{Binding EnglishName}" />
-                      </Viewbox>
-                      <Viewbox Height="15" Stretch="Uniform" StretchDirection="DownOnly">
-                        <TextBlock TextAlignment="Center" Style="{StaticResource SecondaryNameStyle}" FontSize="10" Text="{Binding JapaneseName}" />
-                      </Viewbox>
-                      <Viewbox Height="16" Stretch="Uniform" StretchDirection="DownOnly">
-                        <TextBlock TextAlignment="Center" Foreground="{StaticResource TextSoftBrush}" FontSize="10" Text="{Binding EntityLabel}" />
-                      </Viewbox>
+                      <TextBlock TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{StaticResource TextBrush}" FontSize="12" FontWeight="SemiBold" Text="{Binding EnglishName}" />
+                      <TextBlock TextAlignment="Center" TextTrimming="CharacterEllipsis" Style="{StaticResource SecondaryNameStyle}" FontSize="10" Text="{Binding JapaneseName}" />
+                      <TextBlock TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{StaticResource TextFaintBrush}" FontSize="10" Text="{Binding EntityLabel}" />
                     </StackPanel>
                   </Border>
                 </Grid>
@@ -141,204 +144,182 @@
       </DataTemplate>
     </ResourceDictionary>
   </FrameworkElement.Resources>
-  <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="1">
-    <Border.Background>
-      <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Offset="0" Color="#0B1B3A" />
-        <GradientStop Offset="0.55" Color="#08132A" />
-        <GradientStop Offset="1" Color="#050A16" />
-      </LinearGradientBrush>
-    </Border.Background>
+  <Border Background="{StaticResource GroundBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1">
     <Grid>
       <Grid.RowDefinitions>
         <RowDefinition Height="32" />
-        <RowDefinition Height="80" />
+        <RowDefinition Height="60" />
         <RowDefinition Height="*" />
-        <RowDefinition Height="36" />
+        <RowDefinition Height="28" />
       </Grid.RowDefinitions>
-      <!-- The soft blue bokeh of the RESULT screen. Four frozen radial brushes, no bitmap. -->
-      <Canvas IsHitTestVisible="False" ClipToBounds="True">
-        <Ellipse Canvas.Left="-120" Canvas.Top="-60" Width="560" Height="560" Opacity="0.30">
-          <Ellipse.Fill>
-            <RadialGradientBrush>
-              <GradientStop Offset="0" Color="#2A5C9E" />
-              <GradientStop Offset="1" Color="#000B1B3A" />
-            </RadialGradientBrush>
-          </Ellipse.Fill>
-        </Ellipse>
-        <Ellipse Canvas.Left="620" Canvas.Top="-220" Width="760" Height="760" Opacity="0.24">
-          <Ellipse.Fill>
-            <RadialGradientBrush>
-              <GradientStop Offset="0" Color="#1E4C86" />
-              <GradientStop Offset="1" Color="#000B1B3A" />
-            </RadialGradientBrush>
-          </Ellipse.Fill>
-        </Ellipse>
-        <Ellipse Canvas.Left="240" Canvas.Top="420" Width="520" Height="520" Opacity="0.18">
-          <Ellipse.Fill>
-            <RadialGradientBrush>
-              <GradientStop Offset="0" Color="#17406F" />
-              <GradientStop Offset="1" Color="#00050A16" />
-            </RadialGradientBrush>
-          </Ellipse.Fill>
-        </Ellipse>
-        <Ellipse Canvas.Left="900" Canvas.Top="360" Width="680" Height="680" Opacity="0.16">
-          <Ellipse.Fill>
-            <RadialGradientBrush>
-              <GradientStop Offset="0" Color="#123A66" />
-              <GradientStop Offset="1" Color="#00050A16" />
-            </RadialGradientBrush>
-          </Ellipse.Fill>
-        </Ellipse>
-      </Canvas>
-      <Border Grid.Row="0" Background="#40050A16" BorderBrush="{StaticResource LineSoftBrush}" BorderThickness="0,0,0,1" MouseLeftButtonDown="TitleBar_OnMouseLeftButtonDown">
+      <Border Grid.Row="0" Background="{StaticResource GroundBrush}" MouseLeftButtonDown="TitleBar_OnMouseLeftButtonDown">
         <Grid>
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
           </Grid.ColumnDefinitions>
           <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0">
-            <Image Source="platform.ico" Width="18" Height="18" Margin="0,0,9,0" RenderOptions.BitmapScalingMode="HighQuality" />
-            <TextBlock Name="HeaderBrandText" Foreground="{StaticResource TextSoftBrush}" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" />
+            <Image Source="platform.ico" Width="16" Height="16" Margin="0,0,10,0" RenderOptions.BitmapScalingMode="HighQuality" />
+            <TextBlock Name="HeaderBrandText" Foreground="{StaticResource TextSoftBrush}" FontSize="12" VerticalAlignment="Center" />
           </StackPanel>
           <StackPanel Grid.Column="1" Orientation="Horizontal">
             <Button Style="{StaticResource CaptionButtonStyle}" ToolTip="Minimize" AutomationProperties.Name="Minimize" Click="MinimizeButton_OnClick">
-              <Path Width="12" Height="12" Stretch="None" Data="M1,8 L11,8" StrokeThickness="1.5" SnapsToDevicePixels="True" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+              <Path Width="12" Height="12" Stretch="None" Data="M1,8 L11,8" StrokeThickness="1" SnapsToDevicePixels="True" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
             </Button>
             <Button Style="{StaticResource CaptionButtonStyle}" ToolTip="Maximize / Restore" AutomationProperties.Name="Maximize or restore" Click="MaximizeButton_OnClick">
-              <Rectangle Width="10" Height="10" StrokeThickness="1.25" SnapsToDevicePixels="True" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+              <Rectangle Width="10" Height="10" StrokeThickness="1" SnapsToDevicePixels="True" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
             </Button>
             <Button Style="{StaticResource CloseCaptionButtonStyle}" ToolTip="Close" AutomationProperties.Name="Close" Click="CloseButton_OnClick">
-              <Path Width="12" Height="12" Stretch="None" Data="M1.5,1.5 L10.5,10.5 M10.5,1.5 L1.5,10.5" StrokeThickness="1.5" StrokeStartLineCap="Square" StrokeEndLineCap="Square" SnapsToDevicePixels="True" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+              <Path Width="12" Height="12" Stretch="None" Data="M1.5,1.5 L10.5,10.5 M10.5,1.5 L1.5,10.5" StrokeThickness="1" StrokeStartLineCap="Square" StrokeEndLineCap="Square" SnapsToDevicePixels="True" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
             </Button>
           </StackPanel>
         </Grid>
       </Border>
-      <Border Grid.Row="1" Background="#66102040" BorderBrush="{StaticResource LineBrush}" BorderThickness="0,0,0,1">
-        <Grid Margin="20,0,16,0">
+      <Border Grid.Row="1" Background="{StaticResource GroundBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="0,0,0,1">
+        <Grid Margin="16,0,16,0">
           <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
           </Grid.ColumnDefinitions>
           <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-            <Image Source="platform.ico" Width="34" Height="34" Margin="0,0,13,0" RenderOptions.BitmapScalingMode="HighQuality" />
-            <local:OutlinedText Text="FGOAC scooby" FontFamily="{DynamicResource DisplayFont}" FontSize="27" Fill="{StaticResource TextBrush}" Stroke="{StaticResource IceDimBrush}" StrokeThickness="1" VerticalAlignment="Center" />
+            <Image Source="platform.ico" Width="32" Height="32" Margin="0,0,12,0" RenderOptions.BitmapScalingMode="HighQuality" />
+            <TextBlock Text="FGOAC scooby" FontFamily="{DynamicResource DisplayFont}" FontSize="24" Foreground="{StaticResource TextBrush}" VerticalAlignment="Center" />
           </StackPanel>
-          <Border Grid.Column="1" Style="{StaticResource StatusBandStyle}" Margin="26,0" MaxWidth="560" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <StackPanel Orientation="Horizontal">
-              <TextBlock Text="server" Style="{StaticResource BandKeyStyle}" Margin="0,0,12,0" />
-              <TextBlock Style="{StaticResource BandValueStyle}" Text="{Binding Text, ElementName=RuntimeStatusText}" />
-            </StackPanel>
-          </Border>
+          <TextBlock Grid.Column="1" Margin="24,0,24,0" VerticalAlignment="Center" FontSize="13" Foreground="{StaticResource TextSoftBrush}" TextTrimming="CharacterEllipsis" Text="{Binding Text, ElementName=RuntimeStatusText}" />
           <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-            <Button Name="StopGameButton" Style="{StaticResource StopGameButtonStyle}" Content="Stop game" IsEnabled="False" Height="46" MinWidth="118" Margin="0,0,10,0" Click="StopGameButton_OnClick" />
-            <Button Name="StartGameButton" Style="{StaticResource PrimaryButtonStyle}" Content="Play" FontSize="19" MinWidth="150" Height="46" Margin="0" Click="StartGameButton_OnClick" />
+            <Button Content="Check for updates" Height="34" Margin="0,0,8,0" Click="CheckUpdatesButton_OnClick" />
+            <Button Name="StopGameButton" Style="{StaticResource StopGameButtonStyle}" Content="Stop game" IsEnabled="False" Height="34" MinWidth="104" Margin="0,0,8,0" Click="StopGameButton_OnClick" />
+            <Button Name="StartGameButton" Style="{StaticResource PrimaryButtonStyle}" Content="Play" Height="40" MinWidth="140" FontSize="18" Click="StartGameButton_OnClick" />
           </StackPanel>
         </Grid>
       </Border>
-      <Grid Row="2" Margin="10">
+      <Grid Grid.Row="2">
         <Grid.ColumnDefinitions>
           <ColumnDefinition Name="WorkspaceColumn" Width="*" MinWidth="620" />
           <ColumnDefinition Name="LogSplitterColumn" Width="7" />
           <ColumnDefinition Name="LogPanelColumn" Width="440" MinWidth="310" />
         </Grid.ColumnDefinitions>
-        <TabControl Grid.Column="0" MaxWidth="1180" HorizontalAlignment="Stretch" Background="#00FFFFFF" BorderBrush="#00FFFFFF" BorderThickness="0">
-          <TabItem Header="Play">
+        <TabControl Name="SectionTabs" Grid.Column="0" Style="{StaticResource SidebarTabControlStyle}" TabStripPlacement="Left">
+          <TabItem Header="Play" Style="{StaticResource SidebarTabItemStyle}">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
-              <StackPanel Margin="18,18,18,22">
-                <Border Name="UpdateBanner" Style="{StaticResource StatusBandStyle}" Visibility="Collapsed" Margin="0,0,0,16">
+              <Grid Margin="28">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*" MaxWidth="900" />
+                  <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                <Border Name="UpdateBanner" Visibility="Collapsed" Background="{StaticResource PlateBrush}" BorderBrush="{StaticResource IceBrush}" BorderThickness="3,0,0,0" Padding="14,10" Margin="0,0,0,20">
                   <DockPanel>
-                    <Button DockPanel.Dock="Right" Content="Later" MinHeight="34" Padding="16,5,16,3" Margin="8,0,0,0" Click="UpdateLaterButton_OnClick" />
-                    <Button DockPanel.Dock="Right" Style="{StaticResource PrimaryButtonStyle}" Content="Install now" FontSize="14" MinHeight="34" Padding="18,5" Margin="8,0,0,0" Click="UpdateInstallButton_OnClick" />
+                    <Button DockPanel.Dock="Right" Content="Later" Margin="8,0,0,0" Click="UpdateLaterButton_OnClick" />
+                    <Button DockPanel.Dock="Right" Style="{StaticResource AccentButtonStyle}" Content="Install now" Margin="8,0,0,0" Click="UpdateInstallButton_OnClick" />
                     <TextBlock Name="UpdateBannerText" VerticalAlignment="Center" Foreground="{StaticResource TextBrush}" TextWrapping="Wrap" />
                   </DockPanel>
                 </Border>
-                <local:ChamferPanel Fill="{StaticResource PlateBrush}" Stroke="{StaticResource GoldSoftBrush}" StrokeThickness="1" Cut="16" OrnamentBrush="{StaticResource GoldBrush}" Padding="22,20" Margin="0,0,0,16">
-                  <Grid>
-                    <Grid.ColumnDefinitions>
-                      <ColumnDefinition Width="2*" MinWidth="200" />
-                      <ColumnDefinition Width="3*" />
-                    </Grid.ColumnDefinitions>
-                    <Border Background="{StaticResource PlateLowBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" Padding="10" Margin="0,0,20,0">
-                      <Grid>
-                        <Image Name="HeroFallbackImage" Source="platform.ico" Width="96" Height="96" RenderOptions.BitmapScalingMode="HighQuality" />
-                        <Image Name="HeroCardImage" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" Visibility="Collapsed" />
+                <Grid Margin="0,0,0,20">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+                  <Border Width="232" Height="316" VerticalAlignment="Top" Margin="0,0,24,0" Background="{StaticResource PlateLowBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" Padding="8">
+                    <Grid>
+                      <Image Name="HeroFallbackImage" Source="platform.ico" Width="96" Height="96" RenderOptions.BitmapScalingMode="HighQuality" />
+                      <Image Name="HeroCardImage" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" Visibility="Collapsed" />
+                    </Grid>
+                  </Border>
+                  <StackPanel Grid.Column="1">
+                    <Button Content="Play" Style="{StaticResource PrimaryButtonStyle}" FontSize="24" Height="72" Margin="0,0,0,18" HorizontalAlignment="Stretch" IsEnabled="{Binding IsEnabled, ElementName=StartGameButton}" Click="StartGameButton_OnClick" />
+                    <Border BorderBrush="{StaticResource LineSoftBrush}" BorderThickness="0,0,0,1">
+                      <Grid Height="34">
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="80" />
+                          <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Server" FontSize="13" Foreground="{StaticResource TextSoftBrush}" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="1" FontSize="14" Foreground="{StaticResource TextBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Text="{Binding Text, ElementName=RuntimeStatusText}" />
                       </Grid>
                     </Border>
-                    <StackPanel Grid.Column="1">
-                      <Button Content="Play" Style="{StaticResource PrimaryButtonStyle}" FontSize="34" Height="72" Margin="0,0,0,14" HorizontalAlignment="Stretch" IsEnabled="{Binding IsEnabled, ElementName=StartGameButton}" Click="StartGameButton_OnClick" />
-                      <Border Style="{StaticResource StatusBandStyle}" Margin="0,0,0,7">
-                        <Grid>
-                          <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="74" />
-                            <ColumnDefinition Width="*" />
-                          </Grid.ColumnDefinitions>
-                          <TextBlock Text="server" Style="{StaticResource BandKeyStyle}" />
-                          <TextBlock Grid.Column="1" Style="{StaticResource BandValueStyle}" Text="{Binding Text, ElementName=RuntimeStatusText}" />
-                        </Grid>
-                      </Border>
-                      <Border Style="{StaticResource StatusBandStyle}" Margin="0,0,0,7">
-                        <Grid>
-                          <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="74" />
-                            <ColumnDefinition Width="*" />
-                          </Grid.ColumnDefinitions>
-                          <TextBlock Text="Master" Style="{StaticResource BandKeyStyle}" />
-                          <TextBlock Grid.Column="1" Style="{StaticResource BandValueStyle}" Text="{Binding Text, ElementName=CurrentAccountText}" />
-                        </Grid>
-                      </Border>
-                      <Border Style="{StaticResource StatusBandStyle}" Margin="0,0,0,14">
-                        <Grid>
-                          <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="74" />
-                            <ColumnDefinition Width="*" />
-                          </Grid.ColumnDefinitions>
-                          <TextBlock Text="deck" Style="{StaticResource BandKeyStyle}" />
-                          <TextBlock Grid.Column="1" Style="{StaticResource BandValueStyle}" Text="{Binding Text, ElementName=DeckStatusText}" />
-                        </Grid>
-                      </Border>
-                      <UniformGrid Columns="4" Height="42">
-                        <Button Content="Start server" Margin="0,0,3,0" FontSize="13" ToolTip="Starts the local server. If it is already running, this checks that its ports answer." Click="StartServerButton_OnClick" />
-                        <Button Content="Stop server" Margin="3,0" FontSize="13" Click="StopServerButton_OnClick" />
-                        <Button Content="Open logs" Margin="3,0" FontSize="13" Click="OpenLogsButton_OnClick" />
-                        <Button Content="Stop game" Style="{StaticResource DangerButtonStyle}" Margin="3,0,0,0" FontSize="13" IsEnabled="{Binding IsEnabled, ElementName=StopGameButton}" Click="StopGameButton_OnClick" />
-                      </UniformGrid>
-                    </StackPanel>
-                  </Grid>
-                </local:ChamferPanel>
-                <local:ChamferPanel Fill="{StaticResource PlateBrush}" Stroke="{StaticResource GoldSoftBrush}" StrokeThickness="1" Cut="16" OrnamentBrush="{StaticResource GoldBrush}" Padding="22,18">
-                  <StackPanel>
-                    <TextBlock Text="How it works" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,12" />
-                    <Grid>
+                    <Border BorderBrush="{StaticResource LineSoftBrush}" BorderThickness="0,0,0,1">
+                      <Grid Height="34">
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="80" />
+                          <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Master" FontSize="13" Foreground="{StaticResource TextSoftBrush}" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="1" FontSize="14" Foreground="{StaticResource TextBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Text="{Binding Text, ElementName=CurrentAccountText}" />
+                      </Grid>
+                    </Border>
+                    <Grid Height="34">
                       <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="80" />
                         <ColumnDefinition Width="*" />
                       </Grid.ColumnDefinitions>
-                      <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                      </Grid.RowDefinitions>
-                      <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource HelpTextStyle}" Margin="0,0,20,10" Text="Play: starts the local server and the game. The title screen appears after about a minute." />
-                      <TextBlock Grid.Row="0" Grid.Column="1" Style="{StaticResource HelpTextStyle}" Margin="0,0,0,10" Text="Cards and Deck: choose up to 30 cards. They are sent to the game every time you press Play." />
-                      <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource HelpTextStyle}" Margin="0,0,20,0" Text="Account: your first start created the account Master with every Servant. Rename it or add another one while the game is closed." />
-                      <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource HelpTextStyle}" Text="Settings: monitor, resolution and controls. Advanced has the server, logs and help with error codes." />
+                      <TextBlock Text="Deck" FontSize="13" Foreground="{StaticResource TextSoftBrush}" VerticalAlignment="Center" />
+                      <TextBlock Grid.Column="1" FontSize="14" Foreground="{StaticResource TextBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Text="{Binding Text, ElementName=DeckStatusText}" />
                     </Grid>
+                    <WrapPanel Margin="0,14,0,0">
+                      <FrameworkElement.Resources>
+                        <ResourceDictionary>
+                          <Style x:Key="{x:Type Button}" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                            <Setter Property="Width" Value="152" />
+                            <Setter Property="Height" Value="40" />
+                            <Setter Property="Margin" Value="0,0,8,8" />
+                          </Style>
+                        </ResourceDictionary>
+                      </FrameworkElement.Resources>
+                      <Button Content="Start server" ToolTip="Starts the local server. If it is already running, this checks that its ports answer." Click="StartServerButton_OnClick" />
+                      <Button Content="Stop server" Click="StopServerButton_OnClick" />
+                      <Button Content="Open logs" Click="OpenLogsButton_OnClick" />
+                      <Button Content="Stop game" Style="{StaticResource DangerButtonStyle}" Width="152" Height="40" Margin="0,0,8,8" IsEnabled="{Binding IsEnabled, ElementName=StopGameButton}" Click="StopGameButton_OnClick" />
+                    </WrapPanel>
                   </StackPanel>
-                </local:ChamferPanel>
-              </StackPanel>
+                </Grid>
+                <TextBlock Text="First time here" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,14" />
+                <Grid Height="30">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="24" />
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+                  <TextBlock Text="1" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource IceBrush}" />
+                  <TextBlock Grid.Column="1" FontSize="14" LineHeight="20" TextWrapping="Wrap" Foreground="{StaticResource TextBrush}" Text="Your account Master is ready, with every Servant." />
+                </Grid>
+                <Grid Height="30">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="24" />
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+                  <TextBlock Text="2" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource IceBrush}" />
+                  <TextBlock Grid.Column="1" FontSize="14" LineHeight="20" TextWrapping="Wrap" Foreground="{StaticResource TextBrush}" Text="Cards and Deck: pick up to 30 cards. They reach the game on Play." />
+                </Grid>
+                <Grid Height="30">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="24" />
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+                  <TextBlock Text="3" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource IceBrush}" />
+                  <TextBlock Grid.Column="1" FontSize="14" LineHeight="20" TextWrapping="Wrap" Foreground="{StaticResource TextBrush}" Text="Settings: monitor, resolution and controls." />
+                </Grid>
+                <Grid Height="30">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="24" />
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+                  <TextBlock Text="4" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource IceBrush}" />
+                  <TextBlock Grid.Column="1" FontSize="14" LineHeight="20" TextWrapping="Wrap" Foreground="{StaticResource TextBrush}" Text="Press Play. The title screen takes about a minute." />
+                </Grid>
+                </StackPanel>
+              </Grid>
             </ScrollViewer>
           </TabItem>
-          <TabItem Header="Account">
+          <TabItem Header="Account" Style="{StaticResource SidebarTabItemStyle}">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
-              <StackPanel Margin="16">
-                <TextBlock Text="Local Accounts" FontSize="22" FontWeight="Bold" Margin="0,0,0,16" />
+              <StackPanel Margin="28" MaxWidth="900" HorizontalAlignment="Left">
                 <WrapPanel Margin="0,0,0,16" VerticalAlignment="Center">
-                  <TextBlock Text="In use" VerticalAlignment="Center" Margin="10,3,3,3" Foreground="{StaticResource TextSoftBrush}" />
+                  <TextBlock Text="In use" VerticalAlignment="Center" Margin="0,3,6,3" Foreground="{StaticResource TextSoftBrush}" />
                   <TextBlock Name="CurrentAccountText" Text="Loading..." Foreground="{StaticResource TextBrush}" VerticalAlignment="Center" Margin="3" />
-                  <TextBlock Text="Access code" VerticalAlignment="Center" Margin="10,3,3,3" Foreground="{StaticResource TextSoftBrush}" />
-                  <TextBlock Name="CurrentAccessCodeText" Text="—" Foreground="{StaticResource ReadyBrush}" VerticalAlignment="Center" Margin="3" FontFamily="{StaticResource DigitFont}" />
-                  <TextBlock Text="Select" VerticalAlignment="Center" Margin="10,3,3,3" Foreground="{StaticResource TextSoftBrush}" />
+                  <TextBlock Text="Access code" VerticalAlignment="Center" Margin="14,3,6,3" Foreground="{StaticResource TextSoftBrush}" />
+                  <TextBlock Name="CurrentAccessCodeText" Text="—" Foreground="{StaticResource ReadyBrush}" VerticalAlignment="Center" Margin="3" FontFamily="{StaticResource DigitFont}" FontSize="12" />
+                  <TextBlock Text="Select" VerticalAlignment="Center" Margin="14,3,6,3" Foreground="{StaticResource TextSoftBrush}" />
                   <ComboBox Name="AccountComboBox" Width="330" VerticalAlignment="Center" DisplayMemberPath="DisplayText" ToolTip="Local accounts (Master name - Aime ID - account mode)" SelectionChanged="AccountComboBox_OnSelectionChanged" />
                   <Button Name="UseAccountButton" Content="Use Selected Account" Click="UseAccountButton_OnClick" />
                   <Button Name="CreateAccountButton" Content="New Account" Click="CreateAccountButton_OnClick" />
@@ -350,17 +331,16 @@
                   <Button Name="GrantBenefitsButton" Content="Grant Items" IsEnabled="False" Style="{StaticResource GrantButtonStyle}" ToolTip="Pick currency or materials from the installed game data and add a chosen amount to the selected account" Click="GrantBenefitsButton_OnClick" />
                   <Button Name="RefreshAccountsButton" Content="Refresh" Click="RefreshAccountsButton_OnClick" />
                   <Button Name="SummonHistoryButton" Content="Print History" IsEnabled="False" Click="SummonHistoryButton_OnClick" />
-                  <TextBlock Name="CurrentSummonSummaryText" Text="Lv.1 - EXP 0 - 0 cards" Foreground="{StaticResource GoldBrush}" VerticalAlignment="Center" Margin="8,3,3,3" />
+                  <TextBlock Name="CurrentSummonSummaryText" Text="Lv.1 - EXP 0 - 0 cards" FontSize="13" Foreground="{StaticResource TextSoftBrush}" VerticalAlignment="Center" Margin="8,3,3,3" />
                 </WrapPanel>
-                <TextBlock Text="One-Click Inventory and Growth" FontSize="18" FontWeight="SemiBold" Margin="3,4,0,8" />
-                <TextBlock Text="These act on the selected account. Quit the game and stop the server first. The growth options only affect Servants the account already owns." Foreground="{StaticResource TextSoftBrush}" Margin="3,0,0,10" TextWrapping="Wrap" />
-                <WrapPanel Name="AccountUpgradePanel" IsEnabled="False" MaxWidth="960" HorizontalAlignment="Left">
+                <TextBlock Text="One-Click Inventory and Growth" Style="{StaticResource SectionTitleStyle}" Margin="0,8,0,8" />
+                <TextBlock Style="{StaticResource HelpTextStyle}" Margin="0,0,0,12" Text="These act on the selected account. Quit the game and stop the server first. The growth options only affect Servants the account already owns." />
+                <WrapPanel Name="AccountUpgradePanel" IsEnabled="False" HorizontalAlignment="Left">
                   <FrameworkElement.Resources>
                     <ResourceDictionary>
                       <Style x:Key="{x:Type Button}" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
                         <Setter Property="Width" Value="246" />
-                        <Setter Property="MinHeight" Value="48" />
-                        <Setter Property="Margin" Value="3,3,9,9" />
+                        <Setter Property="Margin" Value="0,0,10,10" />
                       </Style>
                     </ResourceDictionary>
                   </FrameworkElement.Resources>
@@ -373,15 +353,15 @@
                   <Button Content="Max All Materials" Tag="materials" ToolTip="Fills every enhancement material in the installed data to its own cap" Click="AccountUpgrade_OnClick" />
                   <Button Content="Max All Servants" Tag="levels" ToolTip="Raises level, Ascension, level cap, Skills, support Skills, Noble Phantasm and Bond to the highest value available" Click="AccountUpgrade_OnClick" />
                 </WrapPanel>
-                <TextBlock Text="Account Details" FontSize="18" FontWeight="SemiBold" Margin="0,16,0,10" />
+                <TextBlock Text="Account Details" Style="{StaticResource SectionTitleStyle}" Margin="0,12,0,10" />
                 <ItemsControl Name="AccountDetailsTable" />
               </StackPanel>
             </ScrollViewer>
           </TabItem>
-          <TabItem Header="Cards and Deck">
-            <TabControl Background="{StaticResource PlateBrush}" BorderBrush="{StaticResource LineBrush}">
+          <TabItem Header="Cards and Deck" Style="{StaticResource SidebarTabItemStyle}">
+            <TabControl>
               <TabItem Header="Deck">
-                <Grid>
+                <Grid Margin="28,20,28,20">
                   <Grid.RowDefinitions>
                     <RowDefinition Name="SettingsPanelRow" Height="52" MinHeight="48" />
                     <RowDefinition Height="7" />
@@ -389,26 +369,18 @@
                     <RowDefinition Height="7" />
                     <RowDefinition Name="DeckPanelRow" Height="195" MinHeight="195" />
                   </Grid.RowDefinitions>
-                  <Border Grid.Row="0" Background="{StaticResource PlateBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1">
-                    <Grid Margin="8">
-                      <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                      </Grid.RowDefinitions>
-                      <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                      </Grid.ColumnDefinitions>
-                      <TextBlock Grid.Row="0" Grid.Column="0" Text="Card Folder" Foreground="{StaticResource IceBrush}" VerticalAlignment="Center" Margin="3" FontWeight="Bold" />
-                      <TextBox Name="CardsPathTextBox" Grid.Row="0" Grid.Column="1" VerticalContentAlignment="Center" KeyDown="CardsPathTextBox_OnKeyDown" />
-                      <Button Grid.Row="0" Grid.Column="2" Content="Reload" ToolTip="Read the card folder again" Click="ReloadButton_OnClick" />
-                    </Grid>
-                  </Border>
+                  <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="Auto" />
+                      <ColumnDefinition Width="*" />
+                      <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Card Folder" Foreground="{StaticResource TextSoftBrush}" VerticalAlignment="Center" Margin="0,0,10,0" />
+                    <TextBox Name="CardsPathTextBox" Grid.Column="1" VerticalContentAlignment="Center" KeyDown="CardsPathTextBox_OnKeyDown" />
+                    <Button Grid.Column="2" Content="Reload" ToolTip="Read the card folder again" Click="ReloadButton_OnClick" />
+                  </Grid>
                   <GridSplitter Grid.Row="1" Style="{StaticResource HorizontalPanelSplitterStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ResizeDirection="Rows" ResizeBehavior="PreviousAndNext" />
-                  <Grid Row="2">
+                  <Grid Grid.Row="2">
                     <Grid.RowDefinitions>
                       <RowDefinition Height="Auto" />
                       <RowDefinition Height="*" />
@@ -416,36 +388,32 @@
                     <Grid.ColumnDefinitions>
                       <ColumnDefinition Name="CardListColumn" Width="*" MinWidth="360" />
                     </Grid.ColumnDefinitions>
-                    <Border Grid.Row="0" Grid.Column="0" Background="{StaticResource PlateBrush}" BorderBrush="{StaticResource IceDeepBrush}" BorderThickness="1" Padding="7,3">
-                      <StackPanel>
-                        <DockPanel Margin="4,3,4,7" LastChildFill="False">
-                          <TextBlock Text="Pick Servants and Craft Essences - double-click a card to choose its art and how many copies" Foreground="{StaticResource IceBrush}" FontWeight="Bold" VerticalAlignment="Center" />
-                        </DockPanel>
-                        <DockPanel LastChildFill="True">
-                          <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock Text="Show" Foreground="{StaticResource TextSoftBrush}" VerticalAlignment="Center" />
-                            <ComboBox Name="CardTypeComboBox" Width="150" SelectedIndex="0" ToolTip="List Servant cards and Craft Essence cards separately">
-                              <ComboBoxItem Content="All Cards" Tag="0" />
-                              <ComboBoxItem Content="Servants" Tag="1" />
-                              <ComboBoxItem Content="Craft Essences" Tag="2" />
-                            </ComboBox>
-                            <ToggleButton Name="OwnedCardsOnlyCheckBox" Style="{StaticResource OwnedOnlyToggleStyle}" AutomationProperties.Name="Owned cards only" IsEnabled="False" VerticalAlignment="Center" Margin="8,3,3,3" ToolTip="Show only cards this account already owns. Cards still waiting to be printed are left out." Checked="OwnedCardsOnlyCheckBox_OnChanged" Unchecked="OwnedCardsOnlyCheckBox_OnChanged" />
-                          </StackPanel>
-                          <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
-                            <Button Name="BuildThumbnailCacheButton" Content="Cache Thumbnails" Padding="9,3" ToolTip="Build a local JPEG thumbnail cache in DEVICE/cache/card-thumbnails" Click="BuildThumbnailCacheButton_OnClick" />
-                            <TextBlock Text="View" Foreground="{StaticResource TextSoftBrush}" VerticalAlignment="Center" Margin="7,0,2,0" />
-                            <Button Name="ListViewModeButton" Content="List" Padding="9,3" Click="ListViewModeButton_OnClick" />
-                            <Button Name="IconViewModeButton" Content="Icons" Padding="9,3" Click="IconViewModeButton_OnClick" />
-                          </StackPanel>
-                        </DockPanel>
-                        <TextBlock Name="CardCatalogSummaryText" Text="Reading the card folder..." Margin="4,3" Foreground="{StaticResource TextSoftBrush}" TextTrimming="CharacterEllipsis" />
-                        <DockPanel Margin="0,4,0,0">
-                          <TextBlock Text="Search" VerticalAlignment="Center" Margin="4,0,10,0" Foreground="{StaticResource TextSoftBrush}" />
-                          <TextBox Name="SearchTextBox" VerticalContentAlignment="Center" ToolTip="Filter as you type by card name, id or file name. Clear the box to show everything again." TextChanged="CardPickerSearchBox_OnTextChanged" />
-                        </DockPanel>
-                      </StackPanel>
-                    </Border>
-                    <ListView Name="CardList" Grid.Row="1" Grid.Column="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="True" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.ScrollUnit="Pixel" SelectionChanged="CardList_OnSelectionChanged" MouseDoubleClick="CardList_OnMouseDoubleClick">
+                    <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,0,10">
+                      <TextBlock Text="Pick Servants and Craft Essences - double-click a card to choose its art and how many copies" FontSize="13" Foreground="{StaticResource TextSoftBrush}" Margin="0,0,0,8" />
+                      <DockPanel LastChildFill="True">
+                        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                          <TextBlock Text="Show" Foreground="{StaticResource TextSoftBrush}" VerticalAlignment="Center" Margin="0,0,6,0" />
+                          <ComboBox Name="CardTypeComboBox" Width="150" SelectedIndex="0" ToolTip="List Servant cards and Craft Essence cards separately">
+                            <ComboBoxItem Content="All Cards" Tag="0" />
+                            <ComboBoxItem Content="Servants" Tag="1" />
+                            <ComboBoxItem Content="Craft Essences" Tag="2" />
+                          </ComboBox>
+                          <ToggleButton Name="OwnedCardsOnlyCheckBox" Style="{StaticResource OwnedOnlyToggleStyle}" AutomationProperties.Name="Owned cards only" IsEnabled="False" VerticalAlignment="Center" Margin="8,3,3,3" ToolTip="Show only cards this account already owns. Cards still waiting to be printed are left out." Checked="OwnedCardsOnlyCheckBox_OnChanged" Unchecked="OwnedCardsOnlyCheckBox_OnChanged" />
+                        </StackPanel>
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+                          <Button Name="BuildThumbnailCacheButton" Content="Cache Thumbnails" ToolTip="Build a local JPEG thumbnail cache in DEVICE/cache/card-thumbnails" Click="BuildThumbnailCacheButton_OnClick" />
+                          <TextBlock Text="View" Foreground="{StaticResource TextSoftBrush}" VerticalAlignment="Center" Margin="10,0,4,0" />
+                          <Button Name="ListViewModeButton" Content="List" Click="ListViewModeButton_OnClick" />
+                          <Button Name="IconViewModeButton" Content="Icons" Click="IconViewModeButton_OnClick" />
+                        </StackPanel>
+                      </DockPanel>
+                      <TextBlock Name="CardCatalogSummaryText" Text="Reading the card folder..." Margin="0,8,0,0" FontSize="13" Foreground="{StaticResource TextSoftBrush}" TextTrimming="CharacterEllipsis" />
+                      <DockPanel Margin="0,6,0,0">
+                        <TextBlock Text="Search" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="{StaticResource TextSoftBrush}" />
+                        <TextBox Name="SearchTextBox" Margin="0,3" VerticalContentAlignment="Center" ToolTip="Filter as you type by card name, id or file name. Clear the box to show everything again." TextChanged="CardPickerSearchBox_OnTextChanged" />
+                      </DockPanel>
+                    </StackPanel>
+                    <ListView Name="CardList" Grid.Row="1" Grid.Column="0" BorderThickness="1" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="True" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.ScrollUnit="Pixel" SelectionChanged="CardList_OnSelectionChanged" MouseDoubleClick="CardList_OnMouseDoubleClick">
                       <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                           <VirtualizingStackPanel />
@@ -459,19 +427,19 @@
                               <ColumnDefinition Width="*" />
                               <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <Border Background="{StaticResource NightBottomBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" Padding="2">
+                            <Border Background="{StaticResource PlateLowBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" Padding="2">
                               <Image Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Thumbnail}" />
                             </Border>
                             <StackPanel Grid.Column="1" Margin="12,0,8,0" VerticalAlignment="Center">
-                              <TextBlock Foreground="{StaticResource TextBrush}" FontSize="15" FontWeight="SemiBold" TextWrapping="Wrap" Text="{Binding EnglishName}" />
-                              <TextBlock Style="{StaticResource SecondaryNameStyle}" FontSize="12" TextWrapping="Wrap" Text="{Binding JapaneseName}" />
-                              <TextBlock Foreground="{StaticResource TextSoftBrush}" FontSize="11" Margin="0,4,0,0" Text="{Binding EntityLabel}" />
+                              <TextBlock Foreground="{StaticResource TextBrush}" FontSize="14" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Text="{Binding EnglishName}" />
+                              <TextBlock Style="{StaticResource SecondaryNameStyle}" FontSize="12" TextTrimming="CharacterEllipsis" Text="{Binding JapaneseName}" />
+                              <TextBlock Foreground="{StaticResource TextFaintBrush}" FontSize="12" Margin="0,4,0,0" TextTrimming="CharacterEllipsis" Text="{Binding EntityLabel}" />
                             </StackPanel>
                             <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="8">
-                              <Border Background="{StaticResource IceDeepBrush}" BorderBrush="{StaticResource IceDimBrush}" BorderThickness="1" Padding="8,3">
-                                <TextBlock Foreground="{StaticResource IceBrush}" FontSize="11" Text="{Binding StackLabel}" />
+                              <Border Background="{StaticResource PlateHighBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" Padding="8,3">
+                                <TextBlock Foreground="{StaticResource TextBrush}" FontSize="12" Text="{Binding StackLabel}" />
                               </Border>
-                              <TextBlock Foreground="{StaticResource IceBrush}" FontFamily="{StaticResource DigitFont}" HorizontalAlignment="Right" Margin="0,7,0,0" Text="{Binding TrcId, StringFormat=TC ID {0}}" />
+                              <TextBlock Foreground="{StaticResource TextSoftBrush}" FontFamily="{StaticResource DigitFont}" FontSize="12" HorizontalAlignment="Right" Margin="0,7,0,0" Text="{Binding TrcId, StringFormat=TC ID {0}}" />
                             </StackPanel>
                           </Grid>
                         </DataTemplate>
@@ -479,15 +447,15 @@
                     </ListView>
                   </Grid>
                   <GridSplitter Grid.Row="3" Style="{StaticResource HorizontalPanelSplitterStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ResizeDirection="Rows" ResizeBehavior="PreviousAndNext" />
-                  <Border Grid.Row="4" Background="{StaticResource NightBottomBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1">
+                  <Border Grid.Row="4" Background="{StaticResource GroundBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1">
                     <Grid>
                       <Grid.RowDefinitions>
                         <RowDefinition Height="34" />
                         <RowDefinition Height="*" />
                       </Grid.RowDefinitions>
-                      <DockPanel Background="{StaticResource PlateBrush}">
-                        <TextBlock Name="DeckStatusText" DockPanel.Dock="Left" Foreground="{StaticResource IceBrush}" FontWeight="SemiBold" VerticalAlignment="Center" Margin="10,0" />
-                        <Button DockPanel.Dock="Right" Content="Clear Deck" Padding="10,3" Click="ClearButton_OnClick" />
+                      <DockPanel Background="{StaticResource PlateBrush}" LastChildFill="False">
+                        <TextBlock Name="DeckStatusText" DockPanel.Dock="Left" Foreground="{StaticResource IceBrush}" VerticalAlignment="Center" Margin="10,0" />
+                        <Button DockPanel.Dock="Right" Content="Clear Deck" MinHeight="26" Padding="10,2" Margin="3,4" Click="ClearButton_OnClick" />
                       </DockPanel>
                       <ListView Name="SelectedCardList" Grid.Row="1" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled" SelectionChanged="SelectedCardList_OnSelectionChanged" MouseDoubleClick="SelectedCardList_OnMouseDoubleClick">
                         <ItemsControl.ItemsPanel>
@@ -498,16 +466,14 @@
                         <ItemsControl.ItemTemplate>
                           <DataTemplate DataType="{x:Type local:CardStack}">
                             <Grid Margin="4" Width="88" Height="142">
-                              <Image Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Thumbnail}" />
-                              <Border VerticalAlignment="Bottom" Background="#EA1B2E52" Padding="3">
+                              <Border Background="{StaticResource PlateLowBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1">
+                                <Image Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Thumbnail}" />
+                              </Border>
+                              <Border VerticalAlignment="Bottom" Background="{StaticResource PlateBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1,1,1,0" Padding="4,2">
                                 <StackPanel>
-                                  <Viewbox Height="15" Stretch="Uniform" StretchDirection="DownOnly">
-                                    <TextBlock TextAlignment="Center" Foreground="{StaticResource TextBrush}" FontSize="10" FontWeight="SemiBold" Text="{Binding EnglishName}" />
-                                  </Viewbox>
-                                  <Viewbox Height="13" Stretch="Uniform" StretchDirection="DownOnly">
-                                    <TextBlock TextAlignment="Center" Style="{StaticResource SecondaryNameStyle}" FontSize="9" Text="{Binding JapaneseName}" />
-                                  </Viewbox>
-                                  <TextBlock TextAlignment="Center" Foreground="{StaticResource IceBrush}" FontSize="10" Text="{Binding Count, StringFormat=×{0}}" />
+                                  <TextBlock TextAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{StaticResource TextBrush}" FontSize="11" FontWeight="SemiBold" Text="{Binding EnglishName}" />
+                                  <TextBlock TextAlignment="Center" TextTrimming="CharacterEllipsis" Style="{StaticResource SecondaryNameStyle}" FontSize="10" Text="{Binding JapaneseName}" />
+                                  <TextBlock TextAlignment="Center" Foreground="{StaticResource IceBrush}" FontSize="11" Text="{Binding Count, StringFormat=×{0}}" />
                                 </StackPanel>
                               </Border>
                             </Grid>
@@ -523,18 +489,18 @@
               </TabItem>
             </TabControl>
           </TabItem>
-          <TabItem Header="Settings">
-            <TabControl Background="{StaticResource PlateBrush}" BorderBrush="{StaticResource LineBrush}">
+          <TabItem Header="Settings" Style="{StaticResource SidebarTabItemStyle}">
+            <TabControl>
               <TabItem Header="Display">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                  <StackPanel Margin="22" MaxWidth="820" HorizontalAlignment="Left">
+                  <StackPanel Margin="28" MaxWidth="900" HorizontalAlignment="Left">
                     <TextBlock Text="Game language" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,10" />
                     <ToggleButton Name="ChineseEnabledCheckBox" Style="{StaticResource EnglishTextToggleStyle}" AutomationProperties.Name="English text" HorizontalAlignment="Left" MinWidth="210" Margin="0,0,0,8" ToolTip="Turns the translated in-game text on or off. Takes effect the next time you start the game." />
                     <TextBlock Style="{StaticResource HelpTextStyle}" Margin="0,0,0,26" Text="Off leaves the game in Japanese. The switch takes effect the next time you press Play." />
-                    <TextBlock Text="Display and Resolution" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,16" />
+                    <TextBlock Text="Display and Resolution" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,14" />
                     <WrapPanel>
                       <StackPanel Orientation="Horizontal" Margin="0,0,12,8">
-                        <TextBlock Text="Mode" VerticalAlignment="Center" Margin="3" Foreground="{StaticResource TextSoftBrush}" />
+                        <TextBlock Text="Mode" VerticalAlignment="Center" Margin="0,3,6,3" Foreground="{StaticResource TextSoftBrush}" />
                         <ComboBox Name="DisplayModeComboBox" Width="152">
                           <ComboBoxItem Content="Windowed" Tag="windowed" />
                           <ComboBoxItem Content="Borderless" Tag="borderless" />
@@ -542,11 +508,11 @@
                         </ComboBox>
                       </StackPanel>
                       <StackPanel Orientation="Horizontal" Margin="0,0,12,8">
-                        <TextBlock Text="Monitor" VerticalAlignment="Center" Margin="8,3,3,3" Foreground="{StaticResource TextSoftBrush}" />
+                        <TextBlock Text="Monitor" VerticalAlignment="Center" Margin="8,3,6,3" Foreground="{StaticResource TextSoftBrush}" />
                         <ComboBox Name="MonitorComboBox" Width="262" ToolTip="The game uses this monitor the next time it starts. If that monitor is disconnected it falls back to the primary one." DropDownOpened="MonitorComboBox_OnDropDownOpened" />
                       </StackPanel>
                       <StackPanel Orientation="Horizontal" Margin="0,0,12,8">
-                        <TextBlock Text="Aspect" VerticalAlignment="Center" Margin="8,3,3,3" Foreground="{StaticResource TextSoftBrush}" />
+                        <TextBlock Text="Aspect" VerticalAlignment="Center" Margin="8,3,6,3" Foreground="{StaticResource TextSoftBrush}" />
                         <ComboBox Name="AspectRatioComboBox" Width="140" SelectionChanged="AspectRatioComboBox_OnSelectionChanged">
                           <ComboBoxItem Content="16:9" Tag="16:9" />
                           <ComboBoxItem Content="16:10" Tag="16:10" />
@@ -569,7 +535,7 @@
                       </StackPanel>
                     </WrapPanel>
                     <WrapPanel Margin="0,12,0,20">
-                      <TextBlock Text="Frame Rate Cap" VerticalAlignment="Center" Margin="3" />
+                      <TextBlock Text="Frame Rate Cap" VerticalAlignment="Center" Margin="0,3,6,3" Foreground="{StaticResource TextSoftBrush}" />
                       <ComboBox Name="FrameRateComboBox" Width="152">
                         <ComboBoxItem Content="60 FPS (stable)" Tag="60" />
                         <ComboBoxItem Content="90 FPS" Tag="90" />
@@ -577,15 +543,15 @@
                         <ComboBoxItem Content="144 FPS" Tag="144" />
                       </ComboBox>
                     </WrapPanel>
-                    <TextBlock Text="Image Quality" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,12" />
+                    <TextBlock Text="Image Quality" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,12" />
                     <WrapPanel Margin="0,0,0,12">
-                      <TextBlock Text="Anti-aliasing" VerticalAlignment="Center" Margin="3" />
+                      <TextBlock Text="Anti-aliasing" VerticalAlignment="Center" Margin="0,3,6,3" Foreground="{StaticResource TextSoftBrush}" />
                       <ComboBox Name="SmaaComboBox" Width="232" SelectedIndex="0">
                         <ComboBoxItem Content="Off (native)" Tag="0" />
                         <ComboBoxItem Content="Native + SMAA High" Tag="1" />
                         <ComboBoxItem Content="Native + SMAA Ultra" Tag="2" />
                       </ComboBox>
-                      <TextBlock Text="Anisotropic Filtering" VerticalAlignment="Center" Margin="12,3,3,3" />
+                      <TextBlock Text="Anisotropic Filtering" VerticalAlignment="Center" Margin="12,3,6,3" Foreground="{StaticResource TextSoftBrush}" />
                       <ComboBox Name="AnisotropyComboBox" Width="90" SelectedIndex="4">
                         <ComboBoxItem Content="1x" Tag="1" />
                         <ComboBoxItem Content="2x" Tag="2" />
@@ -595,7 +561,7 @@
                       </ComboBox>
                     </WrapPanel>
                     <WrapPanel Margin="0,0,0,12">
-                      <TextBlock Text="Render Scale" VerticalAlignment="Center" Margin="3" />
+                      <TextBlock Text="Render Scale" VerticalAlignment="Center" Margin="0,3,6,3" Foreground="{StaticResource TextSoftBrush}" />
                       <ComboBox Name="RenderScaleComboBox" Width="232" SelectedIndex="0">
                         <ComboBoxItem Content="100% (native)" Tag="100" />
                         <ComboBoxItem Content="125% (1.56x pixels)" Tag="125" />
@@ -603,17 +569,17 @@
                         <ComboBoxItem Content="200% (4x pixels)" Tag="200" />
                       </ComboBox>
                     </WrapPanel>
-                    <TextBlock Text="Renders the scene above your display resolution and scales it back down, so characters look sharper and edges are cleaner. The UI size and the field of view do not change, and it can be combined with SMAA." TextWrapping="Wrap" Foreground="{StaticResource TextSoftBrush}" Margin="0,0,0,8" />
-                    <TextBlock Text="The higher the scale, the more GPU it costs. Lower it if the game stutters. If your GPU cannot handle the setting, the game falls back to 100%." TextWrapping="Wrap" Foreground="{StaticResource TextSoftBrush}" Margin="0,0,0,8" />
-                    <WrapPanel Margin="0,0,0,16">
-                      <CheckBox Name="MotionBlurCheckBox" Content="Motion Blur" Margin="3,8,22,8" />
-                      <CheckBox Name="DepthOfFieldCheckBox" Content="Depth of Field" IsChecked="True" Margin="3,8,22,8" />
-                      <CheckBox Name="BloomCheckBox" Content="Bloom" IsChecked="True" Margin="3,8,22,8" />
-                      <CheckBox Name="DisableCameraShakeCheckBox" Content="No Camera Shake" Margin="3,8,22,8" ToolTip="Removes the game's camera shake while leaving normal camera movement alone. Takes effect the next time you start the game." />
+                    <TextBlock Style="{StaticResource HelpTextStyle}" Margin="0,0,0,8" Text="Renders the scene above your display resolution and scales it back down, so characters look sharper and edges are cleaner. The UI size and the field of view do not change, and it can be combined with SMAA." />
+                    <TextBlock Style="{StaticResource HelpTextStyle}" Margin="0,0,0,8" Text="The higher the scale, the more GPU it costs. Lower it if the game stutters. If your GPU cannot handle the setting, the game falls back to 100%." />
+                    <WrapPanel Margin="0,4,0,16">
+                      <CheckBox Name="MotionBlurCheckBox" Content="Motion Blur" Margin="0,4,24,4" />
+                      <CheckBox Name="DepthOfFieldCheckBox" Content="Depth of Field" IsChecked="True" Margin="0,4,24,4" />
+                      <CheckBox Name="BloomCheckBox" Content="Bloom" IsChecked="True" Margin="0,4,24,4" />
+                      <CheckBox Name="DisableCameraShakeCheckBox" Content="No Camera Shake" Margin="0,4,24,4" ToolTip="Removes the game's camera shake while leaving normal camera movement alone. Takes effect the next time you start the game." />
                     </WrapPanel>
-                    <TextBlock Text="SMAA smooths the finished image, including UI text. Anisotropic filtering sharpens scene textures viewed at an angle." TextWrapping="Wrap" Foreground="{StaticResource TextSoftBrush}" Margin="0,0,0,24" />
+                    <TextBlock Style="{StaticResource HelpTextStyle}" Margin="0,0,0,24" Text="SMAA smooths the finished image, including UI text. Anisotropic filtering sharpens scene textures viewed at an angle." />
                     <WrapPanel Margin="0,0,0,12">
-                      <TextBlock Text="Shadow Resolution" VerticalAlignment="Center" Margin="3,0,12,0" />
+                      <TextBlock Text="Shadow Resolution" VerticalAlignment="Center" Margin="0,3,12,3" Foreground="{StaticResource TextSoftBrush}" />
                       <ComboBox Name="ShadowResolutionComboBox" Width="210" SelectedIndex="0">
                         <ComboBoxItem Content="Game default" Tag="0" />
                         <ComboBoxItem Content="1024 x 1024" Tag="1024" />
@@ -621,10 +587,10 @@
                         <ComboBoxItem Content="4096 x 4096" Tag="4096" />
                       </ComboBox>
                     </WrapPanel>
-                    <TextBlock Text="Sets how sharp real-time cast shadows are. Ambient occlusion and baked shadows are not affected. A higher resolution costs more video memory and draw time. Takes effect the next time you start the game." TextWrapping="Wrap" Foreground="{StaticResource TextSoftBrush}" Margin="0,0,0,24" />
-                    <CheckBox Name="HideTargetLinesCheckBox" Content="Hide Enemy Lock-on Lines" Margin="3,0,0,8" />
-                    <TextBlock Text="Hides only the connecting lines. Lock-on itself and the target marker still work. Takes effect the next time you start the game." TextWrapping="Wrap" Foreground="{StaticResource TextSoftBrush}" Margin="0,0,0,20" />
-                    <TextBlock Text="Battle Damage Popups" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                    <TextBlock Style="{StaticResource HelpTextStyle}" Margin="0,0,0,24" Text="Sets how sharp real-time cast shadows are. Ambient occlusion and baked shadows are not affected. A higher resolution costs more video memory and draw time. Takes effect the next time you start the game." />
+                    <CheckBox Name="HideTargetLinesCheckBox" Content="Hide Enemy Lock-on Lines" Margin="0,0,0,6" />
+                    <TextBlock Style="{StaticResource HelpTextStyle}" Margin="0,0,0,20" Text="Hides only the connecting lines. Lock-on itself and the target marker still work. Takes effect the next time you start the game." />
+                    <TextBlock Text="Battle Damage Popups" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,12" />
                     <Grid MaxWidth="680" HorizontalAlignment="Left" Width="Auto" Margin="0,0,0,12">
                       <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="182" />
@@ -637,31 +603,31 @@
                         <RowDefinition Height="36" />
                         <RowDefinition Height="36" />
                       </Grid.RowDefinitions>
-                      <TextBlock Text="Damage Number Size" VerticalAlignment="Center" />
+                      <TextBlock Text="Damage Number Size" VerticalAlignment="Center" Foreground="{StaticResource TextSoftBrush}" />
                       <Slider Name="DamageNumberScaleSlider" Grid.Column="1" Minimum="0" Maximum="200" Value="100" SmallChange="0.1" IsSnapToTickEnabled="False" VerticalAlignment="Center" />
                       <TextBox Grid.Column="2" Margin="8,3,0,3" VerticalContentAlignment="Center" ToolTip="Percentage; decimals are allowed" Text="{Binding Value, ElementName=DamageNumberScaleSlider, Mode=TwoWay, UpdateSourceTrigger=LostFocus, StringFormat=F1, ValidatesOnExceptions=True}" />
-                      <TextBlock Grid.Row="1" Text="Number Opacity" VerticalAlignment="Center" />
+                      <TextBlock Grid.Row="1" Text="Number Opacity" VerticalAlignment="Center" Foreground="{StaticResource TextSoftBrush}" />
                       <Slider Name="DamageNumberOpacitySlider" Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="100" Value="100" SmallChange="0.1" IsSnapToTickEnabled="False" VerticalAlignment="Center" />
                       <TextBox Grid.Row="1" Grid.Column="2" Margin="8,3,0,3" VerticalContentAlignment="Center" ToolTip="Percentage; decimals are allowed" Text="{Binding Value, ElementName=DamageNumberOpacitySlider, Mode=TwoWay, UpdateSourceTrigger=LostFocus, StringFormat=F1, ValidatesOnExceptions=True}" />
-                      <TextBlock Grid.Row="2" Text="Popup Graphic Size" VerticalAlignment="Center" />
+                      <TextBlock Grid.Row="2" Text="Popup Graphic Size" VerticalAlignment="Center" Foreground="{StaticResource TextSoftBrush}" />
                       <Slider Name="DamageTextureScaleSlider" Grid.Row="2" Grid.Column="1" Minimum="0" Maximum="200" Value="100" SmallChange="0.1" IsSnapToTickEnabled="False" VerticalAlignment="Center" />
                       <TextBox Grid.Row="2" Grid.Column="2" Margin="8,3,0,3" VerticalContentAlignment="Center" ToolTip="Percentage; decimals are allowed" Text="{Binding Value, ElementName=DamageTextureScaleSlider, Mode=TwoWay, UpdateSourceTrigger=LostFocus, StringFormat=F1, ValidatesOnExceptions=True}" />
-                      <TextBlock Grid.Row="3" Text="Graphic Opacity" VerticalAlignment="Center" />
+                      <TextBlock Grid.Row="3" Text="Graphic Opacity" VerticalAlignment="Center" Foreground="{StaticResource TextSoftBrush}" />
                       <Slider Name="DamageTextureOpacitySlider" Grid.Row="3" Grid.Column="1" Minimum="0" Maximum="100" Value="100" SmallChange="0.1" IsSnapToTickEnabled="False" VerticalAlignment="Center" />
                       <TextBox Grid.Row="3" Grid.Column="2" Margin="8,3,0,3" VerticalContentAlignment="Center" ToolTip="Percentage; decimals are allowed" Text="{Binding Value, ElementName=DamageTextureOpacitySlider, Mode=TwoWay, UpdateSourceTrigger=LostFocus, StringFormat=F1, ValidatesOnExceptions=True}" />
                     </Grid>
-                    <TextBlock Text="Resizes the damage numbers and the Critical, Weak Point and Guard popups. No other part of the UI changes. Opacity 0% hides a popup, 100% leaves it as the game draws it." TextWrapping="Wrap" Foreground="{StaticResource TextSoftBrush}" />
+                    <TextBlock Style="{StaticResource HelpTextStyle}" Text="Resizes the damage numbers and the Critical, Weak Point and Guard popups. No other part of the UI changes. Opacity 0% hides a popup, 100% leaves it as the game draws it." />
                     <Button Content="Reset Damage Popups" HorizontalAlignment="Left" Margin="0,10,0,20" Click="ResetDamageUi_OnClick" />
-                    <CheckBox Name="HideUiCheckBox" Content="Hide the UI When the Game Starts" Margin="3,8" />
-                    <CheckBox Name="HideCabinetHudCheckBox" Content="Hide the Cabinet HUD: GP, CREDIT, the volume control and the status icons (the End Game button stays)" ToolTip="The hidden GP and volume controls also stop responding to touch. Actual audio output is unchanged. Takes effect the next time you start the game." Margin="3,8" />
+                    <CheckBox Name="HideUiCheckBox" Content="Hide the UI When the Game Starts" Margin="0,4" />
+                    <CheckBox Name="HideCabinetHudCheckBox" Content="Hide the Cabinet HUD: GP, CREDIT, the volume control and the status icons (the End Game button stays)" ToolTip="The hidden GP and volume controls also stop responding to touch. Actual audio output is unchanged. Takes effect the next time you start the game." Margin="0,4" />
                     <WrapPanel Margin="0,8,0,12">
-                      <TextBlock Text="Show / Hide UI Shortcut" VerticalAlignment="Center" Margin="3,0,12,0" />
+                      <TextBlock Text="Show / Hide UI Shortcut" VerticalAlignment="Center" Margin="0,0,12,0" Foreground="{StaticResource TextSoftBrush}" />
                       <Button Name="HideUiKeyButton" Content="F10" MinWidth="150" Click="HideUiKeyButton_OnClick" PreviewKeyDown="HideUiKeyButton_OnPreviewKeyDown" LostKeyboardFocus="HideUiKeyButton_OnLostKeyboardFocus" />
                     </WrapPanel>
-                    <TextBlock Text="Click the button, then press the key you want. Esc cancels. The shortcut works while the game window has focus; press it again to bring the UI back." TextWrapping="Wrap" Foreground="{StaticResource TextSoftBrush}" />
+                    <TextBlock Style="{StaticResource HelpTextStyle}" Text="Click the button, then press the key you want. Esc cancels. The shortcut works while the game window has focus; press it again to bring the UI back." />
                     <Separator Margin="0,24,0,12" />
-                    <TextBlock Text="These settings take effect the next time you start the game. A wider aspect ratio shows more of the scene; the UI stays centred at its own ratio." TextWrapping="Wrap" Foreground="{StaticResource TextSoftBrush}" />
-                    <Button Content="Save Display Settings" HorizontalAlignment="Left" Padding="24,8" Margin="0,16,0,8" Click="SaveGraphicsButton_OnClick" />
+                    <TextBlock Style="{StaticResource HelpTextStyle}" Text="These settings take effect the next time you start the game. A wider aspect ratio shows more of the scene; the UI stays centred at its own ratio." />
+                    <Button Content="Save Display Settings" HorizontalAlignment="Left" Padding="24,6" Margin="0,16,0,8" Click="SaveGraphicsButton_OnClick" />
                   </StackPanel>
                 </ScrollViewer>
               </TabItem>
@@ -673,8 +639,8 @@
               </TabItem>
             </TabControl>
           </TabItem>
-          <TabItem Header="Advanced">
-            <TabControl Background="{StaticResource PlateBrush}" BorderBrush="{StaticResource LineBrush}">
+          <TabItem Header="Advanced" Style="{StaticResource SidebarTabItemStyle}">
+            <TabControl>
               <TabItem Header="Server">
                 <local:ServerSettingsView x:Name="ServerSettingsPanel" ConfigureRequested="ServerSettings_OnConfigure" />
               </TabItem>
@@ -683,7 +649,7 @@
               </TabItem>
               <TabItem Header="Mouse Cursor">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                  <local:CursorSettingsView Margin="20" />
+                  <local:CursorSettingsView Margin="28" />
                 </ScrollViewer>
               </TabItem>
               <TabItem Header="Debug">
@@ -694,15 +660,11 @@
               </TabItem>
               <TabItem Header="About">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                  <StackPanel Margin="24,20,24,24" MaxWidth="780" HorizontalAlignment="Left">
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
-                      <Border Width="2" Background="{StaticResource GoldSoftBrush}" Margin="0,4,16,4" />
-                      <TextBlock Text="FGOAC scooby" Style="{StaticResource PageTitleStyle}" FontSize="30" VerticalAlignment="Center" />
-                    </StackPanel>
-                    <Border Height="1" Background="{StaticResource LineBrush}" Margin="0,6,0,18" />
-                    <TextBlock Name="AboutVersionText" Style="{StaticResource HelpTextStyle}" Foreground="{StaticResource TextBrush}" FontSize="15" Margin="0,0,0,20" />
+                  <StackPanel Margin="28" MaxWidth="900" HorizontalAlignment="Left">
+                    <TextBlock Text="FGOAC scooby" FontFamily="{DynamicResource DisplayFont}" FontSize="24" Foreground="{StaticResource TextBrush}" Margin="0,0,0,14" />
+                    <TextBlock Name="AboutVersionText" Style="{StaticResource HelpTextStyle}" FontSize="14" Foreground="{StaticResource TextBrush}" Margin="0,0,0,20" />
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                      <Button Content="Check for updates" Click="CheckUpdatesButton_OnClick" Margin="0,0,10,0" />
+                      <Button Content="Check for updates" Margin="0,0,10,0" Click="CheckUpdatesButton_OnClick" />
                       <TextBlock Name="AboutUpdateStatusText" Style="{StaticResource HelpTextStyle}" VerticalAlignment="Center" MaxWidth="470" />
                     </StackPanel>
                     <TextBlock Margin="0,0,0,8">
@@ -724,49 +686,47 @@
           </TabItem>
         </TabControl>
         <GridSplitter Name="LogPanelSplitter" Grid.Column="1" Style="{StaticResource PanelSplitterStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ResizeDirection="Columns" ResizeBehavior="PreviousAndNext" />
-        <Grid Name="LogPanel" Column="2">
+        <Grid Name="LogPanel" Grid.Column="2" Margin="0,10,10,10">
           <Grid.RowDefinitions>
             <RowDefinition Name="ServerLogRow" Height="*" MinHeight="150" />
             <RowDefinition Height="7" />
             <RowDefinition Name="InjectionLogRow" Height="*" MinHeight="150" />
           </Grid.RowDefinitions>
-          <Border Grid.Row="0" Background="{StaticResource PlateLowBrush}" BorderBrush="{StaticResource IceDeepBrush}" BorderThickness="1">
+          <Border Grid.Row="0" Background="{StaticResource PlateLowBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1">
             <Grid>
               <Grid.RowDefinitions>
-                <RowDefinition Height="36" />
+                <RowDefinition Height="32" />
                 <RowDefinition Height="*" />
               </Grid.RowDefinitions>
-              <Border Background="{StaticResource PlateBrush}" BorderBrush="{StaticResource IceDeepBrush}" BorderThickness="0,0,0,1">
-                <TextBlock Text="Server" Style="{StaticResource LabelTextStyle}" FontSize="14" Foreground="{StaticResource TextBrush}" VerticalAlignment="Center" Margin="12,0" />
+              <Border Background="{StaticResource PlateBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="0,0,0,1">
+                <TextBlock Text="Server" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextBrush}" VerticalAlignment="Center" Margin="12,0" />
               </Border>
-              <TextBox Name="ServerLogTextBox" Grid.Row="1" IsReadOnly="True" BorderThickness="0" Margin="0" Padding="9" FontFamily="{StaticResource DigitFont}" FontSize="11" TextWrapping="NoWrap" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
+              <TextBox Name="ServerLogTextBox" Grid.Row="1" IsReadOnly="True" BorderThickness="0" Margin="0" Padding="9" FontFamily="{StaticResource DigitFont}" FontSize="12" TextWrapping="NoWrap" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
             </Grid>
           </Border>
           <GridSplitter Grid.Row="1" Style="{StaticResource HorizontalPanelSplitterStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ResizeDirection="Rows" ResizeBehavior="PreviousAndNext" />
           <Border Grid.Row="2" Background="{StaticResource PlateLowBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1">
             <Grid>
               <Grid.RowDefinitions>
-                <RowDefinition Height="36" />
+                <RowDefinition Height="32" />
                 <RowDefinition Height="*" />
               </Grid.RowDefinitions>
               <Border Background="{StaticResource PlateBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="0,0,0,1">
-                <TextBlock Text="Game" Style="{StaticResource LabelTextStyle}" FontSize="14" Foreground="{StaticResource TextBrush}" VerticalAlignment="Center" Margin="12,0" />
+                <TextBlock Text="Game" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextBrush}" VerticalAlignment="Center" Margin="12,0" />
               </Border>
-              <TextBox Name="InjectionLogTextBox" Grid.Row="1" IsReadOnly="True" BorderThickness="0" Margin="0" Padding="9" FontFamily="{StaticResource DigitFont}" FontSize="11" TextWrapping="NoWrap" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
+              <TextBox Name="InjectionLogTextBox" Grid.Row="1" IsReadOnly="True" BorderThickness="0" Margin="0" Padding="9" FontFamily="{StaticResource DigitFont}" FontSize="12" TextWrapping="NoWrap" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
             </Grid>
           </Border>
         </Grid>
       </Grid>
-      <Border Grid.Row="3" Background="{StaticResource BandBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0">
-        <Grid Margin="14,0">
+      <Border Grid.Row="3" Background="{StaticResource PlateBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="0,1,0,0">
+        <Grid Margin="16,0">
           <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
           </Grid.ColumnDefinitions>
-          <Border Width="2" Background="{StaticResource IceDimBrush}" Margin="0,9,12,9" />
-          <TextBlock Name="RuntimeStatusText" Grid.Column="1" VerticalAlignment="Center" Foreground="{StaticResource TextBrush}" TextTrimming="CharacterEllipsis" />
-          <Button Name="ToggleLogsButton" Grid.Column="2" Content="Hide logs" MinHeight="0" Height="30" Padding="14,0,14,0" Margin="12,0,0,0" Click="ToggleLogs_OnClick" />
+          <TextBlock Name="RuntimeStatusText" VerticalAlignment="Center" FontSize="13" Foreground="{StaticResource TextSoftBrush}" TextTrimming="CharacterEllipsis" />
+          <Button Name="ToggleLogsButton" Grid.Column="1" Content="Hide logs" MinHeight="0" Height="22" FontSize="13" Padding="10,0" Margin="12,0,0,0" Click="ToggleLogs_OnClick" />
         </Grid>
       </Border>
     </Grid>

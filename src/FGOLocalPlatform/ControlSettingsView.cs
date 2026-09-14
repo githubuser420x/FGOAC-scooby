@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Markup;
+using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace FGOLocalPlatform;
@@ -116,11 +117,12 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 			(string, string, int) tuple = physicalButtons[i];
 			Grid grid = new Grid
 			{
-				Margin = new Thickness(0.0, 2.0, 0.0, 2.0)
+				Height = 34.0,
+				Margin = new Thickness(0.0, 0.0, 0.0, 8.0)
 			};
 			grid.ColumnDefinitions.Add(new ColumnDefinition
 			{
-				Width = new GridLength(140.0)
+				Width = new GridLength(200.0)
 			});
 			grid.ColumnDefinitions.Add(new ColumnDefinition
 			{
@@ -129,11 +131,16 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 			grid.Children.Add(new TextBlock
 			{
 				Text = tuple.Item1,
+				Foreground = (Brush)Application.Current.Resources["TextSoftBrush"],
 				VerticalAlignment = VerticalAlignment.Center
 			});
 			Button button = new Button
 			{
+				Width = 360.0,
+				Height = 34.0,
 				MinHeight = 34.0,
+				Margin = new Thickness(0.0),
+				HorizontalAlignment = HorizontalAlignment.Left,
 				HorizontalContentAlignment = HorizontalAlignment.Center
 			};
 			CalibrationBinding binding = new CalibrationBinding(tuple.Item1, tuple.Item2, tuple.Item3, button);
@@ -441,7 +448,7 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 			StackPanel stackPanel = new StackPanel
 			{
 				Orientation = Orientation.Horizontal,
-				Margin = new Thickness(3.0, 3.0, 0.0, 3.0)
+				Margin = new Thickness(0.0, 0.0, 0.0, 8.0)
 			};
 			Slider slider = new Slider
 			{
@@ -456,7 +463,8 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 			stackPanel.Children.Add(new TextBlock
 			{
 				Text = tuple.Item1,
-				Width = 85.0,
+				Width = 200.0,
+				Foreground = (Brush)Application.Current.Resources["TextSoftBrush"],
 				VerticalAlignment = VerticalAlignment.Center
 			});
 			stackPanel.Children.Add(slider);
@@ -570,11 +578,12 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 		};
 		Grid grid = new Grid
 		{
-			Margin = new Thickness(0.0, 2.0, 0.0, 2.0)
+			Height = 34.0,
+			Margin = new Thickness(0.0, 0.0, 0.0, 8.0)
 		};
 		grid.ColumnDefinitions.Add(new ColumnDefinition
 		{
-			Width = new GridLength(140.0)
+			Width = new GridLength(200.0)
 		});
 		grid.ColumnDefinitions.Add(new ColumnDefinition
 		{
@@ -583,14 +592,19 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 		grid.Children.Add(new TextBlock
 		{
 			Text = label,
-			VerticalAlignment = VerticalAlignment.Center,
-			Margin = new Thickness(3.0)
+			Foreground = (Brush)Application.Current.Resources["TextSoftBrush"],
+			VerticalAlignment = VerticalAlignment.Center
 		});
 		KeyBindingButton keyBindingButton = ((section == "xinput") ? null : new KeyBindingButton
 		{
 			Value = defaultValue
 		});
 		Control element = (Control)(((object)keyBindingButton) ?? ((object)comboBox));
+		element.Width = 360.0;
+		element.Height = 34.0;
+		element.MinHeight = 34.0;
+		element.Margin = new Thickness(0.0);
+		element.HorizontalAlignment = HorizontalAlignment.Left;
 		Grid.SetColumn(element, 1);
 		grid.Children.Add(element);
 		host.Items.Add(grid);

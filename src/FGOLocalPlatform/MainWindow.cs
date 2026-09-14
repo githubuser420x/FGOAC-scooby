@@ -511,6 +511,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			await RefreshAccountsAsync(showErrors: false);
 			await RunFirstRunAsync();
 			AboutVersionText.Text = "Version " + UpdateSettings.Version + ", an English build of the FGO Arcade local platform.";
+			SectionTabs.Tag = UpdateSettings.Version;
 			await CheckForUpdateAsync(announce: false);
 		};
 	}
@@ -667,6 +668,8 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 
 	private Updater.Release availableUpdate;
 
+	private DateTime statusHoldUntil = DateTime.MinValue;
+
 	/// <summary>
 	/// Looks for a newer release. On startup a failure says nothing on screen and only reaches
 	/// logs\update.log; the button on the About page reports either way, in one sentence.
@@ -713,6 +716,10 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		try
 		{
 			await CheckForUpdateAsync(announce: true);
+			// The header reads the status line, so the answer has to go there as well, and stay
+			// long enough to read: the two-second refresh writes over it otherwise.
+			RuntimeStatusText.Text = AboutUpdateStatusText.Text;
+			statusHoldUntil = DateTime.UtcNow.AddSeconds(12.0);
 		}
 		finally
 		{
@@ -1126,7 +1133,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			int[] configuredPorts = ServerSettingsView.ConfiguredPorts().Take(3).ToArray();
 			bool[] source = await Task.WhenAll(configuredPorts.Select(IsPortOpenAsync));
 			string text = (source.All((bool value) => value) ? ("Server " + string.Join('/', configuredPorts) + " OK") : ("Server ports " + string.Join('/', source.Select((bool value) => (!value) ? "down" : "up"))));
-			if (!serverConfiguring && !stoppingServer && !windowClosing && !firstRunning)
+			if (!serverConfiguring && !stoppingServer && !windowClosing && !firstRunning && DateTime.UtcNow >= statusHoldUntil)
 			{
 				RuntimeStatusText.Text = text + " - Game " + (gameRunning ? "running" : "not running");
 			}

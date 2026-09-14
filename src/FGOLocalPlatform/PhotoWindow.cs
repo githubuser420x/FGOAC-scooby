@@ -465,9 +465,9 @@ public sealed class PhotoWindow : UserControl
 		stackPanel.Children.Remove(status);
 		stackPanel = new StackPanel
 		{
-			Margin = new Thickness(20.0),
-			MaxWidth = 540.0,
-			HorizontalAlignment = HorizontalAlignment.Stretch
+			Margin = new Thickness(28.0),
+			MaxWidth = 900.0,
+			HorizontalAlignment = HorizontalAlignment.Left
 		};
 		base.Content = new ScrollViewer
 		{
@@ -477,20 +477,25 @@ public sealed class PhotoWindow : UserControl
 		stackPanel.Children.Add(new TextBlock
 		{
 			Text = "Photo Mode Hotkeys",
-			FontSize = 22.0,
-			FontWeight = FontWeights.Bold,
+			Style = (Style)Application.Current.Resources["SectionTitleStyle"],
 			Margin = new Thickness(0.0, 0.0, 0.0, 12.0)
 		});
 		DockPanel dockPanel = new DockPanel
 		{
-			Margin = new Thickness(0.0, 0.0, 0.0, 6.0)
+			Height = 34.0,
+			Margin = new Thickness(0.0, 0.0, 0.0, 8.0)
 		};
 		dockPanel.Children.Add(new TextBlock
 		{
 			Text = "Show / Hide Photo Panel",
 			Width = 200.0,
+			Foreground = (Brush)Application.Current.Resources["TextSoftBrush"],
 			VerticalAlignment = VerticalAlignment.Center
 		});
+		panelKey.Width = 360.0;
+		panelKey.Height = 34.0;
+		panelKey.Margin = new Thickness(0.0);
+		panelKey.HorizontalAlignment = HorizontalAlignment.Left;
 		dockPanel.Children.Add(panelKey);
 		stackPanel.Children.Add(dockPanel);
 		for (int num2 = 0; num2 < keys.Length; num2++)
@@ -498,19 +503,23 @@ public sealed class PhotoWindow : UserControl
 			int index = num2;
 			DockPanel dockPanel2 = new DockPanel
 			{
-				Margin = new Thickness(0.0, 0.0, 0.0, 6.0)
+				Height = 34.0,
+				Margin = new Thickness(0.0, 0.0, 0.0, 8.0)
 			};
 			dockPanel2.Children.Add(new TextBlock
 			{
 				Text = labels[num2],
 				Width = 200.0,
+				Foreground = (Brush)Application.Current.Resources["TextSoftBrush"],
 				VerticalAlignment = VerticalAlignment.Center
 			});
 			Button button3 = new Button
 			{
 				Content = KeyLabel(keys[num2]),
-				MinWidth = 180.0,
-				Height = 32.0
+				Width = 360.0,
+				Height = 34.0,
+				Margin = new Thickness(0.0),
+				HorizontalAlignment = HorizontalAlignment.Left
 			};
 			bool binding = false;
 			button3.Click += delegate

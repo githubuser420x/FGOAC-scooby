@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Window x:Class="FGOLocalPlatform.CardQuantityWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Choose Quantity" Width="450" SizeToContent="Height" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" ShowInTaskbar="False" Background="{StaticResource NightBottomBrush}" Foreground="{StaticResource TextBrush}" FontFamily="{StaticResource UiFont}" xmlns:fgolocalplatform="clr-namespace:FGOLocalPlatform;assembly=FGOLocalPlatform">
+<Window x:Class="FGOLocalPlatform.CardQuantityWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Choose Quantity" Width="450" SizeToContent="Height" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" ShowInTaskbar="False" Background="{StaticResource GroundBrush}" Foreground="{StaticResource TextBrush}" FontFamily="{StaticResource UiFont}" xmlns:fgolocalplatform="clr-namespace:FGOLocalPlatform;assembly=FGOLocalPlatform">
   <Grid Margin="20">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
@@ -7,19 +7,19 @@
       <RowDefinition Height="Auto" />
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
-    <TextBlock Name="CardNameText" TextWrapping="Wrap" FontSize="18" FontWeight="SemiBold" />
-    <TextBlock Name="LimitText" Grid.Row="1" Margin="0,10,0,12" Foreground="{StaticResource TextSoftBrush}" TextWrapping="Wrap" />
+    <TextBlock Name="CardNameText" TextWrapping="Wrap" Style="{StaticResource SectionTitleStyle}" />
+    <TextBlock Name="LimitText" Grid.Row="1" Margin="0,10,0,12" Style="{StaticResource HelpTextStyle}" />
     <DockPanel Grid.Row="2">
       <Button Content="−" Width="42" Click="Decrease_OnClick" />
       <Button DockPanel.Dock="Right" Content="All" Width="62" Click="All_OnClick" />
       <Button DockPanel.Dock="Right" Content="+" Width="42" Click="Increase_OnClick" />
-      <TextBox Name="QuantityInput" Text="1" FontSize="20" HorizontalContentAlignment="Center" Background="{StaticResource PlateBrush}" Foreground="{StaticResource TextBrush}" CaretBrush="{StaticResource TextBrush}" SelectionBrush="{StaticResource IceDimBrush}" TextChanged="QuantityInput_OnTextChanged" />
+      <TextBox Name="QuantityInput" Text="1" HorizontalContentAlignment="Center" TextChanged="QuantityInput_OnTextChanged" />
     </DockPanel>
     <StackPanel Grid.Row="3" Margin="0,14,0,0">
-      <TextBlock Name="ValidationText" Foreground="{StaticResource IceBrush}" Margin="3,0,0,8" />
+      <TextBlock Name="ValidationText" Foreground="{StaticResource DangerBrush}" TextWrapping="Wrap" Margin="3,0,0,8" />
       <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
         <Button Content="Cancel" IsCancel="True" MinWidth="80" Height="36" />
-        <Button Name="ConfirmButton" Content="Add to Deck" IsDefault="True" MinWidth="110" Height="36" Click="Confirm_OnClick" />
+        <Button Name="ConfirmButton" Content="Add to Deck" Style="{StaticResource AccentButtonStyle}" IsDefault="True" MinWidth="110" Height="36" Click="Confirm_OnClick" />
       </StackPanel>
     </StackPanel>
   </Grid>

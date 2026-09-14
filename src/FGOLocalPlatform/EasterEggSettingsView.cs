@@ -15,10 +15,8 @@ public sealed class EasterEggSettingsView : StackPanel
 	public ToggleButton EnabledCheckBox { get; } = new ToggleButton
 	{
 		Content = "Easter Egg",
-		FontSize = 15.0,
-		Foreground = Brushes.White,
 		MinWidth = 110.0,
-		Height = 40.0,
+		Height = 34.0,
 		HorizontalAlignment = HorizontalAlignment.Left
 	};
 
@@ -49,7 +47,7 @@ public sealed class EasterEggSettingsView : StackPanel
 			Text = "Turn it on, then take a look in game.",
 			Margin = new Thickness(12.0, 0.0, 0.0, 0.0),
 			VerticalAlignment = VerticalAlignment.Center,
-			Foreground = Brushes.LightGray,
+			Foreground = (Brush)Application.Current.Resources["TextSoftBrush"],
 			FontSize = 14.0
 		});
 		base.Children.Add(stackPanel);

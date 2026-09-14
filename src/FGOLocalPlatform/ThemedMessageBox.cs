@@ -59,37 +59,20 @@ internal static class ThemedMessageBox
 			MessageBoxImage.Question => "Confirm", 
 			_ => "Notice", 
 		};
-		Brush titleBrush = image switch
-		{
-			MessageBoxImage.Hand => Resource<Brush>("DangerBrush"), 
-			MessageBoxImage.Exclamation => Resource<Brush>("EmberBrush"), 
-			_ => Resource<Brush>("ParchmentBrush"), 
-		};
-		StackPanel titleRow = new StackPanel
-		{
-			Orientation = Orientation.Horizontal,
-			Margin = new Thickness(0.0, 0.0, 0.0, 8.0)
-		};
-		titleRow.Children.Add(new Border
-		{
-			Width = 2.0,
-			Background = titleBrush,
-			Margin = new Thickness(0.0, 1.0, 12.0, 1.0)
-		});
-		titleRow.Children.Add(new TextBlock
+		Brush titleBrush = (image == MessageBoxImage.Hand) ? Resource<Brush>("DangerBrush") : Resource<Brush>("TextBrush");
+		stackPanel.Children.Add(new TextBlock
 		{
 			Text = text,
-			FontFamily = Resource<FontFamily>("DisplayFont"),
-			FontSize = 21.0,
+			FontFamily = Resource<FontFamily>("UiFont"),
+			FontSize = 16.0,
 			FontWeight = FontWeights.SemiBold,
 			Foreground = titleBrush,
-			VerticalAlignment = VerticalAlignment.Center
+			Margin = new Thickness(0.0, 0.0, 0.0, 12.0)
 		});
-		stackPanel.Children.Add(titleRow);
 		stackPanel.Children.Add(new Border
 		{
 			Height = 1.0,
-			Background = Resource<Brush>("RuleBrush"),
+			Background = Resource<Brush>("LineBrush"),
 			Margin = new Thickness(0.0, 0.0, 0.0, 16.0)
 		});
 		UIElementCollection children = stackPanel.Children;
@@ -113,13 +96,11 @@ internal static class ThemedMessageBox
 			Margin = new Thickness(0.0, 22.0, 0.0, 0.0)
 		};
 		stackPanel.Children.Add(stackPanel2);
-		dialog.Content = new ChamferPanel
+		dialog.Content = new Border
 		{
-			Fill = Resource<Brush>("PlateBrush"),
-			Stroke = Resource<Brush>("GoldSoftBrush"),
-			StrokeThickness = 1.0,
-			Cut = 16.0,
-			OrnamentBrush = Resource<Brush>("GoldBrush"),
+			Background = Resource<Brush>("PlateBrush"),
+			BorderBrush = Resource<Brush>("LineBrush"),
+			BorderThickness = new Thickness(1.0),
 			Padding = new Thickness(22.0, 20.0, 22.0, 20.0),
 			Child = stackPanel,
 			Margin = new Thickness(10.0)
@@ -167,7 +148,7 @@ internal static class ThemedMessageBox
 			button.MinHeight = 40.0;
 			if (choice == defaultResult)
 			{
-				button.Style = Resource<Style>("PrimaryButtonStyle");
+				button.Style = Resource<Style>("AccentButtonStyle");
 			}
 			button.IsDefault = choice == defaultResult;
 			button.IsCancel = choice == MessageBoxResult.Cancel || buttons == MessageBoxButton.OK;

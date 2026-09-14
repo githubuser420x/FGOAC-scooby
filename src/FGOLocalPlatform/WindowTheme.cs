@@ -14,12 +14,14 @@ internal static class WindowTheme
 
 	public static void Apply(Window window)
 	{
-		window.Background = (Brush)Application.Current.Resources["AbyssBrush"];
-		window.Foreground = (Brush)Application.Current.Resources["ParchmentBrush"];
+		window.Background = (Brush)Application.Current.Resources["GroundBrush"];
+		window.Foreground = (Brush)Application.Current.Resources["TextBrush"];
 		window.FontFamily = (FontFamily)Application.Current.Resources["UiFont"];
 		window.FontSize = 14.0;
 		window.UseLayoutRounding = true;
+		window.SnapsToDevicePixels = true;
 		TextOptions.SetTextFormattingMode((DependencyObject)(object)window, (TextFormattingMode)1);
+		TextOptions.SetTextRenderingMode((DependencyObject)(object)window, TextRenderingMode.ClearType);
 		window.SourceInitialized += delegate
 		{
 			EnableDarkTitleBar(window);

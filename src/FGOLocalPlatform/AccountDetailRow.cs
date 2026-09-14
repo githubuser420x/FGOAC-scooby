@@ -24,14 +24,15 @@ public static class AccountDetailRow
 		TextBlock element = new TextBlock
 		{
 			Text = name,
-			Foreground = Brushes.LightSteelBlue,
+			Foreground = (Brush)Application.Current.Resources["TextSoftBrush"],
+			FontSize = 13.0,
 			VerticalAlignment = VerticalAlignment.Center
 		};
 		grid.Children.Add(element);
 		TextBlock element2 = new TextBlock
 		{
 			Text = value,
-			Foreground = Brushes.White,
+			Foreground = (Brush)Application.Current.Resources["TextBrush"],
 			FontSize = 14.0,
 			TextWrapping = TextWrapping.Wrap,
 			VerticalAlignment = VerticalAlignment.Center
@@ -41,8 +42,8 @@ public static class AccountDetailRow
 		return new Border
 		{
 			Child = grid,
-			Background = new SolidColorBrush(Color.FromRgb(18, 16, 22)),
-			BorderBrush = new SolidColorBrush(Color.FromRgb(64, 53, 69)),
+			Background = (Brush)Application.Current.Resources["PlateBrush"],
+			BorderBrush = (Brush)Application.Current.Resources["LineSoftBrush"],
 			BorderThickness = new Thickness(1.0, 0.0, 1.0, 1.0)
 		};
 	}
