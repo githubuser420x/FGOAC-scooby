@@ -37,21 +37,7 @@ internal static class StartupDiagnostics
 		{
 			throw new FileNotFoundException(Explain(2), text);
 		}
-		ProcessStartInfo processStartInfo = new ProcessStartInfo(PowerShellHost.Executable)
-		{
-			UseShellExecute = false,
-			CreateNoWindow = true,
-			WorkingDirectory = fullPath,
-			RedirectStandardOutput = true,
-			RedirectStandardError = true,
-			StandardOutputEncoding = Encoding.UTF8,
-			StandardErrorEncoding = Encoding.UTF8
-		};
-		string[] array = new string[7] { "-NoLogo", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", "[Console]::OutputEncoding=[Text.UTF8Encoding]::new($false); $ErrorActionPreference='Stop'; . $env:FGO_CHECK_SCRIPT; Test-FgoWritableLayout -InstallRoot $env:FGO_CHECK_ROOT" };
-		foreach (string item in array)
-		{
-			processStartInfo.ArgumentList.Add(item);
-		}
+		ProcessStartInfo processStartInfo = PowerShellHost.CreateStartInfo(fullPath, redirectOutput: true, new string[2] { "-Command", "[Console]::OutputEncoding=[Text.UTF8Encoding]::new($false); $ErrorActionPreference='Stop'; . $env:FGO_CHECK_SCRIPT; Test-FgoWritableLayout -InstallRoot $env:FGO_CHECK_ROOT" });
 		processStartInfo.Environment["FGO_CHECK_SCRIPT"] = text;
 		processStartInfo.Environment["FGO_CHECK_ROOT"] = fullPath;
 		using Process process = Process.Start(processStartInfo) ?? throw new IOException("Could not start the folder check.");

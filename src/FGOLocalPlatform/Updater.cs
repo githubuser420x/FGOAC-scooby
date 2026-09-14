@@ -158,24 +158,11 @@ internal static class Updater
 
 	private static async Task<int> RunPatchAsync(string script, string packageRoot, string installRoot, Action<string> report, CancellationToken cancellation)
 	{
-		ProcessStartInfo start = new ProcessStartInfo(PowerShellHost.Executable)
+		ProcessStartInfo start = PowerShellHost.CreateStartInfo(installRoot, redirectOutput: true, new string[]
 		{
-			UseShellExecute = false,
-			CreateNoWindow = true,
-			RedirectStandardOutput = true,
-			RedirectStandardError = true,
-			StandardOutputEncoding = Encoding.UTF8,
-			StandardErrorEncoding = Encoding.UTF8
-		};
-		foreach (string argument in new string[13]
-		{
-			"-NoLogo", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", script,
-			"-InstallRoot", installRoot, "-PackageRoot", packageRoot, "-NonInteractive", "-IgnoreProcessId"
-		})
-		{
-			start.ArgumentList.Add(argument);
-		}
-		start.ArgumentList.Add(Environment.ProcessId.ToString());
+			"-File", script, "-InstallRoot", installRoot, "-PackageRoot", packageRoot, "-NonInteractive",
+			"-IgnoreProcessId", Environment.ProcessId.ToString()
+		});
 
 		using Process process = Process.Start(start) ?? throw new IOException("PowerShell could not be started.");
 		process.OutputDataReceived += delegate(object sender, DataReceivedEventArgs e)

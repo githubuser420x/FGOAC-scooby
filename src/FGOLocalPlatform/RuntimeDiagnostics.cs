@@ -11,30 +11,7 @@ internal static class RuntimeDiagnostics
 {
 	public static async Task<string> CheckAsync()
 	{
-		ProcessStartInfo processStartInfo = new ProcessStartInfo(PowerShellHost.Executable)
-		{
-			UseShellExecute = false,
-			CreateNoWindow = true,
-			WorkingDirectory = GamePaths.GameRoot,
-			RedirectStandardOutput = true,
-			RedirectStandardError = true,
-			StandardOutputEncoding = Encoding.UTF8,
-			StandardErrorEncoding = Encoding.UTF8
-		};
-		string[] array = new string[7]
-		{
-			"-NoLogo",
-			"-NoProfile",
-			"-NonInteractive",
-			"-ExecutionPolicy",
-			"Bypass",
-			"-File",
-			Path.Combine(GamePaths.GameRoot, "FGO_EnvironmentCheck.ps1")
-		};
-		foreach (string item in array)
-		{
-			processStartInfo.ArgumentList.Add(item);
-		}
+		ProcessStartInfo processStartInfo = PowerShellHost.CreateStartInfo(GamePaths.GameRoot, redirectOutput: true, new string[2] { "-File", Path.Combine(GamePaths.GameRoot, "FGO_EnvironmentCheck.ps1") });
 		using Process process = Process.Start(processStartInfo) ?? throw new IOException("Could not start the environment check.");
 		Task<string> output = process.StandardOutput.ReadToEndAsync();
 		Task<string> error = process.StandardError.ReadToEndAsync();

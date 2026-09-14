@@ -171,26 +171,11 @@ internal sealed class FirstRun
 
 	private async Task<int> RunPatchScriptAsync(StringBuilder transcript)
 	{
-		ProcessStartInfo processStartInfo = new ProcessStartInfo(PowerShellHost.Executable)
+		ProcessStartInfo processStartInfo = PowerShellHost.CreateStartInfo(installRoot, redirectOutput: true, new string[]
 		{
-			UseShellExecute = false,
-			CreateNoWindow = true,
-			WorkingDirectory = installRoot,
-			RedirectStandardOutput = true,
-			RedirectStandardError = true,
-			StandardOutputEncoding = Encoding.UTF8,
-			StandardErrorEncoding = Encoding.UTF8
-		};
-		string[] array = new string[]
-		{
-			"-NoLogo", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", ScriptPath,
-			"-InstallRoot", installRoot, "-PackageRoot", installRoot, "-NonInteractive",
+			"-File", ScriptPath, "-InstallRoot", installRoot, "-PackageRoot", installRoot, "-NonInteractive",
 			"-IgnoreProcessId", Environment.ProcessId.ToString()
-		};
-		foreach (string item in array)
-		{
-			processStartInfo.ArgumentList.Add(item);
-		}
+		});
 		using Process process = Process.Start(processStartInfo) ?? throw new IOException("The patch installer did not start.");
 		Task<string> errorTask = process.StandardError.ReadToEndAsync();
 		using CancellationTokenSource timeout = new CancellationTokenSource(TimeSpan.FromMinutes(30.0));

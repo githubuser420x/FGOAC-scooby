@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace FGOLocalPlatform;
 
@@ -12,6 +13,40 @@ internal static class PowerShellHost
 	private static readonly Lazy<string> selected = new Lazy<string>(Find);
 
 	public static string Executable => selected.Value;
+
+	/// <summary>
+	/// A hidden, non-interactive PowerShell process in the given folder; <paramref name="arguments"/> is what
+	/// follows the host's own switches, typically "-File", a script path and the script's parameters.
+	/// </summary>
+	public static ProcessStartInfo CreateStartInfo(string workingDirectory, bool redirectOutput, IEnumerable<string> arguments)
+	{
+		ProcessStartInfo start = new ProcessStartInfo
+		{
+			FileName = Executable,
+			WorkingDirectory = workingDirectory,
+			UseShellExecute = false,
+			CreateNoWindow = true,
+			WindowStyle = ProcessWindowStyle.Hidden,
+			ErrorDialog = false,
+			RedirectStandardOutput = redirectOutput,
+			RedirectStandardError = redirectOutput
+		};
+		if (redirectOutput)
+		{
+			UTF8Encoding encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
+			start.StandardOutputEncoding = encoding;
+			start.StandardErrorEncoding = encoding;
+		}
+		foreach (string item in new string[7] { "-NoLogo", "-NoProfile", "-NonInteractive", "-WindowStyle", "Hidden", "-ExecutionPolicy", "Bypass" })
+		{
+			start.ArgumentList.Add(item);
+		}
+		foreach (string argument in arguments)
+		{
+			start.ArgumentList.Add(argument);
+		}
+		return start;
+	}
 
 	private static string Find()
 	{

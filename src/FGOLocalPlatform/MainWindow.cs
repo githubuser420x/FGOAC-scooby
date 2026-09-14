@@ -588,26 +588,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 				{
 					throw new FileNotFoundException("The server cleanup script that runs after the game exits is missing", fullPath);
 				}
-				ProcessStartInfo processStartInfo = new ProcessStartInfo(PowerShellHost.Executable)
-				{
-					UseShellExecute = false,
-					CreateNoWindow = true
-				};
-				string[] array = new string[8]
-				{
-					"-NoProfile",
-					"-NonInteractive",
-					"-ExecutionPolicy",
-					"Bypass",
-					"-File",
-					fullPath,
-					"-FrontendProcessId",
-					Environment.ProcessId.ToString()
-				};
-				foreach (string item in array)
-				{
-					processStartInfo.ArgumentList.Add(item);
-				}
+				ProcessStartInfo processStartInfo = PowerShellHost.CreateStartInfo(GamePaths.GameRoot, redirectOutput: false, new string[4] { "-File", fullPath, "-FrontendProcessId", Environment.ProcessId.ToString() });
 				using (Process.Start(processStartInfo) ?? throw new IOException("Could not start the server cleanup process"))
 				{
 				}
@@ -1229,45 +1210,11 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		}
 	}
 
-	private static ProcessStartInfo CreatePowerShellStartInfo(string scriptPath, bool redirectOutput, IEnumerable<string> arguments)
-	{
-		ProcessStartInfo processStartInfo = new ProcessStartInfo
-		{
-			FileName = PowerShellHost.Executable,
-			WorkingDirectory = GamePaths.GameRoot,
-			UseShellExecute = false,
-			CreateNoWindow = true,
-			WindowStyle = ProcessWindowStyle.Hidden,
-			ErrorDialog = false,
-			RedirectStandardOutput = redirectOutput,
-			RedirectStandardError = redirectOutput
-		};
-		if (redirectOutput)
-		{
-			UTF8Encoding standardErrorEncoding = (UTF8Encoding)(processStartInfo.StandardOutputEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
-			processStartInfo.StandardErrorEncoding = standardErrorEncoding;
-		}
-		processStartInfo.ArgumentList.Add("-NoLogo");
-		processStartInfo.ArgumentList.Add("-NoProfile");
-		processStartInfo.ArgumentList.Add("-NonInteractive");
-		processStartInfo.ArgumentList.Add("-WindowStyle");
-		processStartInfo.ArgumentList.Add("Hidden");
-		processStartInfo.ArgumentList.Add("-ExecutionPolicy");
-		processStartInfo.ArgumentList.Add("Bypass");
-		processStartInfo.ArgumentList.Add("-File");
-		processStartInfo.ArgumentList.Add(scriptPath);
-		foreach (string argument in arguments)
-		{
-			processStartInfo.ArgumentList.Add(argument);
-		}
-		return processStartInfo;
-	}
-
 	private static CapturedProcess StartCapturedPowerShellScript(string scriptPath, Action<string, bool> onOutputLine, params string[] arguments)
 	{
 		Process process = new Process
 		{
-			StartInfo = CreatePowerShellStartInfo(scriptPath, redirectOutput: true, arguments)
+			StartInfo = PowerShellHost.CreateStartInfo(GamePaths.GameRoot, redirectOutput: true, new string[2] { "-File", scriptPath }.Concat(arguments))
 		};
 		TaskCompletionSource<object?> outputClosed = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
 		TaskCompletionSource<object?> errorClosed = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
