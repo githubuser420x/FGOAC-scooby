@@ -17,7 +17,7 @@ internal builds and were never published.
 ### What is in it
 
 - **The game in English.** 65,266 translated text rows - story, quests, tutorial, Servant and Craft
-  Essence profiles, skills, items, missions and every menu - and over 260 rebuilt sprite archives:
+  Essence profiles, skills, items, missions and every menu - and 240 rebuilt sprite archives:
   title, card read, main menu, terminal, formation, battle HUD, results, shops, synthesis, present
   box, master missions, matching, rankings, grail, help pages, title editor, on-screen keyboards and
   the summon screens. The launch scripts, the environment check, the account and server tools are

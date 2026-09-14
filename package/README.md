@@ -44,8 +44,8 @@ but keep them if you may want to roll back later.
 
 ## What works
 
-- The game text: 65,652 translated lines - story, quests, Servant profiles, skills, items, menus.
-- The game artwork: 155 rebuilt sprite archives - title, tutorial, terminal, formation, battle HUD,
+- The game text: 65,266 translated lines - story, quests, Servant profiles, skills, items, menus.
+- The game artwork: 240 rebuilt sprite archives - title, tutorial, terminal, formation, battle HUD,
   results, shops, synthesis, present box, master missions, rankings, help pages, title editor.
 - The launcher: Play, Account, Cards and Deck, Settings and Advanced, all in English, with the
   official English card names and Craft Essence effects in the card library.

@@ -47,9 +47,9 @@ summon, controls, a sortie step by step, the exchange shops and troubleshooting.
 
 ## What works
 
-- **The game text** - 65,652 translated rows: story, quests, Servant and Craft Essence profiles,
+- **The game text** - 65,266 translated rows: story, quests, Servant and Craft Essence profiles,
   skills, items, missions and every menu. Names follow the English release.
-- **The game artwork** - 155 rebuilt sprite archives: title, tutorial, terminal, formation, battle
+- **The game artwork** - 240 rebuilt sprite archives: title, tutorial, terminal, formation, battle
   HUD, results, shops, synthesis, present box, master missions, rankings, help, title editor.
 - **Offline single player, end to end** - the tutorial, solo sorties, the terminal, the exchange
   shops, synthesis, My Room, rankings and the title editor.
