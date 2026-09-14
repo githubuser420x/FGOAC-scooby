@@ -90,7 +90,7 @@ control mode is active for play.
 
 ### A sortie, step by step
 
-1. **Card Read** - press the Card Read button at the bottom-left of the main menu; the game reads the
+1. **Load Deck** - press the Load Deck button at the bottom-left of the main menu; the game reads the
    deck you built in the launcher. The Aime login itself happens automatically at the title screen.
 2. **Formation** - set up your party from the Servants on the card.
 3. **Terminal** - pick the chapter or event.
