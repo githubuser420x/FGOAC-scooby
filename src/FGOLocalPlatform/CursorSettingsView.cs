@@ -75,8 +75,7 @@ public partial class CursorSettingsView : UserControl, IComponentConnector
 						File.Copy(text, text2);
 					}
 					byte[] bytes = CursorArtwork.Build(artwork, (int)SizeSlider.Value, (int)OutlineSlider.Value, HotX.Value / 100.0, HotY.Value / 100.0);
-					File.WriteAllBytes(text + ".tmp", bytes);
-					File.Move(text + ".tmp", text, overwrite: true);
+					AtomicFile.WriteAllBytes(text, bytes);
 					Status.Text = "Upgraded the old cursor color format - it takes effect the next time the game starts.";
 				}
 			}

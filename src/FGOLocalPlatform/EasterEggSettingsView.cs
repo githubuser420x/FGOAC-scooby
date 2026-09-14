@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -81,10 +80,7 @@ public sealed class EasterEggSettingsView : StackPanel
 	{
 		try
 		{
-			Directory.CreateDirectory(Path.GetDirectoryName(settingsPath));
-			string text = settingsPath + $".{Environment.ProcessId}.tmp";
-			File.WriteAllText(text, "[easter_bgm]\nenabled=" + ((EnabledCheckBox.IsChecked == true) ? "1" : "0") + "\n", new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
-			File.Move(text, settingsPath, overwrite: true);
+			AtomicFile.WriteAllText(settingsPath, "[easter_bgm]\nenabled=" + ((EnabledCheckBox.IsChecked == true) ? "1" : "0") + "\n");
 			StatusText.Text = "";
 			StatusText.Visibility = Visibility.Collapsed;
 			return true;

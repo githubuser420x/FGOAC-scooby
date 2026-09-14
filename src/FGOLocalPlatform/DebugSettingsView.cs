@@ -65,7 +65,6 @@ public partial class DebugSettingsView : UserControl, IComponentConnector
 
 	public bool Save()
 	{
-		string text = settingsPath + ".tmp";
 		try
 		{
 			StringBuilder stringBuilder = new StringBuilder("[battle_debug]\n");
@@ -75,8 +74,7 @@ public partial class DebugSettingsView : UserControl, IComponentConnector
 					.Append('\n');
 			}
 			stringBuilder.Append("freeze_enemy=0\nenemy_evade=0\nenemy_flee=0\nenemy_guard=0\n");
-			File.WriteAllText(text, stringBuilder.ToString(), new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
-			File.Move(text, settingsPath, overwrite: true);
+			AtomicFile.WriteAllText(settingsPath, stringBuilder.ToString());
 			StatusText.Text = "Settings saved - with the updated game hook loaded, the battle toggles take effect about a second later.";
 			return true;
 		}

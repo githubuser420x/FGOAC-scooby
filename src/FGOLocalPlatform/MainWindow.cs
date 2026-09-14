@@ -2785,19 +2785,10 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 				["deckHeight"] = Math.Round(DeckPanelRow.ActualHeight, 1),
 				["serverLogHeight"] = Math.Round(ServerLogRow.ActualHeight, 1)
 			};
-			string text2 = text + $".{Environment.ProcessId}.layout.tmp";
-			File.WriteAllText(text2, jsonObject.ToJsonString(new JsonSerializerOptions
+			AtomicFile.WriteAllText(text, jsonObject.ToJsonString(new JsonSerializerOptions
 			{
 				WriteIndented = true
-			}) + Environment.NewLine, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
-			if (File.Exists(text))
-			{
-				File.Replace(text2, text, text + ".bak", ignoreMetadataErrors: true);
-			}
-			else
-			{
-				File.Move(text2, text);
-			}
+			}) + Environment.NewLine);
 		}
 		catch
 		{
@@ -3151,19 +3142,10 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 				jsonObject["graphics"] = jsonObject3;
 			}
 			jsonObject.Remove("startDeckReaderUI");
-			string text2 = text + $".{Environment.ProcessId}.tmp";
-			File.WriteAllText(text2, jsonObject.ToJsonString(new JsonSerializerOptions
+			AtomicFile.WriteAllText(text, jsonObject.ToJsonString(new JsonSerializerOptions
 			{
 				WriteIndented = true
-			}) + Environment.NewLine, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
-			if (File.Exists(text))
-			{
-				File.Replace(text2, text, text + ".bak", ignoreMetadataErrors: true);
-			}
-			else
-			{
-				File.Move(text2, text);
-			}
+			}) + Environment.NewLine);
 			return true;
 		}
 		catch (Exception ex)

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
@@ -83,12 +82,10 @@ public partial class AudioSettingsView : UserControl, IComponentConnector
 	public bool Save()
 	{
 		saveTimer.Stop();
-		string text = settingsPath + ".tmp";
 		try
 		{
 			string contents = $"[audio]\nbgm={(int)BgmSlider.Value}\nvoice={(int)VoiceSlider.Value}\neffects={(int)EffectsSlider.Value}\n";
-			File.WriteAllText(text, contents, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
-			File.Move(text, settingsPath, overwrite: true);
+			AtomicFile.WriteAllText(settingsPath, contents);
 			StatusText.Text = "Saved - applied live while the game is running, and kept for next time.";
 			return true;
 		}
@@ -96,13 +93,6 @@ public partial class AudioSettingsView : UserControl, IComponentConnector
 		{
 			StatusText.Text = "Could not save the volume settings: " + ex.Message;
 			return false;
-		}
-		finally
-		{
-			if (File.Exists(text))
-			{
-				File.Delete(text);
-			}
 		}
 	}
 

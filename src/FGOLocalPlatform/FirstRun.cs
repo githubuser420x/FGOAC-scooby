@@ -489,19 +489,10 @@ internal sealed class FirstRun
 			{
 				return false;
 			}
-			string text = LauncherSettingsPath + $".{Environment.ProcessId}.firstrun.tmp";
-			File.WriteAllText(text, jsonObject.ToJsonString(new JsonSerializerOptions
+			AtomicFile.WriteAllText(LauncherSettingsPath, jsonObject.ToJsonString(new JsonSerializerOptions
 			{
 				WriteIndented = true
-			}) + Environment.NewLine, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
-			if (File.Exists(LauncherSettingsPath))
-			{
-				File.Replace(text, LauncherSettingsPath, LauncherSettingsPath + ".bak", ignoreMetadataErrors: true);
-			}
-			else
-			{
-				File.Move(text, LauncherSettingsPath);
-			}
+			}) + Environment.NewLine);
 			log("First-run defaults written: " + string.Join(", ", list));
 			summary.Add("- Set the settings you had not chosen yet: " + string.Join(", ", list) + ". Change them any time on the Settings page.");
 			return true;

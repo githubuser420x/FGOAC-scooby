@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Windows;
@@ -295,27 +294,7 @@ public partial class SummonSettingsWindow : UserControl, IComponentConnector
 			{
 				WriteIndented = true
 			});
-			Directory.CreateDirectory(Path.GetDirectoryName(settingsPath));
-			string text = settingsPath + "." + Guid.NewGuid().ToString("N") + ".tmp";
-			try
-			{
-				File.WriteAllText(text, contents, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
-				if (File.Exists(settingsPath))
-				{
-					File.Replace(text, settingsPath, settingsPath + ".bak");
-				}
-				else
-				{
-					File.Move(text, settingsPath);
-				}
-			}
-			finally
-			{
-				if (File.Exists(text))
-				{
-					File.Delete(text);
-				}
-			}
+			AtomicFile.WriteAllText(settingsPath, contents);
 			loadedText = contents;
 			dirty = false;
 			StatusText.Text = "Saved to the server config. A server that supports this picks the rates up on its next draw, with no need to restart the game; if you have just replaced older server code, restart the server once.";

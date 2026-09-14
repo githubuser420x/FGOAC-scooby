@@ -5,7 +5,6 @@ using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Windows;
@@ -1181,19 +1180,10 @@ public sealed class PhotoWindow : UserControl
 			jsonObject3["falloff"] = falloff.Value;
 			jsonObject3["blur"] = blur.Value;
 			jsonObject3["speed"] = speed.Value;
-			string text = settingsPath + $".{Environment.ProcessId}.photo.tmp";
-			File.WriteAllText(text, jsonObject.ToJsonString(new JsonSerializerOptions
+			AtomicFile.WriteAllText(settingsPath, jsonObject.ToJsonString(new JsonSerializerOptions
 			{
 				WriteIndented = true
-			}) + Environment.NewLine, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
-			if (File.Exists(settingsPath))
-			{
-				File.Replace(text, settingsPath, settingsPath + ".bak", ignoreMetadataErrors: true);
-			}
-			else
-			{
-				File.Move(text, settingsPath);
-			}
+			}) + Environment.NewLine);
 			status.Text = "Photo settings saved - the panel hotkey and the depth of field work now, and the in-game camera keys work after you restart the game.";
 			if (!RegisterPanelHotkey())
 			{
