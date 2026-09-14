@@ -1282,7 +1282,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 				await ServerSettingsPanel.ReloadAsync();
 				await RefreshRuntimeStatusAsync();
 				await RefreshAccountsAsync(showErrors: false);
-				ThemedMessageBox.Show("Server settings saved. The server starts when you click Start / Check Server or Play.", "Server Settings");
+				ThemedMessageBox.Show("Server settings saved. The server starts when you click Start Server or Play.", "Server Settings");
 				goto end_IL_0091;
 				end_IL_00b4:;
 			}
@@ -1830,7 +1830,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		DeleteAccountButton.IsEnabled = selectedAccount != null && !lastKnownGameRunning && !accountToolRunning;
 		OwnedCardsOnlyCheckBox.IsEnabled = selectedAccount != null;
 		ApplyOwnedCardFilter();
-		CurrentSummonSummaryText.Text = ((selectedAccount == null) ? "Lv.1 - EXP 0 - 0 summons" : $"Lv.{selectedAccount.MasterLevel} - EXP {selectedAccount.MasterExp:N0} - {selectedAccount.ClearedQuestCount} quests cleared - {selectedAccount.OwnedCardCount} cards printed - {selectedAccount.PendingPrintCount} pending");
+		CurrentSummonSummaryText.Text = ((selectedAccount == null) ? "Lv.1 - EXP 0 - 0 summons" : $"Lv.{selectedAccount.MasterLevel} - EXP {selectedAccount.MasterExp:N0} - Quests cleared {selectedAccount.ClearedQuestCount} - Cards printed {selectedAccount.OwnedCardCount} - Pending {selectedAccount.PendingPrintCount}");
 	}
 
 	private void RefreshAccountDetails(AccountEntry? account)

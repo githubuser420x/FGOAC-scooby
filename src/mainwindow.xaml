@@ -209,7 +209,7 @@
                 </FrameworkElement.Style>
               </ToggleButton>
               <UniformGrid Rows="1">
-                <Button Content="Start / Check Server" Click="StartServerButton_OnClick" />
+                <Button Content="Start Server" ToolTip="Starts the local server. If it is already running, this checks that its ports answer." Click="StartServerButton_OnClick" />
                 <Button Content="Stop Server" Click="StopServerButton_OnClick" />
                 <Button Content="Open Logs" Click="OpenLogsButton_OnClick" />
                 <Button Name="StopGameButton" Content="Stop Game" IsEnabled="False" Background="#35141E" BorderBrush="#713044" Click="StopGameButton_OnClick" />
@@ -234,7 +234,7 @@
                 <WrapPanel Margin="0,0,0,20">
                   <Button Content="Play" FontSize="20" FontWeight="Bold" Padding="56,14" Margin="0,0,12,8" Background="#5A1D50" BorderBrush="#A85B9B" IsEnabled="{Binding IsEnabled, ElementName=StartGameButton}" Click="StartGameButton_OnClick" />
                   <Button Content="Stop Game" Padding="22,14" Margin="0,0,12,8" Background="#35141E" BorderBrush="#713044" IsEnabled="{Binding IsEnabled, ElementName=StopGameButton}" Click="StopGameButton_OnClick" />
-                  <Button Content="Start / Check Server" Padding="18,14" Margin="0,0,12,8" Click="StartServerButton_OnClick" />
+                  <Button Content="Start Server" Padding="18,14" Margin="0,0,12,8" ToolTip="Starts the local server. If it is already running, this checks that its ports answer." Click="StartServerButton_OnClick" />
                   <Button Content="Stop Server" Padding="18,14" Margin="0,0,12,8" Click="StopServerButton_OnClick" />
                   <Button Content="Open Logs" Padding="18,14" Margin="0,0,0,8" Click="OpenLogsButton_OnClick" />
                 </WrapPanel>
