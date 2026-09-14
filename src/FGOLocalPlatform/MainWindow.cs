@@ -3316,7 +3316,8 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			return;
 		}
 		runningLauncher = launcherProcess;
-		MonitorLauncherAsync(launcherProcess);
+		// Watches the game script until it exits; nothing here waits for that.
+		_ = MonitorLauncherAsync(launcherProcess);
 	}
 
 	private async Task MonitorLauncherAsync(CapturedProcess launcherProcess)

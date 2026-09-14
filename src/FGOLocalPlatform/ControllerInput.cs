@@ -6,6 +6,7 @@ namespace FGOLocalPlatform;
 
 internal static class ControllerInput
 {
+#pragma warning disable CS0649 // XInput fills these structures in.
 	internal struct Gamepad
 	{
 		public ushort Buttons;
@@ -29,6 +30,7 @@ internal static class ControllerInput
 
 		public Gamepad Gamepad;
 	}
+#pragma warning restore CS0649
 
 	internal struct Vibration
 	{

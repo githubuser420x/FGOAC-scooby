@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyName>FGOLocalPlatform</AssemblyName>
     <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
@@ -21,9 +21,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <LangVersion>Latest</LangVersion>
+    <Nullable>annotations</Nullable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
-    <NoWarn>$(NoWarn);CS0169;CS0414;CS0649;CS8500;NU1701</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>platform.ico</ApplicationIcon>
