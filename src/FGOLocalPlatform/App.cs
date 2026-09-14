@@ -30,7 +30,6 @@ public partial class App : Application
 		try
 		{
 			Directory.SetCurrentDirectory(GamePaths.GameRoot);
-			GameFont.Install(base.Resources);
 			StartupDiagnostics.CheckLayout();
 		}
 		catch (Exception ex)

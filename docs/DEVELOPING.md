@@ -123,9 +123,9 @@ which waits for it to close, moves the staged file into place and starts it agai
 - `src\platform.ico` is the game's own icon, icon group 0 of `App\ago.exe`, pulled out by
   `src\assets\extract-icon.ps1`. It is the executable icon, the window icon and the mark in the top
   bar. The game ships one 32x32 frame, so that is what the file holds.
-- The display typeface is the game's `App\rom\font\SEGA_Skip-B.ttf`, loaded from the install at
-  startup by `GameFont` and published as the `DisplayFont` resource. Nothing is bundled: if the file
-  is missing the resource keeps its Segoe UI fallback and the launcher still runs.
+- There is no bundled typeface. Everything is set in Segoe UI, which every supported Windows has;
+  the game's own SEGA Skip face was tried for the wordmark and dropped because it has no hinting
+  and renders soft at interface sizes.
 
 ## Overlay
 

@@ -36,7 +36,23 @@ public class Card
 
 	public BitmapImage Bitmap => LoadBitmap(Path);
 
-	public BitmapImage Thumbnail => LoadThumbnail(Path);
+	// The tiles bind to this asynchronously and are recycled as the grid scrolls, so the decoded
+	// image is kept as long as something still holds it rather than decoded again on every pass.
+	private WeakReference<BitmapImage> thumbnail;
+
+	public BitmapImage Thumbnail
+	{
+		get
+		{
+			if (thumbnail != null && thumbnail.TryGetTarget(out BitmapImage cached))
+			{
+				return cached;
+			}
+			BitmapImage loaded = LoadThumbnail(Path);
+			thumbnail = new WeakReference<BitmapImage>(loaded);
+			return loaded;
+		}
+	}
 
 	public byte[] FullMetadata { get; }
 

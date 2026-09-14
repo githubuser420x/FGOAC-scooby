@@ -127,7 +127,7 @@
                     <RowDefinition Height="58" />
                   </Grid.RowDefinitions>
                   <Border Background="{StaticResource PlateLowBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" Padding="3">
-                    <Image Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Thumbnail}" />
+                    <Image Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Thumbnail, IsAsync=True}" />
                   </Border>
                   <Border Grid.Row="1" Background="{StaticResource PlateBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1,0,1,1" Padding="6,3">
                     <StackPanel VerticalAlignment="Center">
@@ -184,7 +184,7 @@
           </Grid.ColumnDefinitions>
           <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
             <Image Source="platform.ico" Width="32" Height="32" Margin="0,0,12,0" RenderOptions.BitmapScalingMode="HighQuality" />
-            <TextBlock Text="FGOAC scooby" FontFamily="{DynamicResource DisplayFont}" FontSize="24" Foreground="{StaticResource TextBrush}" VerticalAlignment="Center" />
+            <TextBlock Text="FGOAC scooby" FontWeight="SemiBold" FontSize="20" Foreground="{StaticResource TextBrush}" VerticalAlignment="Center" />
           </StackPanel>
           <TextBlock Grid.Column="1" Margin="24,0,24,0" VerticalAlignment="Center" FontSize="13" Foreground="{StaticResource TextSoftBrush}" TextTrimming="CharacterEllipsis" Text="{Binding Text, ElementName=RuntimeStatusText}" />
           <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
@@ -228,7 +228,7 @@
                     </Grid>
                   </Border>
                   <StackPanel Grid.Column="1">
-                    <Button Content="Play" Style="{StaticResource PrimaryButtonStyle}" FontSize="24" Height="72" Margin="0,0,0,18" HorizontalAlignment="Stretch" IsEnabled="{Binding IsEnabled, ElementName=StartGameButton}" Click="StartGameButton_OnClick" />
+                    <Button Content="Play" Style="{StaticResource PrimaryButtonStyle}" FontSize="22" Height="72" Margin="0,0,0,18" HorizontalAlignment="Stretch" IsEnabled="{Binding IsEnabled, ElementName=StartGameButton}" Click="StartGameButton_OnClick" />
                     <Border BorderBrush="{StaticResource LineSoftBrush}" BorderThickness="0,0,0,1">
                       <Grid Height="34">
                         <Grid.ColumnDefinitions>
@@ -428,7 +428,7 @@
                               <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <Border Background="{StaticResource PlateLowBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1" Padding="2">
-                              <Image Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Thumbnail}" />
+                              <Image Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Thumbnail, IsAsync=True}" />
                             </Border>
                             <StackPanel Grid.Column="1" Margin="12,0,8,0" VerticalAlignment="Center">
                               <TextBlock Foreground="{StaticResource TextBrush}" FontSize="14" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Text="{Binding EnglishName}" />
@@ -467,7 +467,7 @@
                           <DataTemplate DataType="{x:Type local:CardStack}">
                             <Grid Margin="4" Width="88" Height="142">
                               <Border Background="{StaticResource PlateLowBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1">
-                                <Image Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Thumbnail}" />
+                                <Image Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Thumbnail, IsAsync=True}" />
                               </Border>
                               <Border VerticalAlignment="Bottom" Background="{StaticResource PlateBrush}" BorderBrush="{StaticResource LineBrush}" BorderThickness="1,1,1,0" Padding="4,2">
                                 <StackPanel>
@@ -661,7 +661,7 @@
               <TabItem Header="About">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                   <StackPanel Margin="28" MaxWidth="900" HorizontalAlignment="Left">
-                    <TextBlock Text="FGOAC scooby" FontFamily="{DynamicResource DisplayFont}" FontSize="24" Foreground="{StaticResource TextBrush}" Margin="0,0,0,14" />
+                    <TextBlock Text="FGOAC scooby" FontWeight="SemiBold" FontSize="22" Foreground="{StaticResource TextBrush}" Margin="0,0,0,14" />
                     <TextBlock Name="AboutVersionText" Style="{StaticResource HelpTextStyle}" FontSize="14" Foreground="{StaticResource TextBrush}" Margin="0,0,0,20" />
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                       <Button Content="Check for updates" Margin="0,0,10,0" Click="CheckUpdatesButton_OnClick" />
