@@ -183,7 +183,6 @@ public sealed class FgoMotionChannel
 		float num2 = ((float)((num >> 32) & 0x7FFF) - 16384f) / 23169.06f;
 		float num3 = ((float)((num >> 17) & 0x7FFF) - 16384f) / 23169.06f;
 		float num4 = ((float)((num >> 2) & 0x7FFF) - 16384f) / 23169.06f;
-		MathF.Sqrt(MathF.Max(0f, 1f - num2 * num2 - num3 * num3 - num4 * num4));
 		return ComposeSmallestThree((int)(num & 3), num2, num3, num4, positiveOmitted: true);
 	}
 

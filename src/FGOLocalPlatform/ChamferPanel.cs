@@ -24,13 +24,7 @@ public class ChamferPanel : Decorator
 
 	public static readonly DependencyProperty CutProperty = DependencyProperty.Register("Cut", typeof(double), typeof(ChamferPanel), new FrameworkPropertyMetadata(8.0, FrameworkPropertyMetadataOptions.AffectsRender));
 
-	public static readonly DependencyProperty OrnamentBrushProperty = DependencyProperty.Register("OrnamentBrush", typeof(Brush), typeof(ChamferPanel), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));
-
 	public static readonly DependencyProperty PaddingProperty = DependencyProperty.Register("Padding", typeof(Thickness), typeof(ChamferPanel), new FrameworkPropertyMetadata(default(Thickness), FrameworkPropertyMetadataOptions.AffectsMeasure));
-
-	private const double OrnamentSize = 15.0;
-
-	private const double OrnamentInset = 6.0;
 
 	public Brush Fill
 	{
@@ -54,13 +48,6 @@ public class ChamferPanel : Decorator
 	{
 		get => (double)GetValue(CutProperty);
 		set => SetValue(CutProperty, value);
-	}
-
-	/// <summary>Set this to draw the game's four corner brackets; leave it null for a plain plate.</summary>
-	public Brush OrnamentBrush
-	{
-		get => (Brush)GetValue(OrnamentBrushProperty);
-		set => SetValue(OrnamentBrushProperty, value);
 	}
 
 	public Thickness Padding
@@ -120,32 +107,6 @@ public class ChamferPanel : Decorator
 			pen.Freeze();
 		}
 		drawingContext.DrawGeometry(Fill, pen, outline);
-
-		Brush ornament = OrnamentBrush;
-		if (ornament == null)
-		{
-			return;
-		}
-		Pen ornamentPen = new Pen(ornament, 1.2);
-		ornamentPen.Freeze();
-		DrawOrnament(drawingContext, ornamentPen, OrnamentInset, OrnamentInset, 1.0, 1.0);
-		DrawOrnament(drawingContext, ornamentPen, width - OrnamentInset, OrnamentInset, -1.0, 1.0);
-		DrawOrnament(drawingContext, ornamentPen, OrnamentInset, height - OrnamentInset, 1.0, -1.0);
-		DrawOrnament(drawingContext, ornamentPen, width - OrnamentInset, height - OrnamentInset, -1.0, -1.0);
 	}
 
-	/// <summary>The L bracket from the game's panels, mirrored into each corner.</summary>
-	private static void DrawOrnament(DrawingContext drawingContext, Pen pen, double x, double y, double signX, double signY)
-	{
-		double size = OrnamentSize;
-		double corner = size * 0.32;
-		drawingContext.DrawLine(pen, new Point(x, y + signY * size), new Point(x, y + signY * corner));
-		drawingContext.DrawLine(pen, new Point(x, y + signY * corner), new Point(x + signX * corner, y));
-		drawingContext.DrawLine(pen, new Point(x + signX * corner, y), new Point(x + signX * size, y));
-		double innerOffset = size * 0.24;
-		double innerLength = size * 0.62;
-		drawingContext.DrawLine(pen, new Point(x + signX * innerOffset, y + signY * innerLength), new Point(x + signX * innerOffset, y + signY * (innerOffset + corner * 0.3)));
-		drawingContext.DrawLine(pen, new Point(x + signX * innerOffset, y + signY * (innerOffset + corner * 0.3)), new Point(x + signX * (innerOffset + corner * 0.3), y + signY * innerOffset));
-		drawingContext.DrawLine(pen, new Point(x + signX * (innerOffset + corner * 0.3), y + signY * innerOffset), new Point(x + signX * innerLength, y + signY * innerOffset));
-	}
 }

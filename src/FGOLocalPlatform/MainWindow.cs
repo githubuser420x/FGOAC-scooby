@@ -959,12 +959,6 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		}
 	}
 
-	private void Search()
-	{
-		currentCardSearch = SearchTextBox.Text.Trim();
-		ApplyOwnedCardFilter();
-	}
-
 	private void CardPickerSearchBox_OnTextChanged(object sender, TextChangedEventArgs e)
 	{
 		if (cardListView != null && sender is TextBox textBox)
@@ -1181,22 +1175,6 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		}
 	}
 
-	private static async Task<bool> WaitForServerPortsClosedAsync()
-	{
-		int[] ports = ServerSettingsView.ConfiguredPorts().Take(3).ToArray();
-		DateTime deadline = DateTime.UtcNow.AddSeconds(10.0);
-		do
-		{
-			if ((await Task.WhenAll(ports.Select(IsPortOpenAsync))).All((bool isOpen) => !isOpen))
-			{
-				return true;
-			}
-			await Task.Delay(200);
-		}
-		while (DateTime.UtcNow < deadline);
-		return false;
-	}
-
 	private static string ReadTail(string path, int maximumLines = 140, int maximumBytes = 196608)
 	{
 		if (!File.Exists(path))
@@ -1291,11 +1269,6 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			processStartInfo.ArgumentList.Add(argument);
 		}
 		return processStartInfo;
-	}
-
-	private static Process StartPowerShellScript(string scriptPath, params string[] arguments)
-	{
-		return Process.Start(CreatePowerShellStartInfo(scriptPath, redirectOutput: false, arguments)) ?? throw new InvalidOperationException("Could not start " + scriptPath);
 	}
 
 	private static CapturedProcess StartCapturedPowerShellScript(string scriptPath, Action<string, bool> onOutputLine, params string[] arguments)
@@ -3479,32 +3452,6 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		await RefreshRuntimeStatusAsync();
 	}
 
-	private static void ShowGuide(string filename, string title)
-	{
-		string text = Path.Combine(GamePaths.GameRoot, "manuals", filename);
-		if (!File.Exists(text))
-		{
-			ThemedMessageBox.Show("The controls guide image is missing:\n" + text, title, MessageBoxButton.OK, MessageBoxImage.Hand);
-			return;
-		}
-		BitmapImage source = new BitmapImage(new Uri(text, UriKind.Absolute));
-		Window obj = new Window
-		{
-			Title = title,
-			Width = 980.0,
-			Height = 680.0,
-			Background = Brushes.Black,
-			Content = new Image
-			{
-				Source = source,
-				Stretch = Stretch.Uniform
-			},
-			Owner = Application.Current.MainWindow
-		};
-		WindowTheme.Apply(obj);
-		obj.Show();
-	}
-
 	private void OpenLogsButton_OnClick(object sender, RoutedEventArgs e)
 	{
 		string logsRoot = GamePaths.LogsRoot;
@@ -3513,16 +3460,6 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		{
 			UseShellExecute = true
 		});
-	}
-
-	private void KeyboardGuideButton_OnClick(object sender, RoutedEventArgs e)
-	{
-		ShowGuide("keyboard-controls.png", "FGO Keyboard Controls");
-	}
-
-	private void ControllerGuideButton_OnClick(object sender, RoutedEventArgs e)
-	{
-		ShowGuide("controller-controls.png", "FGO Controller Controls");
 	}
 
 	private void CardList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -3561,24 +3498,9 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		RemoveSelectedCard();
 	}
 
-	private void SelectCardButton_OnClick(object sender, RoutedEventArgs e)
-	{
-		AddSelectedCard();
-	}
-
-	private void UnselectCardButton_OnClick(object sender, RoutedEventArgs e)
-	{
-		RemoveSelectedCard();
-	}
-
 	private void ReloadButton_OnClick(object sender, RoutedEventArgs e)
 	{
 		Reload();
-	}
-
-	private void SearchButton_OnClick(object sender, RoutedEventArgs e)
-	{
-		Search();
 	}
 
 	private void CardsPathTextBox_OnKeyDown(object sender, KeyEventArgs e)
@@ -3588,16 +3510,6 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		if ((int)e.Key == 6)
 		{
 			Reload();
-		}
-	}
-
-	private void SearchTextBox_OnKeyDown(object sender, KeyEventArgs e)
-	{
-		//IL_0001: Unknown result type (might be due to invalid IL or missing references)
-		//IL_0007: Invalid comparison between Unknown and I4
-		if ((int)e.Key == 6)
-		{
-			Search();
 		}
 	}
 
