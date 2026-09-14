@@ -121,8 +121,7 @@ they come from the decompiled source and are not worth silencing one file at a t
 
 [`docs/DEVELOPING.md`](docs/DEVELOPING.md) explains where `src\` comes from, the compile fixes the
 decompile needs, what the translation must never change, and how to re-derive the build when the
-author ships a new version. [`docs/DESIGN.md`](docs/DESIGN.md) is the plan the interface is built
-from, and [`CONTRIBUTING.md`](CONTRIBUTING.md) has the house style.
+author ships a new version. [`CONTRIBUTING.md`](CONTRIBUTING.md) has the house style.
 
 ## Releases
 

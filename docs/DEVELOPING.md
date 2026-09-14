@@ -2,7 +2,7 @@
 
 How the launcher is built, where its parts come from, and what must not be changed when the
 translation is carried forward. `README.md` is the player-facing document; this is the one for
-working on the code. `DESIGN.md` is the plan the interface is built from.
+working on the code.
 
 `src\` is a decompile of the platform's managed front end (`FGOLocalPlatform`, V1.01, by
 Cloud23333) with the compile fixes listed below applied and the user-facing strings translated.
@@ -18,7 +18,7 @@ The deliverable is a self-contained single-file host published from `src\` and n
 | `overlay\` | English replacements for files that live outside the assembly, laid out by their path relative to the install root |
 | `patch\` | `Apply-EN-Patch.ps1` (the installer players run) and `Build-Manifest.ps1` (writes the `manifest.json` it checks against) |
 | `dist\` | build output, `FGOAC scooby.exe` (not tracked) |
-| `docs\` | player guide, design, release steps, and this file |
+| `docs\` | player guide, release steps, and this file |
 | `package\` | the README that ships inside the release zip |
 | `build.cmd` | `dotnet build -c Release` (compile check only) |
 | `publish.cmd` | publish + copy to `dist\FGOAC scooby.exe` |

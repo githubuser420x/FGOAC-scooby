@@ -33,9 +33,8 @@ The launcher needs administrator rights because the game does.
 `docs\DEVELOPING.md` says where `src\` comes from, the compile fixes the decompile needs and what
 the translation must never change. Read it before your first change to `src\`.
 
-`docs\DESIGN.md` is the plan the interface is built from. If you are changing how something looks,
-read it first: it says what each colour and each component is for, and a change that contradicts it
-should say so out loud.
+If you are changing how something looks, keep to the existing palette and controls: one accent
+colour, flat surfaces, Segoe UI throughout.
 
 ## Report a problem
 
