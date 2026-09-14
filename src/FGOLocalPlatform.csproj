@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <AssemblyName>FGOLocalPlatform</AssemblyName>
     <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
@@ -60,8 +60,9 @@
     <EmbeddedResource Include="FGOLocalPlatform.CraftEffects.json" LogicalName="FGOLocalPlatform.CraftEffects.json" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="ZstdSharp">
-      <HintPath>D:\FGOA\ZstdSharp.dll</HintPath>
-    </Reference>
+    <!-- The author's build references a copy of this assembly beside the game. The package is
+         the same library at the same assembly identity (0.8.8.0), restored from nuget.org, so
+         the project builds on a machine that has no game install. -->
+    <PackageReference Include="ZstdSharp.Port" Version="0.8.8" />
   </ItemGroup>
 </Project>
