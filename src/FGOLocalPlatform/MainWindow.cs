@@ -2999,6 +2999,12 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 				text2 = jsonObject["aspectRatio"]?.GetValue<string>() ?? "";
 				device = jsonObject["monitorDevice"]?.GetValue<string>() ?? "";
 				ChineseEnabledCheckBox.IsChecked = jsonObject["chineseEnabled"]?.GetValue<bool>() ?? false;
+				GpuCompatCheckBox.IsChecked = GpuCompat.IsInstalled;
+				GpuCompatCheckBox.IsEnabled = GpuCompat.SourceAvailable || GpuCompat.IsInstalled;
+				if (!GpuCompat.SourceAvailable)
+				{
+					GpuCompatHelpText.Text = "The layer's file is missing: " + GpuCompat.SourcePath;
+				}
 				if (jsonObject["graphics"] is JsonObject jsonObject2)
 				{
 					SelectTag(SmaaComboBox, (jsonObject2["smaa"]?.GetValue<int>() ?? 0).ToString());
@@ -3098,6 +3104,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			jsonObject["showControlGuides"] = false;
 			jsonObject["targetFps"] = targetFps;
 			jsonObject["chineseEnabled"] = ChineseEnabledCheckBox.IsChecked == true;
+			jsonObject["gpuCompat"] = GpuCompatCheckBox.IsChecked == true;
 			JsonObject jsonObject3 = (jsonObject["graphics"] as JsonObject) ?? new JsonObject();
 			jsonObject3["smaa"] = (int.TryParse(SelectedTag(SmaaComboBox), out var result2) ? result2 : 0);
 			JsonObject jsonObject4 = jsonObject3;
@@ -3252,10 +3259,20 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 
 	private void SaveGraphicsButton_OnClick(object sender, RoutedEventArgs e)
 	{
-		if (SaveLauncherSettings(out string _, out int _, out int _, out string _, out int _))
+		if (!SaveLauncherSettings(out string _, out int _, out int _, out string _, out int _))
 		{
-			RuntimeStatusText.Text = "Graphics settings saved - they take effect the next time the game starts.";
+			return;
 		}
+		try
+		{
+			GpuCompat.Apply(GpuCompatCheckBox.IsChecked == true);
+		}
+		catch (Exception ex)
+		{
+			RuntimeStatusText.Text = "The graphics compatibility layer could not be changed: " + ex.Message;
+			return;
+		}
+		RuntimeStatusText.Text = "Graphics settings saved - they take effect the next time the game starts.";
 	}
 
 	private void ResetDamageUi_OnClick(object sender, RoutedEventArgs e)

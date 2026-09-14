@@ -62,7 +62,8 @@ but keep them if you may want to roll back later.
 - **A few event screens are still Japanese**: the co-op event banners, the co-op result screens and
   the later event shops. They are artwork, not text, and the rest of the game is unaffected.
 - The game is built for NVIDIA cards and wants a current driver; a black screen usually means the
-  driver, not the patch.
+  driver, not the patch. On AMD and Intel graphics the launcher turns on the bundled compatibility
+  layer by itself (Settings > Display, "AMD and Intel compatibility layer").
 
 ## Reporting a problem
 

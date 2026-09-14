@@ -467,6 +467,12 @@ internal sealed class FirstRun
 					list.Add("your main monitor");
 				}
 			}
+			if (jsonObject["gpuCompat"] == null && GpuCompat.SourceAvailable && !GpuCompat.HasNvidiaAdapter())
+			{
+				GpuCompat.Apply(enabled: true);
+				jsonObject["gpuCompat"] = true;
+				list.Add("the AMD and Intel graphics compatibility layer");
+			}
 			if (list.Count == 0)
 			{
 				return false;

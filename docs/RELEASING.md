@@ -54,7 +54,7 @@ package as it stands.
 ## 3. Check the package before you publish
 
 - `manifest.json` exists and its file count matches what the run reported.
-- `SHA256SUMS.txt` lists the seven top-level files.
+- `SHA256SUMS.txt` lists the seven top-level files and `compat\fgoglcompat.dll`.
 - Unzip into a scratch copy of a V1.01 install and run `Apply-EN-Patch.ps1 -InstallRoot <copy>`.
   A good run reports every file verified against the manifest with zero mismatches, and a second run
   is a no-op. Then `-Rollback` and confirm the install is back as it was.

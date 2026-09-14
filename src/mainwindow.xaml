@@ -497,6 +497,9 @@
                     <TextBlock Text="Game language" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,10" />
                     <ToggleButton Name="ChineseEnabledCheckBox" Style="{StaticResource EnglishTextToggleStyle}" AutomationProperties.Name="English text" HorizontalAlignment="Left" MinWidth="210" Margin="0,0,0,8" ToolTip="Turns the translated in-game text on or off. Takes effect the next time you start the game." />
                     <TextBlock Style="{StaticResource HelpTextStyle}" Margin="0,0,0,26" Text="Off leaves the game in Japanese. The switch takes effect the next time you press Play." />
+                    <TextBlock Text="Graphics card" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,10" />
+                    <ToggleButton Name="GpuCompatCheckBox" Style="{StaticResource SwitchToggleStyle}" Content="AMD and Intel compatibility layer" AutomationProperties.Name="AMD and Intel compatibility layer" HorizontalAlignment="Left" MinWidth="210" Margin="0,0,0,8" ToolTip="Puts a translation layer in front of the game so its NVIDIA-only OpenGL features run on AMD and Intel graphics. Applied when you save the display settings; used the next time you start the game." />
+                    <TextBlock Name="GpuCompatHelpText" Style="{StaticResource HelpTextStyle}" Margin="0,0,0,26" Text="Turned on by itself on a PC with no NVIDIA card. Leave it off on NVIDIA." />
                     <TextBlock Text="Display and Resolution" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,14" />
                     <WrapPanel>
                       <StackPanel Orientation="Horizontal" Margin="0,0,12,8">
