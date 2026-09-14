@@ -1,164 +1,156 @@
-# FGOAC scooby — English launcher
+﻿<div align="center">
 
-English rebuild of the FGO Arcade local platform front end (`FGOLocalPlatform`, V1.01, by Cloud23333).
-`src\` is a decompile of the author's managed assembly with the compile fixes listed below and the
-user-facing strings translated. The deliverable is a self-contained single-file host published from
-`src\` and named `FGOAC scooby.exe`.
+# FGOAC scooby
 
-## Layout
+**Fate/Grand Order Arcade, in English, on your own PC.**
 
-| Path | Contents |
+[![Latest release](https://img.shields.io/github/v/release/githubuser420x/FGOAC-scooby?label=latest%20release)](https://github.com/githubuser420x/FGOAC-scooby/releases/latest)
+[![Licence](https://img.shields.io/badge/licence-MIT-blue)](LICENSE)
+
+![The Play page](docs/screenshots/play.png)
+
+</div>
+
+FGOAC scooby is a fan-made English patch and launcher for the FGO Arcade local platform. It puts the
+game itself into English - menus, tutorial, story, battle screens, shops, help - and replaces the
+platform's Chinese front end with an English one that starts the local server, manages your Master
+account, and builds your thirty-card deck from the real card art. It is not a game download and it
+carries no game files: it is applied on top of an FGO Arcade local platform install you already have.
+
+## What you need
+
+| | |
 | --- | --- |
-| `src\` | buildable C#/XAML project (`FGOLocalPlatform.csproj`) |
-| `overlay\` | English replacements for files that live outside the assembly, laid out by their path relative to the install root |
-| `patch\` | `Apply-EN-Patch.ps1` (the installer players run) and `Build-Manifest.ps1` (writes the `manifest.json` it checks against) |
-| `dist\` | build output, `FGOAC scooby.exe` (not tracked) |
-| `build.cmd` | `dotnet build -c Release` (compile check only) |
-| `publish.cmd` | publish + copy to `dist\FGOAC scooby.exe` |
+| The game | An existing **FGO Arcade local platform V1.01** install (Cloud23333's package) - the folder that holds `App` and `Server` |
+| OS | Windows 10 or 11, 64-bit |
+| GPU | NVIDIA, on a current driver |
+| Drive | Any drive **except E: or Y:** - see the table further down |
+| Rights | Administrator: one Windows prompt when the launcher starts |
 
-## Build
+.NET and Python are not needed. The launcher carries its own runtime, and the platform brings its own
+Python.
+
+## Install
+
+1. Download the latest release zip and unzip it into your FGO Arcade folder, beside `App` and `Server`.
+2. Run **FGOAC scooby.exe** and click **Yes** on the Windows permission prompt.
+3. Press **Play**. The game takes about a minute to reach the title screen.
+
+The first start does the rest on its own: it installs the English files, checks the game can write to
+its own folders, allows the game and the local server through Windows Firewall, creates the account
+**Master** with a full Servant and Craft Essence roster, and sets the display to windowed 1280x720 on
+your main monitor. Later starts go straight to Play.
+
+[`docs/GUIDE_EN.pdf`](docs/GUIDE_EN.pdf) is the full player guide: getting Servants without the
+summon, controls, a sortie step by step, the exchange shops and troubleshooting.
+
+## What works
+
+- **The game text** - 65,652 translated rows: story, quests, Servant and Craft Essence profiles,
+  skills, items, missions and every menu. Names follow the English release.
+- **The game artwork** - 155 rebuilt sprite archives: title, tutorial, terminal, formation, battle
+  HUD, results, shops, synthesis, present box, master missions, rankings, help, title editor.
+- **Offline single player, end to end** - the tutorial, solo sorties, the terminal, the exchange
+  shops, synthesis, My Room, rankings and the title editor.
+- **The launcher**, all five pages, with the official English card names and Craft Essence effects.
+
+## What does not work
+
+- **No online play.** Everything runs against the local server; there is no matchmaking, and no
+  official service left to connect to.
+- **The in-game summon does not draw cards.** Servants come from the launcher instead - the Account
+  page grants a full roster in one click, and the card library holds all 1,384 cards. The Draw Rates
+  page only sets the weights the local server would use; it does not pull anything by itself.
+- **A few event screens are still Japanese** - the co-op event banners, the co-op result screens and
+  the event shops from 0029 on. They are artwork rather than text, and nothing else is affected.
+
+## The launcher
+
+| Page | What it does |
+| --- | --- |
+| **Play** | Play and Stop Game, start and stop the local server, open the logs, and live readouts for the server, the selected Master and the deck. The page to leave open while the game runs. |
+| **Account** | Create, select and delete Master accounts, and grant one of them a full Servant, Craft Essence and item roster in a single click, with levels, bond, costumes and clear rewards. |
+| **Cards and Deck** | The card library and the deck editor, searchable by official English name, with Craft Essence effects in FGO NA phrasing. The deck is sent to the game every time you press Play. |
+| **Settings** | Display - monitor, resolution, aspect ratio, frame rate, display mode. Controls - keyboard, XInput or native DualSense, with dead zone, rumble and a controller test. Audio. |
+| **Advanced** | The local server and its settings, Diagnostics and Help with every game error code and its fix, mouse cursor, debug, photo mode, and About. |
+
+It keeps itself up to date: the launcher asks GitHub Releases whether there is a newer version and
+offers to fetch and apply it, so a translation fix reaches you without a reinstall.
+
+<p align="center">
+  <img src="docs/screenshots/cards.png" width="32%" alt="Cards and Deck" />
+  <img src="docs/screenshots/controls.png" width="32%" alt="Settings, Controls" />
+  <img src="docs/screenshots/diagnostics.png" width="32%" alt="Diagnostics and Help" />
+</p>
+
+## If something goes wrong
+
+Open **Advanced > Diagnostics and Help** first. It lists every game error code with the fix, and the
+answer is usually there.
+
+| What you see | What it means | What to do |
+| --- | --- | --- |
+| **ERROR 4102** | The game cannot reach the local server. | Start the server from the Play page, wait for it to report ready, then press Play again. |
+| **ERROR 4104** | The install is on drive **E:** or **Y:**. The game's own file hook sends every path on those drives to the cabinet data mount, so it cannot open its own files. | Move the whole game folder to any other drive. |
+| **ERROR 4105**, about ninety seconds after launch | The game was not started as administrator. | Click **Yes** on the Windows permission prompt when the launcher starts. |
+| **0xC0000005**, a few seconds after launch | Windows Defender **Controlled Folder Access** is blocking the game from writing its own files. | Allow the game folder, or `App\ago.exe`, under Windows Security, Virus and threat protection, Ransomware protection. |
+| **A black screen at launch** | Almost always the NVIDIA driver rather than the patch. | Update the driver and try again. |
+| **The game hangs at a black screen on the very first launch** | A Windows Firewall prompt is waiting behind the game window. The launcher normally creates those rules itself, but a company policy or a security suite can stop it. | Look in the task bar for the prompt and allow both `Server\python\python.exe` and `App\ago.exe`. |
+| **The main menu misbehaves right after the tutorial** | A known quirk of the tutorial-to-main-menu handoff. | Restart the game once. |
+
+To report a problem, open an issue and say which screen you were on and what you expected. Attach
+what you have from the `logs` folder next to `App`: `fgo-last-launch.log`, `fgozh.log`,
+`server-control.log`, `artemis-stderr.log`, `mariadb.log`, and `environment-check.txt`, which
+Diagnostics and Help writes for you.
+
+## Building from source
+
+You need the .NET SDK (10.x is what this is developed on) and Windows 10 or 11 x64. Everything else -
+the .NET 6 reference and runtime packs, and the one package dependency - is restored from nuget.org
+on the first build.
+
+```
+build.cmd                     compile check only
+publish.cmd                   self-contained single file, into dist\
+deploy.cmd <install root>     copy the published launcher into an install
+```
+
+`publish.cmd` writes `dist\FGOAC scooby.exe`. Expect around 165 `CS8632` warnings and zero errors;
+they come from the decompiled source and are not worth silencing one file at a time.
+
+[`docs/DEVELOPING.md`](docs/DEVELOPING.md) explains where `src\` comes from, the compile fixes the
+decompile needs, what the translation must never change, and how to re-derive the build when the
+author ships a new version. [`docs/DESIGN.md`](docs/DESIGN.md) is the plan the interface is built
+from, [`docs/HISTORY.md`](docs/HISTORY.md) is the log of what was done, and
+[`CONTRIBUTING.md`](CONTRIBUTING.md) has the house style.
+
+## Releases
+
+A release is one zip built from this repository and the English game files in an install, with a
+SHA-256 manifest generated from the same bytes that ship. The updater in the launcher reads
+`releases/latest`, so a release only reaches players once it is published and not marked
+pre-release.
 
 ```
 publish.cmd
+package.ps1 -GameRoot <install root>
 ```
 
-Requirements: .NET SDK 10.0.303 (builds the `net6.0-windows` target; the 6.0 reference and runtime
-packs are restored from nuget.org on first run) and `D:\FGOA\ZstdSharp.dll` (assembly identity
-0.8.8.0), which `src\FGOLocalPlatform.csproj` references by `HintPath`. Nothing else is needed; the
-published host carries its own .NET runtime, so a player does not have to install one.
+That writes `release\FGOAC-scooby-vX.Y.Z.zip` and `FGOAC-scooby-vX.Y.Z.zip.sha256`. Tag the commit
+`vX.Y.Z`, publish a GitHub release on that tag, and upload **both** files as assets: the updater
+looks for an asset whose name starts with `FGOAC-scooby-v` and ends in `.zip`, and for the
+`.zip.sha256` beside it, and skips a release that is missing either rather than half-installing it.
+[`docs/RELEASING.md`](docs/RELEASING.md) has the exact steps and the checks.
 
-Deploy with a single copy:
+## Credits
 
-```
-copy /y "dist\FGOAC scooby.exe" "D:\FGOA\FGOAC scooby.exe"
-```
+**Cloud23333** wrote the FGO Arcade local platform: the server package, the front end
+(`FGOLocalPlatform`) that FGOAC scooby is built from, and the file hook this patch loads its English
+through. None of this exists without that work, and his package is free - if anyone sold it to you,
+ask for your money back. The **FGO Arcade wiki** and **Atlas Academy** are where the official English
+names of Servants, Craft Essences, skills and items come from, so the game and the launcher call
+everything what the English release calls it. **Fate/Grand Order Arcade is Sega's and TYPE-MOON's**;
+they own the game. This is a fan translation applied to files you already have, it is not sold, and
+it carries no game files of its own.
 
-`AssemblyName` stays `FGOLocalPlatform`: pack URIs in code and XAML are built from it, and the
-process name the diagnostics tooling looks for is still `FGOLocalPlatform`. Only the file is renamed.
-
-## Re-deriving from a new author release
-
-When the author ships a new `FGOLocalPlatform.dll`, the English build has to be re-derived rather
-than patched — his `FGOLocalPlatform.exe` is a self-contained single-file bundle that carries its own
-copy of the managed assembly and ignores the sibling DLL.
-
-1. Decompile the new assembly (ilspycmd 10.1, `C:\Users\user\.dotnet\tools\ilspycmd.exe`):
-
-   ```
-   ilspycmd -p --decompile-baml -o <newdir> <path>\FGOLocalPlatform.dll
-   ```
-
-2. Re-apply the fixes below, then diff `<newdir>` against `src\` to see what the author changed and
-   port the translation forward.
-
-### Compile fixes the decompile needs
-
-| # | File | Fix |
-| --- | --- | --- |
-| 1 | `FGOLocalPlatform.csproj` | `TargetFramework` `net6.0` -> `net6.0-windows` (`UseWPF` requires the Windows TFM) |
-| 2 | `FGOLocalPlatform.csproj` | add `ApplicationDefinition` for `app.xaml` and `Page` items for the other 12 XAML files; explicit `Compile` items with `EnableDefaultItems=false` |
-| 3 | `FGOLocalPlatform.csproj` | `platform.ico`, `aprilfoolfgofirsthassan.ico`, `assets\crying-emoji.png` from `EmbeddedResource` to `Resource` (they are addressed by pack URI, which reads `.g.resources`). The two JSON tables stay `EmbeddedResource` — they are read with `GetManifestResourceStream` |
-| 4 | XAML file names | `FGOLocalPlatform.MainWindow.xaml` -> `mainwindow.xaml`, and the same for the other 11: the resource key comes from the file path and the originals are `mainwindow.baml` etc. at the root |
-| 5 | `app.xaml` | add `StartupUri="MainWindow.xaml"`; the original sets it in the generated `App.InitializeComponent`, which the BAML decompiler does not reproduce |
-| 6 | `MainWindow.cs`, `ThemedMessageBox.cs` | 6 occurrences of `((Rect)(ref x)).Height` / `((Size)(ref x)).Width` reduced to `x.Height` / `x.Width` |
-| 7 | `MainWindow.cs` | remove the generated `_CreateDelegate` helper (PresentationBuildTasks regenerates it from `mainwindow.xaml`) |
-| 8 | `PhotoWindow.cs`, `MainWindow.cs` | `(val - 70 > 1 && val - 116 > 5) \|\| 1 == 0` -> `(uint)(val - 70) > 1u && (uint)(val - 116) > 5u`. Semantic fix: the original excludes `Key.LWin`/`Key.RWin` and the six modifier keys from key binding; the signed rendering rejects almost every key |
-| 9 | `MainWindow.cs` | remove the dead `int num; _ = num - 1; _ = 1;` |
-| 10 | `MainWindow.cs` | `new(string, double)[10]` -> `new (string Name, double Value)[10]`; the LINQ query below it addresses `item.Name` / `item.Value` |
-
-Expect about 165 `CS8632` warnings and zero errors.
-
-### Things the translation must not change
-
-- Every XAML `Tag` value, every `SelectedIndex` order, and the item order of any combo box whose
-  index is persisted (cursor mode, input mode, movement and controller-number selectors, the two
-  summon filters, photo-mode weapon mode and bone array).
-- Resolution captions: they are parsed back with `^\s*(\d{3,4})\s*[xX×]\s*(\d{3,4})\s*$`, so they
-  must stay in `1920x1080` form.
-- The JSON keys and field names of `FGOLocalPlatform.CardNames.json` (`SVT#####` / `CE#####`,
-  `Japanese` / `Chinese`) and `FGOLocalPlatform.CraftEffects.json` (`CE#####`, `Normal`,
-  `NormalJapanese`, `Maximum`, `MaximumJapanese`) — English goes into the existing `Chinese`,
-  `Normal` and `Maximum` fields.
-- Config keys and enum values shared with `FGO_Launcher.ps1` and the author's tooling
-  (`windowed` / `borderless` / `exclusive`, `keyboard` / `xinput`, `16:9`, the `graphics` block).
-- Interpolation holes in format strings, `StringFormat` placeholders, and the `|` in the
-  `OpenFileDialog` filter.
-
-## Publishing a release
-
-The launcher checks `https://api.github.com/repos/<owner>/<repo>/releases/latest` once per start and
-installs from the release's own assets, so a release has to carry both of them:
-
-1. Set the version in `src\FGOLocalPlatform.csproj` (`<Version>`). Nothing else holds a version
-   number: the About page and the updater read it from the assembly, and `package.ps1` reads it back
-   off the built launcher.
-2. `publish.cmd`, then `package.ps1`. That writes `D:\FGOA\release\FGOAC-scooby-v<ver>.zip` and
-   `FGOAC-scooby-v<ver>.zip.sha256` beside it.
-3. Tag the commit `v<ver>` (for example `v1.1.0`) and push the tag.
-4. Create the GitHub release on that tag and upload **both** files as assets: the
-   `FGOAC-scooby-v<ver>.zip` and its `.zip.sha256`. The updater looks for an asset whose name starts
-   with `FGOAC-scooby-v` and ends in `.zip`, and for the `.zip.sha256` beside it; a release missing
-   either one is logged in `logs\update.log` and skipped rather than half-installed.
-5. `src\FGOLocalPlatform\UpdateSettings.cs` holds the owner and repository the launcher asks. They
-   are placeholders (`githubuser420x` / `FGOAC-scooby`) until the repository exists.
-
-Updating a running launcher: the patch script cannot overwrite the executable that is running it, so
-it stages the new one as `FGOAC scooby.exe.new`. The launcher then writes `%TEMP%\update-swap.cmd`,
-which waits for it to close, moves the staged file into place and starts it again.
-
-## Assets that are not code
-
-- `src\platform.ico` is the game's own icon, icon group 0 of `App\ago.exe`, pulled out by
-  `src\assets\extract-icon.ps1`. It is the executable icon, the window icon and the mark in the top
-  bar. The game ships one 32x32 frame, so that is what the file holds.
-- The display typeface is the game's `App\rom\font\SEGA_Skip-B.ttf`, loaded from the install at
-  startup by `GameFont` and published as the `DisplayFont` resource. Nothing is bundled: if the file
-  is missing the resource keeps its Segoe UI fallback and the launcher still runs.
-
-## Overlay
-
-`overlay\` mirrors the install root. The release packager copies it over an existing V1.01 install
-after backing up what it replaces; the files under `D:\FGOA\App` and `D:\FGOA\Server` are left alone
-during development.
-
-| Overlay file | Why |
-| --- | --- |
-| `App\FGO_EnvironmentCheck.ps1` | its whole stdout is the environment-check panel |
-| `App\FGO_Launcher.ps1` | two lines reach the launcher log panel |
-| `App\FGO_StartupChecks.ps1` | one line reaches the startup failure dialog |
-| `Server\Start-FGOLocalServer.ps1` | three lines reach the server log panel |
-| `Server\Stop-FGOLocalServerWhenIdle.ps1` | also recognises `FGOAC scooby.exe` as a running front end |
-| `Server\tools\fgo_account.py` | every `message` it emits is shown verbatim by the account page |
-| `Server\tools\fgo_server_config.py` | port and address validation errors on the server page |
-| `Server\artemis\titles\fgo\data\summon_candidates.json` | the acquisition notes shown in the Draw Rates status line. The Japanese card names and quest titles in that file stay as they are — the column they feed is labelled Japanese Name |
-
-## The English patch
-
-`patch\Apply-EN-Patch.ps1` is what a player runs, and what the launcher runs for them on first
-start. It works against a release package laid out like this, which is also what unzipping the
-package into the game folder produces:
-
-```
-FGOAC scooby.exe
-Apply-EN-Patch.ps1
-manifest.json
-payload\App\zh\...
-payload\App\FGO_EnvironmentCheck.ps1
-payload\Server\...
-```
-
-`manifest.json` maps each install-relative path to its SHA-256, and carries the patch version and a
-`manifestHash` over the whole list. `patch\Build-Manifest.ps1 -PackageRoot <dir> -Version <v>` writes
-it from a staged package; `package.ps1` calls it, so the manifest always describes the bytes that
-ship.
-
-The apply run finds the install (its own folder, then the parent, then a scan of the fixed drives,
-then a folder picker), refuses drive E: and Y:, refuses to run while the game or a launcher is open
-from that folder, backs up every file it replaces to `_en-patch-backup\<timestamp>\`, copies, checks
-the copies against the manifest, sets `chineseEnabled` in `App\fgo-launcher.json` and writes
-`App\zh\en-patch.json` with the version and the manifest hash. A second run with the same manifest
-does nothing. `-Rollback` restores the newest backup, using the `en-patch-restore.json` written
-beside it to also remove the files the patch added. Exit codes are listed at the top of the script.
-
-Accounts, decks, `Server\state`, the database and the rest of `App\fgo-launcher.json` are never
-written; `Apply-EN-Patch.ps1` refuses a manifest that lists a path under any of them.
+Released under the [MIT licence](LICENSE).
