@@ -1,7 +1,7 @@
 ﻿# FGOAC scooby - Player Guide
 
 FGOAC scooby is an English fan patch and launcher for the FGO Arcade local platform (Cloud23333's
-V1.01 package). This guide covers install, first run, how to get Servants without the summon, controls,
+V1.01 package). This guide covers install, first run, how to get Servants, controls,
 and troubleshooting.
 
 ## What this is
@@ -49,19 +49,19 @@ The launcher has five pages:
   codes), mouse cursor, debug, photo mode, and About (credits, including Cloud23333's original
   FGOLocalPlatform).
 
-## Getting Servants without the summon
+## Getting Servants
 
-The in-game summon screen does not draw cards - it has nothing to connect to. Servants and Craft
-Essences come from the launcher instead:
+The in-game summon works: it draws from the local server's card pool with the weights set on the
+launcher's Draw Rates page, one credit per pull, and the platform gives you free credits. You do not
+need it for a full roster, though - the launcher can grant everything at once:
 
 - **Account page**: select an account and use One-Click Inventory and Growth to grant a full set of
   Servants, Craft Essences, levels, bond, costumes, and clear rewards at once.
 - **Cards and Deck page**: build a deck from the full card library. Drag a card into the deck to add
   one copy, or double-click it to choose its art and how many copies; drag a deck card to reorder it,
   or back into the library to remove it. The deck is published to the game every time you press Play.
-- **Draw Rates page**: this only sets the weight the local server uses if a card is drawn through the
-  in-game summon screen - it does not grant anything by itself. Since the summon screen does not draw,
-  this page has no practical effect unless you are testing the server's own summon logic.
+- **Draw Rates page**: sets the weight the local server gives each card when the in-game summon draws.
+  It does not grant anything by itself.
 
 ## Playing
 
@@ -112,7 +112,6 @@ The local server restores two in-game shops:
 - No online play or matchmaking - everything runs against the local server.
 - No co-op events - the co-op banners and co-op result screens stay Japanese; this is artwork, not
   text, and the rest of the game is unaffected.
-- The in-game summon does not draw cards (see "Getting Servants without the summon" above).
 
 ## Troubleshooting
 

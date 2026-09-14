@@ -58,9 +58,9 @@ summon, controls, a sortie step by step, the exchange shops and troubleshooting.
 
 - **No online play.** Everything runs against the local server; there is no matchmaking, and no
   official service left to connect to.
-- **The in-game summon does not draw cards.** Servants come from the launcher instead - the Account
-  page grants a full roster in one click, and the card library holds all 1,384 cards. The Draw Rates
-  page only sets the weights the local server would use; it does not pull anything by itself.
+- **The in-game summon works** - it draws from the local server's pool with the weights from the Draw
+  Rates page - but you do not need it: the Account page grants a full roster in one click, and the
+  card library holds all 1,384 cards.
 - **A few event screens are still Japanese** - the co-op event banners, the co-op result screens and
   the event shops from 0029 on. They are artwork rather than text, and nothing else is affected.
 

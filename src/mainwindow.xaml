@@ -289,7 +289,7 @@
                     <ColumnDefinition Width="*" />
                   </Grid.ColumnDefinitions>
                   <TextBlock Text="2" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource IceBrush}" />
-                  <TextBlock Grid.Column="1" FontSize="14" LineHeight="20" TextWrapping="Wrap" Foreground="{StaticResource TextBrush}" Text="Go to Cards and Deck and choose up to 30 cards. The deck is sent to the game when you press Play." />
+                  <TextBlock Grid.Column="1" FontSize="14" LineHeight="20" TextWrapping="Wrap" Foreground="{StaticResource TextBrush}" Text="Go to Cards and Deck and pick up to 30 cards. They load into the game on Play." />
                 </Grid>
                 <Grid Height="30">
                   <Grid.ColumnDefinitions>
