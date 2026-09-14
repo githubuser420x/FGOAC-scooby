@@ -112,7 +112,9 @@ try {
     $zipPath = [IO.Path]::Combine($OutputRoot, "$packageName.zip")
     if ([IO.File]::Exists($zipPath)) { [IO.File]::Delete($zipPath) }
     Write-Host "Zipping to $zipPath - this takes a few minutes"
-    [IO.Compression.ZipFile]::CreateFromDirectory($packageRoot, $zipPath, [IO.Compression.CompressionLevel]::Optimal, $true)
+    # No base directory in the zip: the package is meant to be extracted straight into the game
+    # folder, so its files have to land beside App and Server rather than in a subfolder.
+    [IO.Compression.ZipFile]::CreateFromDirectory($packageRoot, $zipPath, [IO.Compression.CompressionLevel]::Optimal, $false)
     $zipHash = (Get-FileHash -LiteralPath $zipPath -Algorithm SHA256).Hash.ToLowerInvariant()
     [IO.File]::WriteAllText("$zipPath.sha256", "$zipHash *$packageName.zip" + [Environment]::NewLine, [Text.UTF8Encoding]::new($false))
     Write-Host "Zip: $zipPath"
