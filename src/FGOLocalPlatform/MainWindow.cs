@@ -2071,6 +2071,32 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		ThemedMessageBox.Show("The local server is running, so this account operation cannot run.\nClick Stop Server at the top, then try again.", "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 	}
 
+	/// <summary>The account tool must not touch the save while the game is up; warns and says whether it is.</summary>
+	private bool GameBlocksAccountAction()
+	{
+		if (Process.GetProcessesByName("ago").Length == 0)
+		{
+			return false;
+		}
+		lastKnownGameRunning = true;
+		SetAccountControlsEnabled(enabled: true);
+		ShowGameRunningAccountWarning();
+		return true;
+	}
+
+	/// <summary>The account tool refuses to run while the local server is up; warns and says whether it is.</summary>
+	private async Task<bool> ServerBlocksAccountActionAsync()
+	{
+		if (await IsPortOpenAsync(ServerSettingsView.ConfiguredPorts()[0]))
+		{
+			lastKnownServerRunning = true;
+			ShowServerRunningAccountWarning();
+			return true;
+		}
+		lastKnownServerRunning = false;
+		return false;
+	}
+
 	private static void ShowGameRunningAccountWarning()
 	{
 		ThemedMessageBox.Show("The game is running, so accounts cannot be switched, created, deleted, reset or repaired.\nEnd the current game session first, so the access code still matches the save that is logged in.", "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Exclamation);
@@ -2107,20 +2133,14 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 
 	private async void UseAccountButton_OnClick(object sender, RoutedEventArgs e)
 	{
-		if (Process.GetProcessesByName("ago").Length != 0)
+		if (GameBlocksAccountAction())
 		{
-			lastKnownGameRunning = true;
-			SetAccountControlsEnabled(enabled: true);
-			ShowGameRunningAccountWarning();
 			return;
 		}
-		if (await IsPortOpenAsync(ServerSettingsView.ConfiguredPorts()[0]))
+		if (await ServerBlocksAccountActionAsync())
 		{
-			lastKnownServerRunning = true;
-			ShowServerRunningAccountWarning();
 			return;
 		}
-		lastKnownServerRunning = false;
 		AccountEntry account = SelectedAccount;
 		if (account == null)
 		{
@@ -2141,20 +2161,14 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 
 	private async void CreateAccountButton_OnClick(object sender, RoutedEventArgs e)
 	{
-		if (Process.GetProcessesByName("ago").Length != 0)
+		if (GameBlocksAccountAction())
 		{
-			lastKnownGameRunning = true;
-			SetAccountControlsEnabled(enabled: true);
-			ShowGameRunningAccountWarning();
 			return;
 		}
-		if (await IsPortOpenAsync(ServerSettingsView.ConfiguredPorts()[0]))
+		if (await ServerBlocksAccountActionAsync())
 		{
-			lastKnownServerRunning = true;
-			ShowServerRunningAccountWarning();
 			return;
 		}
-		lastKnownServerRunning = false;
 		NewAccountDialog newAccountDialog = new NewAccountDialog
 		{
 			Owner = this
@@ -2192,11 +2206,8 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 
 	private async void DeleteAccountButton_OnClick(object sender, RoutedEventArgs e)
 	{
-		if (Process.GetProcessesByName("ago").Length != 0)
+		if (GameBlocksAccountAction())
 		{
-			lastKnownGameRunning = true;
-			SetAccountControlsEnabled(enabled: true);
-			ShowGameRunningAccountWarning();
 			return;
 		}
 		AccountEntry account = SelectedAccount;
@@ -2205,13 +2216,10 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			ThemedMessageBox.Show("Pick the account to delete in the Select drop-down first.", "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 			return;
 		}
-		if (await IsPortOpenAsync(ServerSettingsView.ConfiguredPorts()[0]))
+		if (await ServerBlocksAccountActionAsync())
 		{
-			lastKnownServerRunning = true;
-			ShowServerRunningAccountWarning();
 			return;
 		}
-		lastKnownServerRunning = false;
 		string text = (account.IsCurrent ? "\n\nThis is the current account. After it is deleted the launcher switches to a remaining account; if none are left the current access code is cleared." : "");
 		if (ThemedMessageBox.Show($"Permanently delete the account {account.MasterName} (Aime ID {account.AimeId})?\n\nMaster level: Lv.{account.MasterLevel}\nPrinted cards: {account.OwnedCardCount} unique / {account.OwnedCardCopyCount} copies\nQuests cleared: {account.ClearedQuestCount}\n\n" + "The save data, the Aime database identity, the card mapping and any leftover account backups are deleted permanently, and no recoverable copy is kept." + text, "Confirm Account Deletion", MessageBoxButton.YesNo, MessageBoxImage.Exclamation, MessageBoxResult.No) != MessageBoxResult.Yes)
 		{
@@ -2281,11 +2289,8 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 
 	private async void ResetAccountButton_OnClick(object sender, RoutedEventArgs e)
 	{
-		if (Process.GetProcessesByName("ago").Length != 0)
+		if (GameBlocksAccountAction())
 		{
-			lastKnownGameRunning = true;
-			SetAccountControlsEnabled(enabled: true);
-			ShowGameRunningAccountWarning();
 			return;
 		}
 		AccountEntry account = SelectedAccount;
@@ -2294,13 +2299,10 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			ThemedMessageBox.Show("Pick the account to reset in the Select drop-down first.", "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 			return;
 		}
-		if (await IsPortOpenAsync(ServerSettingsView.ConfiguredPorts()[0]))
+		if (await ServerBlocksAccountActionAsync())
 		{
-			lastKnownServerRunning = true;
-			ShowServerRunningAccountWarning();
 			return;
 		}
-		lastKnownServerRunning = false;
 		if (ThemedMessageBox.Show($"Reset the account {account.MasterName} (ID {account.AimeId}) to a brand new normal account?\n\nThis clears owned Servants, points, items, print history and all game progress. Resetting the current account also clears the sortie deck, and it cannot be undone.", "FGOAC scooby", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) != MessageBoxResult.Yes)
 		{
 			return;
@@ -2327,11 +2329,8 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 
 	private async void RepairAccountButton_OnClick(object sender, RoutedEventArgs e)
 	{
-		if (Process.GetProcessesByName("ago").Length != 0)
+		if (GameBlocksAccountAction())
 		{
-			lastKnownGameRunning = true;
-			SetAccountControlsEnabled(enabled: true);
-			ShowGameRunningAccountWarning();
 			return;
 		}
 		AccountEntry account = SelectedAccount;
@@ -2340,13 +2339,10 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			ThemedMessageBox.Show("Pick the account to repair first.", "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 			return;
 		}
-		if (await IsPortOpenAsync(ServerSettingsView.ConfiguredPorts()[0]))
+		if (await ServerBlocksAccountActionAsync())
 		{
-			lastKnownServerRunning = true;
-			ShowServerRunningAccountWarning();
 			return;
 		}
-		lastKnownServerRunning = false;
 		if (ThemedMessageBox.Show("This rebuilds the EXP, materials, Bond and quest progress of the account " + account.MasterName + " from the recorded cabinet traffic.\n\nThe account files are backed up first. Continue?", "FGOAC scooby", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
 		{
 			return;
