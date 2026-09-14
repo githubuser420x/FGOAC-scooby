@@ -2,8 +2,7 @@
 
 How the launcher is built, where its parts come from, and what must not be changed when the
 translation is carried forward. `README.md` is the player-facing document; this is the one for
-working on the code. `DESIGN.md` is the plan the interface is built from and `HISTORY.md` is the
-log of what was done.
+working on the code. `DESIGN.md` is the plan the interface is built from.
 
 `src\` is a decompile of the platform's managed front end (`FGOLocalPlatform`, V1.01, by
 Cloud23333) with the compile fixes listed below applied and the user-facing strings translated.
@@ -115,8 +114,8 @@ installs from the release's own assets, so a release has to carry both of them:
    `FGOAC-scooby-v<ver>.zip` and its `.zip.sha256`. The updater looks for an asset whose name starts
    with `FGOAC-scooby-v` and ends in `.zip`, and for the `.zip.sha256` beside it; a release missing
    either one is logged in `logs\update.log` and skipped rather than half-installed.
-5. `src\FGOLocalPlatform\UpdateSettings.cs` holds the owner and repository the launcher asks. They
-   are placeholders (`githubuser420x` / `FGOAC-scooby`) until the repository exists.
+5. `src\FGOLocalPlatform\UpdateSettings.cs` holds the owner and repository the launcher asks
+   (`githubuser420x` / `FGOAC-scooby`).
 
 Updating a running launcher: the patch script cannot overwrite the executable that is running it, so
 it stages the new one as `FGOAC scooby.exe.new`. The launcher then writes `%TEMP%\update-swap.cmd`,
