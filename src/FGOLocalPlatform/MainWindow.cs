@@ -418,6 +418,8 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 
 	private bool accountToolRunning;
 
+	private bool firstRunning;
+
 	private bool lastKnownServerRunning;
 
 	private bool lastKnownGameRunning;
@@ -501,7 +503,43 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			await RefreshRuntimeStatusAsync();
 			await RefreshLogPanelsAsync();
 			await RefreshAccountsAsync(showErrors: false);
+			await RunFirstRunAsync();
 		};
+	}
+
+	private async Task RunFirstRunAsync()
+	{
+		firstRunning = true;
+		accountToolRunning = true;
+		SetAccountControlsEnabled(enabled: false);
+		try
+		{
+			FirstRun firstRun = new FirstRun(this, async (string[] arguments) =>
+			{
+				AccountToolResult accountToolResult = await RunAccountToolAsync(arguments);
+				return new FirstRun.ToolResult(accountToolResult.Ok, string.IsNullOrWhiteSpace(accountToolResult.Message) ? accountToolResult.Error : accountToolResult.Message, accountToolResult.Root);
+			}, delegate(string message)
+			{
+				RuntimeStatusText.Text = message;
+			}, AppendAccountLog);
+			if (await firstRun.RunAsync())
+			{
+				LoadLauncherSettings();
+				await RefreshAccountsAsync(showErrors: false);
+			}
+		}
+		catch (Exception ex)
+		{
+			AppendAccountLog("First-run setup error: " + ex.Message);
+			ThemedMessageBox.Show(this, "The first-run setup did not finish:\n" + ex.Message + "\n\nYou can still set everything up by hand from the Account and Settings pages.", "FGOA scooby - First Run", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+		}
+		finally
+		{
+			firstRunning = false;
+			accountToolRunning = false;
+			SetAccountControlsEnabled(enabled: true);
+			await RefreshRuntimeStatusAsync();
+		}
 	}
 
 	private async void MainWindow_OnClosing(object? sender, CancelEventArgs e)
@@ -949,11 +987,11 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			int[] configuredPorts = ServerSettingsView.ConfiguredPorts().Take(3).ToArray();
 			bool[] source = await Task.WhenAll(configuredPorts.Select(IsPortOpenAsync));
 			string text = (source.All((bool value) => value) ? ("Server " + string.Join('/', configuredPorts) + " OK") : ("Server ports " + string.Join('/', source.Select((bool value) => (!value) ? "down" : "up"))));
-			if (!serverConfiguring && !stoppingServer && !windowClosing)
+			if (!serverConfiguring && !stoppingServer && !windowClosing && !firstRunning)
 			{
 				RuntimeStatusText.Text = text + " - Game " + (gameRunning ? "running" : "not running");
 			}
-			StartGameButton.IsEnabled = !gameRunning && !launcherProcessRunning && !serverConfiguring && !stoppingServer && !windowClosing;
+			StartGameButton.IsEnabled = !gameRunning && !launcherProcessRunning && !serverConfiguring && !stoppingServer && !windowClosing && !firstRunning;
 			StopGameButton.IsEnabled = gameRunning || launcherProcessRunning;
 			SetAccountControlsEnabled(!accountToolRunning);
 		}

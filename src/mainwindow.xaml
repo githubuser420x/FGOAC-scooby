@@ -250,11 +250,10 @@
                   </StackPanel>
                 </Border>
                 <TextBlock Text="First time here" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,10" />
-                <TextBlock TextWrapping="Wrap" Foreground="#D7BBDD" Margin="0,0,0,7" Text="1. Open Account and click New Account, then Use Selected Account. The server has to be stopped to create an account, so click Stop Server first if it is running." />
-                <TextBlock TextWrapping="Wrap" Foreground="#D7BBDD" Margin="0,0,0,7" Text="2. Still on Account, use One-Click Inventory and Growth to give yourself Servants and Craft Essences. The in-game summon does not work offline, so this and the deck editor are how you get cards." />
-                <TextBlock TextWrapping="Wrap" Foreground="#D7BBDD" Margin="0,0,0,7" Text="3. Open Cards and Deck and pick up to 30 cards. The deck is what the cabinet card reader hands to the game, and it is published again every time you press Play." />
-                <TextBlock TextWrapping="Wrap" Foreground="#D7BBDD" Margin="0,0,0,7" Text="4. Check Settings for your monitor, resolution and controls. Windowed 1280x720 on the primary monitor is a safe starting point." />
-                <TextBlock TextWrapping="Wrap" Foreground="#D7BBDD" Margin="0,0,0,7" Text="5. Press Play. The server starts by itself if it is not already running, and the game takes about a minute to reach the title screen." />
+                <TextBlock TextWrapping="Wrap" Foreground="#D7BBDD" Margin="0,0,0,7" Text="1. Your account is ready. The first start creates the account Master with the full Servant and Craft Essence roster and selects it, because the in-game summon does not work offline. Account is where you see it, rename the Master, or add another one - the server has to be stopped to create an account." />
+                <TextBlock TextWrapping="Wrap" Foreground="#D7BBDD" Margin="0,0,0,7" Text="2. Open Cards and Deck and pick up to 30 cards. The deck is what the cabinet card reader hands to the game, and it is published again every time you press Play." />
+                <TextBlock TextWrapping="Wrap" Foreground="#D7BBDD" Margin="0,0,0,7" Text="3. Check Settings for your monitor, resolution and controls. The first start picks windowed 1280x720 on your main monitor with keyboard controls, and never changes a setting you have chosen yourself." />
+                <TextBlock TextWrapping="Wrap" Foreground="#D7BBDD" Margin="0,0,0,7" Text="4. Press Play. The server starts by itself if it is not already running, and the game takes about a minute to reach the title screen." />
                 <TextBlock TextWrapping="Wrap" Foreground="#BFB5C2" Margin="0,14,0,0" Text="The game has to run as administrator, so Windows asks for permission once. If something goes wrong, Advanced has Diagnostics and Help with the error codes and their fixes." />
               </StackPanel>
             </ScrollViewer>
