@@ -1,0 +1,706 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="FGOLocalPlatform.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:kancolle="clr-namespace:DeckReaderUI.Kancolle" xmlns:local="clr-namespace:FGOLocalPlatform" xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework" Title="" Icon="AprilFoolFGOFirstHassan.ico" Width="1540" Height="900" MinWidth="1180" MinHeight="720" WindowStyle="None" ResizeMode="CanResize" Background="#050506" Foreground="#FFFFFFFF" FontFamily="Microsoft YaHei UI, Segoe UI" FontSize="14" Closing="MainWindow_OnClosing">
+  <shell:WindowChrome.WindowChrome>
+    <shell:WindowChrome CaptionHeight="32" ResizeBorderThickness="7" GlassFrameThickness="0" CornerRadius="0" UseAeroCaptionButtons="False" />
+  </shell:WindowChrome.WindowChrome>
+  <FrameworkElement.Resources>
+    <ResourceDictionary>
+      <Style x:Key="CardFormMenuItemStyle" TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}" />
+      <Style x:Key="CaptionButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Width" Value="44" />
+        <Setter Property="Height" Value="31" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="#00FFFFFF" />
+        <Setter Property="BorderBrush" Value="#00FFFFFF" />
+        <Setter Property="BorderThickness" Value="0,0,0,2" />
+        <Setter Property="Foreground" Value="#DCD5DF" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="FrameworkElement.Cursor" Value="Arrow" />
+        <Setter Property="UIElement.SnapsToDevicePixels" Value="True" />
+        <Setter Property="FrameworkElement.UseLayoutRounding" Value="True" />
+        <Setter Property="shell:WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+        <Setter Property="Template">
+          <Setter.Value>
+            <ControlTemplate TargetType="{x:Type Button}">
+              <Border Name="CaptionSurface" Background="{TemplateBinding Control.Background}" BorderBrush="{TemplateBinding Control.BorderBrush}" BorderThickness="{TemplateBinding Control.BorderThickness}" SnapsToDevicePixels="True">
+                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" SnapsToDevicePixels="True" />
+              </Border>
+              <ControlTemplate.Triggers>
+                <Trigger Property="UIElement.IsMouseOver" Value="True">
+                  <Setter TargetName="CaptionSurface" Property="Border.Background" Value="#251B27" />
+                  <Setter TargetName="CaptionSurface" Property="Border.BorderBrush" Value="#C764B3" />
+                  <Setter Property="Foreground" Value="#FFFFFF" />
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                  <Setter TargetName="CaptionSurface" Property="Border.Background" Value="#4A1D46" />
+                  <Setter TargetName="CaptionSurface" Property="Border.BorderBrush" Value="#F08ADA" />
+                  <Setter Property="Foreground" Value="#FFFFFF" />
+                </Trigger>
+              </ControlTemplate.Triggers>
+            </ControlTemplate>
+          </Setter.Value>
+        </Setter>
+      </Style>
+      <Style x:Key="CloseCaptionButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource CaptionButtonStyle}">
+        <Setter Property="Foreground" Value="#DCD5DF" />
+      </Style>
+      <Style x:Key="PanelSplitterStyle" TargetType="{x:Type GridSplitter}">
+        <Setter Property="Background" Value="#151119" />
+        <Setter Property="GridSplitter.ShowsPreview" Value="True" />
+        <Setter Property="UIElement.SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+          <Setter.Value>
+            <ControlTemplate TargetType="{x:Type GridSplitter}">
+              <Grid Background="{TemplateBinding Control.Background}">
+                <Border Name="Grip" Background="#4A1D46" Opacity="0.7" HorizontalAlignment="Center" VerticalAlignment="Center" Width="2" Height="30" />
+              </Grid>
+              <ControlTemplate.Triggers>
+                <Trigger Property="UIElement.IsMouseOver" Value="True">
+                  <Setter TargetName="Grip" Property="Border.Background" Value="#B45A9F" />
+                  <Setter TargetName="Grip" Property="UIElement.Opacity" Value="1" />
+                </Trigger>
+              </ControlTemplate.Triggers>
+            </ControlTemplate>
+          </Setter.Value>
+        </Setter>
+      </Style>
+      <Style x:Key="HorizontalPanelSplitterStyle" TargetType="{x:Type GridSplitter}" BasedOn="{StaticResource PanelSplitterStyle}">
+        <Setter Property="Template">
+          <Setter.Value>
+            <ControlTemplate TargetType="{x:Type GridSplitter}">
+              <Grid Background="{TemplateBinding Control.Background}">
+                <Border Name="Grip" Background="#4A1D46" Opacity="0.7" HorizontalAlignment="Center" VerticalAlignment="Center" Width="30" Height="2" />
+              </Grid>
+              <ControlTemplate.Triggers>
+                <Trigger Property="UIElement.IsMouseOver" Value="True">
+                  <Setter TargetName="Grip" Property="Border.Background" Value="#B45A9F" />
+                  <Setter TargetName="Grip" Property="UIElement.Opacity" Value="1" />
+                </Trigger>
+              </ControlTemplate.Triggers>
+            </ControlTemplate>
+          </Setter.Value>
+        </Setter>
+      </Style>
+      <DataTemplate x:Key="CardIconRowTemplate">
+        <ItemsControl HorizontalAlignment="Left" ItemsSource="{Binding Cards}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel Orientation="Horizontal" />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:Key="{DataTemplateKey {x:Type local:CardStack}}" DataType="{x:Type local:CardStack}">
+              <Button Width="144" Height="188" Margin="0" Padding="0" Background="#00FFFFFF" BorderBrush="#00FFFFFF" BorderThickness="0" HorizontalContentAlignment="Stretch" Tag="{Binding}" Click="IconCardButton_OnClick" MouseDoubleClick="IconCardButton_OnMouseDoubleClick">
+                <Grid Margin="2" Width="140" Height="184">
+                  <Grid.RowDefinitions>
+                    <RowDefinition Height="126" />
+                    <RowDefinition Height="58" />
+                  </Grid.RowDefinitions>
+                  <Border Background="#050506" BorderBrush="#493E4F" BorderThickness="1" Padding="3">
+                    <Image Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Thumbnail}" />
+                  </Border>
+                  <Border Grid.Row="1" Background="#E8121016" BorderBrush="#6B245E" BorderThickness="1,0,1,1" Padding="5,2">
+                    <StackPanel VerticalAlignment="Center">
+                      <Viewbox Height="17" Stretch="Uniform" StretchDirection="DownOnly">
+                        <TextBlock TextAlignment="Center" Foreground="#FFFFFFFF" FontSize="11" Text="{Binding JapaneseName}" />
+                      </Viewbox>
+                      <Viewbox Height="17" Stretch="Uniform" StretchDirection="DownOnly">
+                        <TextBlock TextAlignment="Center" Foreground="#D7BBDD" FontSize="11" ToolTip="中文参考译名，含机器翻译" Text="{Binding ChineseName}" />
+                      </Viewbox>
+                      <Viewbox Height="16" Stretch="Uniform" StretchDirection="DownOnly">
+                        <TextBlock TextAlignment="Center" Foreground="#BFB5C2" FontSize="10" Text="{Binding EntityLabel}" />
+                      </Viewbox>
+                    </StackPanel>
+                  </Border>
+                </Grid>
+              </Button>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </DataTemplate>
+    </ResourceDictionary>
+  </FrameworkElement.Resources>
+  <Border Background="#050506" BorderBrush="#29232D" BorderThickness="1">
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="32" />
+        <RowDefinition Height="72" />
+        <RowDefinition Height="*" />
+        <RowDefinition Height="38" />
+      </Grid.RowDefinitions>
+      <Border Grid.Row="0" Background="#0C0A0E" BorderBrush="#2C2530" BorderThickness="0,0,0,1" MouseLeftButtonDown="TitleBar_OnMouseLeftButtonDown">
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0">
+            <Image Source="AprilFoolFGOFirstHassan.ico" Width="18" Height="18" Margin="0,0,8,0" />
+            <TextBlock Name="HeaderBrandText" Foreground="#B9B0BC" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" />
+          </StackPanel>
+          <StackPanel Grid.Column="1" Orientation="Horizontal">
+            <Button Style="{StaticResource CaptionButtonStyle}" ToolTip="最小化" Click="MinimizeButton_OnClick">
+              <Path Width="12" Height="12" Stretch="None" Data="M1,8 L11,8" StrokeThickness="1.5" SnapsToDevicePixels="True" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+            </Button>
+            <Button Style="{StaticResource CaptionButtonStyle}" ToolTip="最大化 / 还原" Click="MaximizeButton_OnClick">
+              <Rectangle Width="10" Height="10" StrokeThickness="1.25" SnapsToDevicePixels="True" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+            </Button>
+            <Button Style="{StaticResource CloseCaptionButtonStyle}" ToolTip="关闭" Click="CloseButton_OnClick">
+              <Path Width="12" Height="12" Stretch="None" Data="M1.5,1.5 L10.5,10.5 M10.5,1.5 L1.5,10.5" StrokeThickness="1.5" StrokeStartLineCap="Square" StrokeEndLineCap="Square" SnapsToDevicePixels="True" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
+            </Button>
+          </StackPanel>
+        </Grid>
+      </Border>
+      <Border Grid.Row="1" Background="#050506" BorderBrush="#34283A" BorderThickness="0,0,0,1">
+        <Grid ClipToBounds="True">
+          <Canvas IsHitTestVisible="False">
+            <Polygon Points="0,0 350,0 320,72 0,72" Fill="#F4F1F5" />
+          </Canvas>
+          <Grid Margin="24,0,16,0">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="340" />
+              <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel VerticalAlignment="Center">
+              <StackPanel Orientation="Horizontal">
+                <TextBlock Text="FGO" FontSize="30" FontWeight="Black" Foreground="#080709" />
+                <TextBlock Text=" / LOCAL" FontSize="18" FontWeight="Light" Foreground="#6B245E" Margin="8,9,0,0" />
+              </StackPanel>
+              <TextBlock Text="ARCADE 11.00 · DECK / SERVER / DISPLAY" Foreground="#413843" FontSize="11" FontWeight="SemiBold" />
+            </StackPanel>
+            <DockPanel Grid.Column="1" VerticalAlignment="Center" Margin="8,0,0,0">
+              <ToggleButton Name="ChineseEnabledCheckBox" VerticalAlignment="Stretch" Margin="3,3,10,3" MinWidth="110" ToolTip="点击开启或关闭中文；下次启动游戏生效。">
+                <FrameworkElement.Style>
+                  <Style TargetType="{x:Type ToggleButton}">
+                    <Setter Property="Content" Value="使用中文 · 关" />
+                    <Setter Property="Foreground" Value="#FFFFFFFF" />
+                    <Setter Property="Background" Value="#17131B" />
+                    <Setter Property="BorderBrush" Value="#3E3343" />
+                    <Setter Property="BorderThickness" Value="1" />
+                    <Setter Property="Padding" Value="10,6" />
+                    <Setter Property="FontWeight" Value="SemiBold" />
+                    <Setter Property="Template">
+                      <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                          <Border Background="{TemplateBinding Control.Background}" BorderBrush="{TemplateBinding Control.BorderBrush}" BorderThickness="{TemplateBinding Control.BorderThickness}" Padding="{TemplateBinding Control.Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                          </Border>
+                        </ControlTemplate>
+                      </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                      <Trigger Property="ToggleButton.IsChecked" Value="True">
+                        <Setter Property="Content" Value="使用中文 · 开" />
+                        <Setter Property="Background" Value="#5A1D50" />
+                        <Setter Property="BorderBrush" Value="#A85B9B" />
+                      </Trigger>
+                      <Trigger Property="UIElement.IsMouseOver" Value="True">
+                        <Setter Property="BorderBrush" Value="#ED9BDC" />
+                      </Trigger>
+                      <Trigger Property="UIElement.IsKeyboardFocused" Value="True">
+                        <Setter Property="BorderBrush" Value="#ED9BDC" />
+                      </Trigger>
+                      <Trigger Property="IsPressed" Value="True">
+                        <Setter Property="Background" Value="#78336C" />
+                      </Trigger>
+                    </Style.Triggers>
+                  </Style>
+                </FrameworkElement.Style>
+              </ToggleButton>
+              <UniformGrid Rows="1">
+                <Button Content="服务器启动 / 检查" Click="StartServerButton_OnClick" />
+                <Button Content="服务器停止" Click="StopServerButton_OnClick" />
+                <Button Content="日志目录" Click="OpenLogsButton_OnClick" />
+                <Button Name="StopGameButton" Content="停止游戏" IsEnabled="False" Background="#35141E" BorderBrush="#713044" Click="StopGameButton_OnClick" />
+                <Button Name="StartGameButton" Content="启动游戏" FontSize="15" Background="#5A1D50" BorderBrush="#A85B9B" Click="StartGameButton_OnClick" />
+              </UniformGrid>
+            </DockPanel>
+          </Grid>
+        </Grid>
+      </Border>
+      <Grid Row="2" Margin="10">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Name="WorkspaceColumn" Width="*" MinWidth="650" />
+          <ColumnDefinition Name="LogSplitterColumn" Width="7" />
+          <ColumnDefinition Name="LogPanelColumn" Width="440" MinWidth="310" />
+        </Grid.ColumnDefinitions>
+        <TabControl Grid.Column="0" Background="#101014" BorderBrush="#403545">
+          <TabItem Header="卡组">
+            <Grid>
+              <Grid.RowDefinitions>
+                <RowDefinition Name="SettingsPanelRow" Height="52" MinHeight="48" />
+                <RowDefinition Height="7" />
+                <RowDefinition Name="CardBrowserRow" Height="*" MinHeight="240" />
+                <RowDefinition Height="7" />
+                <RowDefinition Name="DeckPanelRow" Height="195" MinHeight="195" />
+              </Grid.RowDefinitions>
+              <Border Grid.Row="0" Background="{StaticResource PanelBrush}" BorderBrush="#403545" BorderThickness="1">
+                <Grid Margin="8">
+                  <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                  </Grid.RowDefinitions>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                  </Grid.ColumnDefinitions>
+                  <TextBlock Grid.Row="0" Grid.Column="0" Text="卡片目录" Foreground="#A84F96" VerticalAlignment="Center" Margin="3" FontWeight="Bold" />
+                  <TextBox Name="CardsPathTextBox" Grid.Row="0" Grid.Column="1" VerticalContentAlignment="Center" KeyDown="CardsPathTextBox_OnKeyDown" />
+                  <Button Grid.Row="0" Grid.Column="2" Content="载入" ToolTip="重新读取卡片目录" Click="ReloadButton_OnClick" />
+                </Grid>
+              </Border>
+              <GridSplitter Grid.Row="1" Style="{StaticResource HorizontalPanelSplitterStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ResizeDirection="Rows" ResizeBehavior="PreviousAndNext" />
+              <Grid Row="2">
+                <Grid.RowDefinitions>
+                  <RowDefinition Height="Auto" />
+                  <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Name="CardListColumn" Width="*" MinWidth="360" />
+                </Grid.ColumnDefinitions>
+                <Border Grid.Row="0" Grid.Column="0" Background="#18131B" BorderBrush="#4A1D46" BorderThickness="1" Padding="7,3">
+                  <StackPanel>
+                    <DockPanel Margin="4,3,4,7" LastChildFill="False">
+                      <TextBlock Text="选择从者 / 礼装 · 双击选择卡片类型与数量" Foreground="#B45A9F" FontWeight="Bold" VerticalAlignment="Center" />
+                    </DockPanel>
+                    <DockPanel LastChildFill="True">
+                      <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="种类" Foreground="#BFB5C2" VerticalAlignment="Center" />
+                        <ComboBox Name="CardTypeComboBox" Width="120" SelectedIndex="0" ToolTip="将从者卡和概念礼装卡分开显示">
+                          <ComboBoxItem Content="全部卡片" Tag="0" />
+                          <ComboBoxItem Content="从者卡" Tag="1" />
+                          <ComboBoxItem Content="概念礼装" Tag="2" />
+                        </ComboBox>
+                        <ToggleButton Name="OwnedCardsOnlyCheckBox" IsEnabled="False" VerticalAlignment="Center" Margin="8,3,3,3" ToolTip="仅显示本账号已打印入库的卡片，不包含待打印结果。" Checked="OwnedCardsOnlyCheckBox_OnChanged" Unchecked="OwnedCardsOnlyCheckBox_OnChanged">
+                          <FrameworkElement.Style>
+                            <Style TargetType="{x:Type ToggleButton}">
+                              <Setter Property="Content" Value="仅本账号已入库 · 关" />
+                              <Setter Property="Foreground" Value="#FFFFFFFF" />
+                              <Setter Property="Background" Value="#17131B" />
+                              <Setter Property="BorderBrush" Value="#3E3343" />
+                              <Setter Property="Padding" Value="9,3" />
+                              <Setter Property="FontWeight" Value="SemiBold" />
+                              <Setter Property="Template">
+                                <Setter.Value>
+                                  <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                    <Border Background="{TemplateBinding Control.Background}" BorderBrush="{TemplateBinding Control.BorderBrush}" BorderThickness="1" Padding="{TemplateBinding Control.Padding}">
+                                      <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                  </ControlTemplate>
+                                </Setter.Value>
+                              </Setter>
+                              <Style.Triggers>
+                                <Trigger Property="ToggleButton.IsChecked" Value="True">
+                                  <Setter Property="Content" Value="仅本账号已入库 · 开" />
+                                  <Setter Property="Background" Value="#5A1D50" />
+                                  <Setter Property="BorderBrush" Value="#A85B9B" />
+                                </Trigger>
+                                <Trigger Property="UIElement.IsMouseOver" Value="True">
+                                  <Setter Property="BorderBrush" Value="#ED9BDC" />
+                                </Trigger>
+                                <Trigger Property="UIElement.IsKeyboardFocused" Value="True">
+                                  <Setter Property="BorderBrush" Value="#ED9BDC" />
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                  <Setter Property="Background" Value="#78336C" />
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                  <Setter Property="UIElement.Opacity" Value="0.5" />
+                                </Trigger>
+                              </Style.Triggers>
+                            </Style>
+                          </FrameworkElement.Style>
+                        </ToggleButton>
+                      </StackPanel>
+                      <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+                        <Button Name="BuildThumbnailCacheButton" Content="缓存缩略图" Padding="9,3" ToolTip="在 DEVICE/cache/card-thumbnails 生成本地 JPEG 缩略图缓存" Click="BuildThumbnailCacheButton_OnClick" />
+                        <TextBlock Text="视图" Foreground="#BFB5C2" VerticalAlignment="Center" Margin="7,0,2,0" />
+                        <Button Name="ListViewModeButton" Content="列表" Padding="9,3" Click="ListViewModeButton_OnClick" />
+                        <Button Name="IconViewModeButton" Content="图标" Padding="9,3" Click="IconViewModeButton_OnClick" />
+                      </StackPanel>
+                    </DockPanel>
+                    <TextBlock Name="CardCatalogSummaryText" Text="卡库读取中…" Margin="4,3" Foreground="#D7BBDD" TextTrimming="CharacterEllipsis" />
+                    <DockPanel Margin="0,4,0,0">
+                      <TextBlock Text="搜索卡片" VerticalAlignment="Center" Margin="4,0,10,0" Foreground="#BFB5C2" />
+                      <TextBox Name="SearchTextBox" VerticalContentAlignment="Center" ToolTip="输入卡名、编号或文件名即时筛选；清空恢复全部结果" TextChanged="CardPickerSearchBox_OnTextChanged" />
+                    </DockPanel>
+                  </StackPanel>
+                </Border>
+                <ListView Name="CardList" Grid.Row="1" Grid.Column="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="True" VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.ScrollUnit="Pixel" SelectionChanged="CardList_OnSelectionChanged" MouseDoubleClick="CardList_OnMouseDoubleClick">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type local:CardStack}">
+                      <Grid Margin="3" MinHeight="104">
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="66" />
+                          <ColumnDefinition Width="*" />
+                          <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="#050506" BorderBrush="#493E4F" BorderThickness="1" Padding="2">
+                          <Image Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Thumbnail}" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="12,0,8,0" VerticalAlignment="Center">
+                          <TextBlock Foreground="#FFFFFFFF" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" Text="{Binding JapaneseName}" />
+                          <TextBlock Foreground="#D7BBDD" TextWrapping="Wrap" ToolTip="中文参考译名，含机器翻译" Text="{Binding ChineseName}" />
+                          <TextBlock Foreground="#BFB5C2" FontSize="11" Margin="0,4,0,0" Text="{Binding EntityLabel}" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="8">
+                          <Border Background="#351832" BorderBrush="#8A2E78" BorderThickness="1" Padding="8,3">
+                            <TextBlock Foreground="#F2C8EA" FontSize="11" Text="{Binding StackLabel}" />
+                          </Border>
+                          <TextBlock Foreground="#A84F96" FontFamily="Cascadia Mono, Consolas" HorizontalAlignment="Right" Margin="0,7,0,0" Text="{Binding TrcId, StringFormat=TC ID {0}}" />
+                        </StackPanel>
+                      </Grid>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ListView>
+              </Grid>
+              <GridSplitter Grid.Row="3" Style="{StaticResource HorizontalPanelSplitterStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ResizeDirection="Rows" ResizeBehavior="PreviousAndNext" />
+              <Border Grid.Row="4" Background="#0A090C" BorderBrush="#403545" BorderThickness="1">
+                <Grid>
+                  <Grid.RowDefinitions>
+                    <RowDefinition Height="34" />
+                    <RowDefinition Height="*" />
+                  </Grid.RowDefinitions>
+                  <DockPanel Background="#18131B">
+                    <TextBlock Name="DeckStatusText" DockPanel.Dock="Left" Foreground="#B45A9F" FontWeight="SemiBold" VerticalAlignment="Center" Margin="10,0" />
+                    <Button DockPanel.Dock="Right" Content="清空卡组" Padding="10,3" Click="ClearButton_OnClick" />
+                  </DockPanel>
+                  <ListView Name="SelectedCardList" Grid.Row="1" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled" SelectionChanged="SelectedCardList_OnSelectionChanged" MouseDoubleClick="SelectedCardList_OnMouseDoubleClick">
+                    <ItemsControl.ItemsPanel>
+                      <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" />
+                      </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate DataType="{x:Type local:CardStack}">
+                        <Grid Margin="4" Width="88" Height="142">
+                          <Image Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Thumbnail}" />
+                          <Border VerticalAlignment="Bottom" Background="#EA17121A" Padding="3">
+                            <StackPanel>
+                              <Viewbox Height="14" Stretch="Uniform" StretchDirection="DownOnly">
+                                <TextBlock TextAlignment="Center" Foreground="#FFFFFFFF" FontSize="10" Text="{Binding JapaneseName}" />
+                              </Viewbox>
+                              <Viewbox Height="14" Stretch="Uniform" StretchDirection="DownOnly">
+                                <TextBlock TextAlignment="Center" Foreground="#D7BBDD" FontSize="10" Text="{Binding ChineseName}" />
+                              </Viewbox>
+                              <TextBlock TextAlignment="Center" Foreground="#F2C8EA" FontSize="10" Text="{Binding Count, StringFormat=×{0}}" />
+                            </StackPanel>
+                          </Border>
+                        </Grid>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ListView>
+                </Grid>
+              </Border>
+            </Grid>
+          </TabItem>
+          <TabItem Header="账号">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+              <StackPanel Margin="16">
+                <TextBlock Text="本地账号" FontSize="22" FontWeight="Bold" Margin="0,0,0,16" />
+                <WrapPanel Margin="0,0,0,16" VerticalAlignment="Center">
+                  <TextBlock Text="ACCOUNT / 本地账号" Foreground="#A84F96" VerticalAlignment="Center" Margin="3" FontWeight="Bold" />
+                  <TextBlock Text="当前" VerticalAlignment="Center" Margin="10,3,3,3" Foreground="#BFB5C2" />
+                  <TextBlock Name="CurrentAccountText" Text="读取中…" Foreground="#F5F1F6" VerticalAlignment="Center" Margin="3" />
+                  <TextBlock Text="卡码" VerticalAlignment="Center" Margin="10,3,3,3" Foreground="#BFB5C2" />
+                  <TextBlock Name="CurrentAccessCodeText" Text="—" Foreground="#9CF6C8" VerticalAlignment="Center" Margin="3" FontFamily="Cascadia Mono, Consolas" />
+                  <TextBlock Text="选择" VerticalAlignment="Center" Margin="10,3,3,3" Foreground="#BFB5C2" />
+                  <ComboBox Name="AccountComboBox" Width="270" VerticalAlignment="Center" DisplayMemberPath="DisplayText" ToolTip="本地账号列表（MASTER 名 · Aime ID · 账号模式）" SelectionChanged="AccountComboBox_OnSelectionChanged" />
+                  <Button Name="UseAccountButton" Content="使用选中账号" Click="UseAccountButton_OnClick" />
+                  <Button Name="CreateAccountButton" Content="新建账号" Click="CreateAccountButton_OnClick" />
+                </WrapPanel>
+                <WrapPanel Margin="0,0,0,16">
+                  <Button Name="ResetAccountButton" Content="重置为普通新账号" Background="#35141E" BorderBrush="#713044" Click="ResetAccountButton_OnClick" />
+                  <Button Name="DeleteAccountButton" Content="删除账号" IsEnabled="False" Background="#45141B" BorderBrush="#A43B4A" ToolTip="永久删除选中账号的存档、Aime 身份、卡映射及账号备份残留" Click="DeleteAccountButton_OnClick" />
+                  <Button Name="RepairAccountButton" Content="修复历史结算" ToolTip="从已保存的柜机通信记录补回旧版本漏存的经验、素材、羁绊和任务进度" Click="RepairAccountButton_OnClick" />
+                  <Button Name="GrantBenefitsButton" Content="福利下发" IsEnabled="False" Background="#28402F" BorderBrush="#4F8B63" ToolTip="从安装数据中选择货币或素材，并向选中账号追加指定数量" Click="GrantBenefitsButton_OnClick" />
+                  <Button Name="RefreshAccountsButton" Content="刷新账号" Click="RefreshAccountsButton_OnClick" />
+                  <Button Name="SummonHistoryButton" Content="打印入库记录" IsEnabled="False" Click="SummonHistoryButton_OnClick" />
+                  <TextBlock Name="CurrentSummonSummaryText" Text="Lv.1 · EXP 0 · 持卡 0" Foreground="#E7C56A" VerticalAlignment="Center" Margin="8,3,3,3" />
+                </WrapPanel>
+                <TextBlock Text="入库与成长" FontSize="18" FontWeight="SemiBold" Margin="3,4,0,8" />
+                <TextBlock Text="对选中账号生效；操作前请退出游戏并停止服务器。成长选项作用于已持有从者。" Foreground="#BFB5C2" Margin="3,0,0,10" TextWrapping="Wrap" />
+                <WrapPanel Name="AccountUpgradePanel" IsEnabled="False" MaxWidth="960" HorizontalAlignment="Left">
+                  <FrameworkElement.Resources>
+                    <ResourceDictionary>
+                      <Style x:Key="{x:Type Button}" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                        <Setter Property="Width" Value="218" />
+                        <Setter Property="MinHeight" Value="48" />
+                        <Setter Property="Margin" Value="3,3,9,9" />
+                      </Style>
+                    </ResourceDictionary>
+                  </FrameworkElement.Resources>
+                  <Button Content="全角色打印入库" Tag="servants" ToolTip="按正式获取流程将每种从者卡片补足 5 张；已有超过 5 张的保留，重复执行不累加" Click="AccountUpgrade_OnClick" />
+                  <Button Content="全概念礼装打印入库" Tag="craft-essences" ToolTip="将每种概念礼装卡片补足 5 张；已有超过 5 张的保留，重复执行不累加" Click="AccountUpgrade_OnClick" />
+                  <Button Content="一键清空礼物箱" Tag="clear-gifts" ToolTip="删除选中账号的全部未领取礼物，不领取奖励；保留领取和删除历史，操作前自动备份" Click="AccountUpgrade_OnClick" />
+                  <Button Content="全任务一键完成" Tag="quests" ToolTip="全部关卡通关并完成任务菜单中的任务，任务奖励保留手动领取" Click="AccountUpgrade_OnClick" />
+                  <Button Content="全从者好感一键最大值" Tag="bond" Click="AccountUpgrade_OnClick" />
+                  <Button Content="全灵衣一键解锁" Tag="costumes" Click="AccountUpgrade_OnClick" />
+                  <Button Content="全素材一键满值" Tag="materials" ToolTip="将全部已安装强化素材补至各自上限" Click="AccountUpgrade_OnClick" />
+                  <Button Content="全从者一键满级" Tag="levels" ToolTip="等级、再临、等级上限、技能、支援技能、宝具及羁绊达到可用上限" Click="AccountUpgrade_OnClick" />
+                </WrapPanel>
+                <TextBlock Text="账号详情" FontSize="18" FontWeight="SemiBold" Margin="0,16,0,10" />
+                <ItemsControl Name="AccountDetailsTable" />
+              </StackPanel>
+            </ScrollViewer>
+          </TabItem>
+          <TabItem Header="抽卡概率">
+            <ContentControl Name="SummonTabContent" Loaded="SummonTab_OnSelected" />
+          </TabItem>
+          <TabItem Header="控制">
+            <local:ControlSettingsView x:Name="ControlsPanel" SaveRequested="ControlsPanel_OnSaveRequested" />
+          </TabItem>
+          <TabItem Header="鼠标指针">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+              <local:CursorSettingsView Margin="20" />
+            </ScrollViewer>
+          </TabItem>
+          <TabItem Header="画面设置">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+              <StackPanel Margin="20" MaxWidth="720" HorizontalAlignment="Stretch">
+                <TextBlock Text="显示与分辨率" FontSize="22" FontWeight="SemiBold" Margin="0,0,0,16" />
+                <WrapPanel>
+                  <StackPanel Orientation="Horizontal" Margin="0,0,12,8">
+                    <TextBlock Text="显示" VerticalAlignment="Center" Margin="3" Foreground="#BFB5C2" />
+                    <ComboBox Name="DisplayModeComboBox" Width="125">
+                      <ComboBoxItem Content="窗口化" Tag="windowed" />
+                      <ComboBoxItem Content="无边框全屏" Tag="borderless" />
+                      <ComboBoxItem Content="独占全屏" Tag="exclusive" />
+                    </ComboBox>
+                  </StackPanel>
+                  <StackPanel Orientation="Horizontal" Margin="0,0,12,8">
+                    <TextBlock Text="屏幕" VerticalAlignment="Center" Margin="8,3,3,3" Foreground="#BFB5C2" />
+                    <ComboBox Name="MonitorComboBox" Width="210" ToolTip="下次启动游戏时使用所选屏幕；屏幕断开时回退到主屏。" DropDownOpened="MonitorComboBox_OnDropDownOpened" />
+                  </StackPanel>
+                  <StackPanel Orientation="Horizontal" Margin="0,0,12,8">
+                    <TextBlock Text="比例" VerticalAlignment="Center" Margin="8,3,3,3" Foreground="#BFB5C2" />
+                    <ComboBox Name="AspectRatioComboBox" Width="82" SelectionChanged="AspectRatioComboBox_OnSelectionChanged">
+                      <ComboBoxItem Content="16:9" Tag="16:9" />
+                      <ComboBoxItem Content="16:10" Tag="16:10" />
+                      <ComboBoxItem Content="21:9" Tag="21:9" />
+                      <ComboBoxItem Content="32:9" Tag="32:9" />
+                      <ComboBoxItem Content="4:3" Tag="4:3" />
+                      <ComboBoxItem Content="9:16（竖）" Tag="9:16" />
+                      <ComboBoxItem Content="10:16（竖）" Tag="10:16" />
+                      <ComboBoxItem Content="9:21（竖）" Tag="9:21" />
+                      <ComboBoxItem Content="9:32（竖）" Tag="9:32" />
+                      <ComboBoxItem Content="3:4（竖）" Tag="3:4" />
+                      <ComboBoxItem Content="自定义" Tag="custom" />
+                    </ComboBox>
+                  </StackPanel>
+                  <StackPanel Orientation="Horizontal" Margin="0,0,12,8">
+                    <ComboBox Name="ResolutionComboBox" Width="118" IsEditable="False" ToolTip="分辨率预设" SelectionChanged="ResolutionComboBox_OnSelectionChanged" />
+                    <TextBox Name="CustomWidthTextBox" Width="58" MaxLength="4" VerticalContentAlignment="Center" ToolTip="自定义宽度 480–7680" />
+                    <TextBlock Text="×" VerticalAlignment="Center" Margin="2" Foreground="#BFB5C2" />
+                    <TextBox Name="CustomHeightTextBox" Width="58" MaxLength="4" VerticalContentAlignment="Center" ToolTip="自定义高度 480–7680" />
+                  </StackPanel>
+                </WrapPanel>
+                <WrapPanel Margin="0,12,0,20">
+                  <TextBlock Text="帧率上限" VerticalAlignment="Center" Margin="3" />
+                  <ComboBox Name="FrameRateComboBox" Width="135">
+                    <ComboBoxItem Content="60 FPS（稳定）" Tag="60" />
+                    <ComboBoxItem Content="90 FPS" Tag="90" />
+                    <ComboBoxItem Content="120 FPS" Tag="120" />
+                    <ComboBoxItem Content="144 FPS" Tag="144" />
+                  </ComboBox>
+                </WrapPanel>
+                <TextBlock Text="画面质量" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,12" />
+                <WrapPanel Margin="0,0,0,12">
+                  <TextBlock Text="抗锯齿" VerticalAlignment="Center" Margin="3" />
+                  <ComboBox Name="SmaaComboBox" Width="210" SelectedIndex="0">
+                    <ComboBoxItem Content="原生" Tag="0" />
+                    <ComboBoxItem Content="原生 + SMAA 高" Tag="1" />
+                    <ComboBoxItem Content="原生 + SMAA 极高" Tag="2" />
+                  </ComboBox>
+                  <TextBlock Text="场景各向异性过滤" VerticalAlignment="Center" Margin="12,3,3,3" />
+                  <ComboBox Name="AnisotropyComboBox" Width="90" SelectedIndex="4">
+                    <ComboBoxItem Content="1×" Tag="1" />
+                    <ComboBoxItem Content="2×" Tag="2" />
+                    <ComboBoxItem Content="4×" Tag="4" />
+                    <ComboBoxItem Content="8×" Tag="8" />
+                    <ComboBoxItem Content="16×" Tag="16" />
+                  </ComboBox>
+                </WrapPanel>
+                <WrapPanel Margin="0,0,0,12">
+                  <TextBlock Text="渲染倍率" VerticalAlignment="Center" Margin="3" />
+                  <ComboBox Name="RenderScaleComboBox" Width="210" SelectedIndex="0">
+                    <ComboBoxItem Content="100%（原生分辨率）" Tag="100" />
+                    <ComboBoxItem Content="125%（1.56 倍像素）" Tag="125" />
+                    <ComboBoxItem Content="150%（2.25 倍像素）" Tag="150" />
+                    <ComboBoxItem Content="200%（4 倍像素）" Tag="200" />
+                  </ComboBox>
+                </WrapPanel>
+                <TextBlock Text="让场景和卡槽中的人物更细腻，减轻边缘锯齿；界面大小与视野不变，也可以搭配 SMAA 使用。" TextWrapping="Wrap" Foreground="#BFB5C2" Margin="0,0,0,8" />
+                <TextBlock Text="倍率越高，对显卡的要求也越高。如果感觉卡顿，可以适当调低；显卡不支持当前设置时，会自动使用 100%。" TextWrapping="Wrap" Foreground="#BFB5C2" Margin="0,0,0,8" />
+                <WrapPanel Margin="0,0,0,16">
+                  <CheckBox Name="MotionBlurCheckBox" Content="动态模糊" Margin="3,8,22,8" />
+                  <CheckBox Name="DepthOfFieldCheckBox" Content="景深" IsChecked="True" Margin="3,8,22,8" />
+                  <CheckBox Name="BloomCheckBox" Content="辉光" IsChecked="True" Margin="3,8,22,8" />
+                  <CheckBox Name="DisableCameraShakeCheckBox" Content="关闭镜头抖动" Margin="3,8,22,8" ToolTip="取消游戏的镜头震动叠加，保留正常运镜；保存后下次启动游戏生效。" />
+                </WrapPanel>
+                <TextBlock Text="SMAA 对最终画面追加抗锯齿，包含界面文字。各向异性过滤作用于场景材质。" TextWrapping="Wrap" Foreground="#BFB5C2" Margin="0,0,0,24" />
+                <WrapPanel Margin="0,0,0,12">
+                  <TextBlock Text="实时投射阴影分辨率" VerticalAlignment="Center" Margin="3,0,12,0" />
+                  <ComboBox Name="ShadowResolutionComboBox" Width="210" SelectedIndex="0">
+                    <ComboBoxItem Content="原版" Tag="0" />
+                    <ComboBoxItem Content="1024 × 1024" Tag="1024" />
+                    <ComboBoxItem Content="2048 × 2048" Tag="2048" />
+                    <ComboBoxItem Content="4096 × 4096" Tag="4096" />
+                  </ComboBox>
+                </WrapPanel>
+                <TextBlock Text="调整实时级联阴影的清晰度，不改变 AO 或烘焙阴影；分辨率越高，显存和绘制开销越大。保存后重新启动游戏生效。" TextWrapping="Wrap" Foreground="#BFB5C2" Margin="0,0,0,24" />
+                <CheckBox Name="HideTargetLinesCheckBox" Content="隐藏敌人锁定曲线" Margin="3,0,0,8" />
+                <TextBlock Text="仅隐藏连线，不影响锁定和目标标记。保存后重新启动游戏生效。" TextWrapping="Wrap" Foreground="#BFB5C2" Margin="0,0,0,20" />
+                <TextBlock Text="战斗伤害提示" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+                <Grid MaxWidth="680" HorizontalAlignment="Left" Width="Auto" Margin="0,0,0,12">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="155" />
+                    <ColumnDefinition Width="*" MinWidth="180" />
+                    <ColumnDefinition Width="65" />
+                  </Grid.ColumnDefinitions>
+                  <Grid.RowDefinitions>
+                    <RowDefinition Height="38" />
+                    <RowDefinition Height="38" />
+                    <RowDefinition Height="38" />
+                    <RowDefinition Height="38" />
+                  </Grid.RowDefinitions>
+                  <TextBlock Text="伤害数字大小" VerticalAlignment="Center" />
+                  <Slider Name="DamageNumberScaleSlider" Grid.Column="1" Minimum="0" Maximum="200" Value="100" SmallChange="0.1" IsSnapToTickEnabled="False" VerticalAlignment="Center" />
+                  <TextBox Grid.Column="2" Margin="8,3,0,3" VerticalContentAlignment="Center" ToolTip="百分比，可输入小数" Text="{Binding Value, ElementName=DamageNumberScaleSlider, Mode=TwoWay, UpdateSourceTrigger=LostFocus, StringFormat=F1, ValidatesOnExceptions=True}" />
+                  <TextBlock Grid.Row="1" Text="数字不透明度" VerticalAlignment="Center" />
+                  <Slider Name="DamageNumberOpacitySlider" Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="100" Value="100" SmallChange="0.1" IsSnapToTickEnabled="False" VerticalAlignment="Center" />
+                  <TextBox Grid.Row="1" Grid.Column="2" Margin="8,3,0,3" VerticalContentAlignment="Center" ToolTip="百分比，可输入小数" Text="{Binding Value, ElementName=DamageNumberOpacitySlider, Mode=TwoWay, UpdateSourceTrigger=LostFocus, StringFormat=F1, ValidatesOnExceptions=True}" />
+                  <TextBlock Grid.Row="2" Text="提示纹理大小" VerticalAlignment="Center" />
+                  <Slider Name="DamageTextureScaleSlider" Grid.Row="2" Grid.Column="1" Minimum="0" Maximum="200" Value="100" SmallChange="0.1" IsSnapToTickEnabled="False" VerticalAlignment="Center" />
+                  <TextBox Grid.Row="2" Grid.Column="2" Margin="8,3,0,3" VerticalContentAlignment="Center" ToolTip="百分比，可输入小数" Text="{Binding Value, ElementName=DamageTextureScaleSlider, Mode=TwoWay, UpdateSourceTrigger=LostFocus, StringFormat=F1, ValidatesOnExceptions=True}" />
+                  <TextBlock Grid.Row="3" Text="纹理不透明度" VerticalAlignment="Center" />
+                  <Slider Name="DamageTextureOpacitySlider" Grid.Row="3" Grid.Column="1" Minimum="0" Maximum="100" Value="100" SmallChange="0.1" IsSnapToTickEnabled="False" VerticalAlignment="Center" />
+                  <TextBox Grid.Row="3" Grid.Column="2" Margin="8,3,0,3" VerticalContentAlignment="Center" ToolTip="百分比，可输入小数" Text="{Binding Value, ElementName=DamageTextureOpacitySlider, Mode=TwoWay, UpdateSourceTrigger=LostFocus, StringFormat=F1, ValidatesOnExceptions=True}" />
+                </Grid>
+                <TextBlock Text="调整伤害数字及暴击、弱点、格挡等弹出提示，不影响其他界面。不透明度 0% 为隐藏，100% 为原样。" TextWrapping="Wrap" Foreground="#BFB5C2" />
+                <Button Content="恢复伤害提示默认值" HorizontalAlignment="Left" Margin="0,10,0,20" Click="ResetDamageUi_OnClick" />
+                <CheckBox Name="HideUiCheckBox" Content="进入游戏时隐藏 UI" Margin="3,8" />
+                <CheckBox Name="HideCabinetHudCheckBox" Content="隐藏 GP、CREDIT、右下角音量和状态图标（保留结束游戏按钮）" ToolTip="同时禁用隐藏的 GP 与音量控件触摸；不影响实际音频输出。保存后下次启动游戏生效。" Margin="3,8" />
+                <WrapPanel Margin="0,8,0,12">
+                  <TextBlock Text="显示 / 隐藏 UI 快捷键" VerticalAlignment="Center" Margin="3,0,12,0" />
+                  <Button Name="HideUiKeyButton" Content="F10" MinWidth="150" Click="HideUiKeyButton_OnClick" PreviewKeyDown="HideUiKeyButton_OnPreviewKeyDown" LostKeyboardFocus="HideUiKeyButton_OnLostKeyboardFocus" />
+                </WrapPanel>
+                <TextBlock Text="点击快捷键按钮后按键绑定，Esc 取消。游戏获得焦点时生效，再按一次恢复 UI。" TextWrapping="Wrap" Foreground="#BFB5C2" />
+                <Separator Margin="0,24,0,12" />
+                <TextBlock Text="保存后，下次启动游戏生效。宽屏扩展场景视野，UI 保持居中比例。" TextWrapping="Wrap" Foreground="#BFB5C2" />
+                <Button Content="保存画面设置" HorizontalAlignment="Left" Padding="24,8" Margin="0,16,0,8" Click="SaveGraphicsButton_OnClick" />
+              </StackPanel>
+            </ScrollViewer>
+          </TabItem>
+          <TabItem Header="音量">
+            <local:AudioSettingsView />
+          </TabItem>
+          <TabItem Header="服务器">
+            <local:ServerSettingsView x:Name="ServerSettingsPanel" ConfigureRequested="ServerSettings_OnConfigure" />
+          </TabItem>
+          <TabItem Header="调试">
+            <local:DebugSettingsView />
+          </TabItem>
+          <TabItem Header="摄影">
+            <ContentControl Name="PhotoTabContent" Loaded="PhotoSettings_OnClick" />
+          </TabItem>
+          <TabItem Header="诊断与帮助">
+            <local:DiagnosticsView />
+          </TabItem>
+          <TabItem Header="关于">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+              <StackPanel Margin="20" MaxWidth="720" HorizontalAlignment="Stretch">
+                <TextBlock Text="关于 · Ver1.01" FontSize="22" FontWeight="Bold" Margin="0,0,0,24" />
+                <TextBlock Text="原项目地址" Foreground="#B45A9F" FontSize="16" FontWeight="Bold" Margin="0,0,0,8" />
+                <TextBlock TextWrapping="Wrap" Margin="0,0,0,24">
+                  <Hyperlink Foreground="#BCDFFF" NavigateUri="https://gitea.tendokyu.moe/TeamTofuShop/segatools" RequestNavigate="AboutLink_OnRequestNavigate">https://gitea.tendokyu.moe/TeamTofuShop/segatools</Hyperlink>
+                </TextBlock>
+                <TextBlock Text="11.00修正 + 渲染修正 + 一键本地部署 + 杂项功能增加" TextWrapping="Wrap" Foreground="#B45A9F" FontSize="16" FontWeight="Bold" Margin="0,0,0,8" />
+                <TextBlock Margin="0,0,0,24">
+                  <Hyperlink Foreground="#BCDFFF" NavigateUri="https://space.bilibili.com/13236455" RequestNavigate="AboutLink_OnRequestNavigate">bilibili Cloud23333</Hyperlink>
+                </TextBlock>
+                <TextBlock Text="汉化工具制作" Foreground="#B45A9F" FontSize="16" FontWeight="Bold" Margin="0,0,0,8" />
+                <TextBlock Margin="0,0,0,24">
+                  <Hyperlink Foreground="#BCDFFF" NavigateUri="https://space.bilibili.com/13236455" RequestNavigate="AboutLink_OnRequestNavigate">bilibili Cloud23333</Hyperlink>
+                </TextBlock>
+                <Separator Margin="0,0,0,24" />
+                <TextBlock Text="特殊鸣谢" Foreground="#E7C56A" FontSize="18" FontWeight="Bold" Margin="0,0,0,10" />
+                <TextBlock TextWrapping="Wrap" FontSize="16">
+                  <Run Text="爱赞助上愿意赞助的金主爸爸们" />
+                  <InlineUIContainer BaselineAlignment="Center">
+                    <Image Source="/FGOLocalPlatform;component/Assets/crying-emoji.png" Width="22" Height="22" Margin="1,0" AutomationProperties.Name="😭" RenderOptions.BitmapScalingMode="HighQuality" />
+                  </InlineUIContainer>
+                  <Run Text="，没有你们走不到今天" />
+                </TextBlock>
+                <TextBlock Margin="0,10,0,0">
+                  <Hyperlink Foreground="#BCDFFF" NavigateUri="https://azz.ee/Cloud23333" RequestNavigate="AboutLink_OnRequestNavigate">Cloud23333爱赞助主页</Hyperlink>
+                </TextBlock>
+                <local:EasterEggSettingsView Margin="0,24,0,0" />
+              </StackPanel>
+            </ScrollViewer>
+          </TabItem>
+        </TabControl>
+        <GridSplitter Name="LogPanelSplitter" Grid.Column="1" Style="{StaticResource PanelSplitterStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ResizeDirection="Columns" ResizeBehavior="PreviousAndNext" />
+        <Grid Name="LogPanel" Column="2">
+          <Grid.RowDefinitions>
+            <RowDefinition Name="ServerLogRow" Height="*" MinHeight="150" />
+            <RowDefinition Height="7" />
+            <RowDefinition Name="InjectionLogRow" Height="*" MinHeight="150" />
+          </Grid.RowDefinitions>
+          <Border Grid.Row="0" Background="#08070A" BorderBrush="#4A1D46" BorderThickness="1">
+            <Grid>
+              <Grid.RowDefinitions>
+                <RowDefinition Height="36" />
+                <RowDefinition Height="*" />
+              </Grid.RowDefinitions>
+              <Border Background="#1A111B" BorderBrush="#4A1D46" BorderThickness="0,0,0,1">
+                <DockPanel Margin="10,0" LastChildFill="False">
+                  <TextBlock Text="SERVER / 本地服务器日志" FontWeight="Bold" Foreground="#B45A9F" VerticalAlignment="Center" />
+                  <TextBlock Text="LIVE" DockPanel.Dock="Right" Foreground="#9CF6C8" FontSize="11" VerticalAlignment="Center" />
+                </DockPanel>
+              </Border>
+              <TextBox Name="ServerLogTextBox" Grid.Row="1" IsReadOnly="True" BorderThickness="0" Margin="0" Padding="9" FontFamily="Cascadia Mono, Consolas" FontSize="11" TextWrapping="NoWrap" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
+            </Grid>
+          </Border>
+          <GridSplitter Grid.Row="1" Style="{StaticResource HorizontalPanelSplitterStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ResizeDirection="Rows" ResizeBehavior="PreviousAndNext" />
+          <Border Grid.Row="2" Background="#08070A" BorderBrush="#3E3343" BorderThickness="1">
+            <Grid>
+              <Grid.RowDefinitions>
+                <RowDefinition Height="36" />
+                <RowDefinition Height="*" />
+              </Grid.RowDefinitions>
+              <Border Background="#151217" BorderBrush="#3E3343" BorderThickness="0,0,0,1">
+                <DockPanel Margin="10,0" LastChildFill="False">
+                  <TextBlock Text="INJECT / 注入与游戏日志" FontWeight="Bold" Foreground="#E9E3EB" VerticalAlignment="Center" />
+                  <TextBlock Text="TAIL" DockPanel.Dock="Right" Foreground="#9D6A96" FontSize="11" VerticalAlignment="Center" />
+                </DockPanel>
+              </Border>
+              <TextBox Name="InjectionLogTextBox" Grid.Row="1" IsReadOnly="True" BorderThickness="0" Margin="0" Padding="9" FontFamily="Cascadia Mono, Consolas" FontSize="11" TextWrapping="NoWrap" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
+            </Grid>
+          </Border>
+        </Grid>
+      </Grid>
+      <Border Grid.Row="3" Background="#0C0A0E" BorderBrush="#34283A" BorderThickness="0,1,0,0">
+        <Grid Margin="12,0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <TextBlock Name="RuntimeStatusText" VerticalAlignment="Center" Foreground="#B45A9F" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+          <Button Name="ToggleLogsButton" Grid.Column="2" Content="收起日志 ▶" Padding="8,2" Margin="12,2,0,2" Click="ToggleLogs_OnClick" />
+          <TextBlock Name="FooterNoticeText" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" Foreground="#E7C56A" FontSize="11" FontWeight="SemiBold" Margin="18,0,0,0" />
+        </Grid>
+      </Border>
+    </Grid>
+  </Border>
+</Window>

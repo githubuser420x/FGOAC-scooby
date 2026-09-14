@@ -1,0 +1,100 @@
+# FGOA scooby — English launcher
+
+English rebuild of the FGO Arcade local platform front end (`FGOLocalPlatform`, V1.01, by Cloud23333).
+`src\` is a decompile of the author's managed assembly with the compile fixes listed below and the
+user-facing strings translated. The deliverable is a self-contained single-file host published from
+`src\` and named `FGOA scooby.exe`.
+
+## Layout
+
+| Path | Contents |
+| --- | --- |
+| `src\` | buildable C#/XAML project (`FGOLocalPlatform.csproj`) |
+| `overlay\` | English replacements for files that live outside the assembly, laid out by their path relative to the install root |
+| `dist\` | build output, `FGOA scooby.exe` (not tracked) |
+| `build.cmd` | `dotnet build -c Release` (compile check only) |
+| `publish.cmd` | publish + copy to `dist\FGOA scooby.exe` |
+
+## Build
+
+```
+publish.cmd
+```
+
+Requirements: .NET SDK 10.0.303 (builds the `net6.0-windows` target; the 6.0 reference and runtime
+packs are restored from nuget.org on first run) and `D:\FGOA\ZstdSharp.dll` (assembly identity
+0.8.8.0), which `src\FGOLocalPlatform.csproj` references by `HintPath`. Nothing else is needed; the
+published host carries its own .NET runtime, so a player does not have to install one.
+
+Deploy with a single copy:
+
+```
+copy /y "dist\FGOA scooby.exe" "D:\FGOA\FGOA scooby.exe"
+```
+
+`AssemblyName` stays `FGOLocalPlatform`: pack URIs in code and XAML are built from it, and the
+process name the diagnostics tooling looks for is still `FGOLocalPlatform`. Only the file is renamed.
+
+## Re-deriving from a new author release
+
+When the author ships a new `FGOLocalPlatform.dll`, the English build has to be re-derived rather
+than patched — his `FGOLocalPlatform.exe` is a self-contained single-file bundle that carries its own
+copy of the managed assembly and ignores the sibling DLL.
+
+1. Decompile the new assembly (ilspycmd 10.1, `C:\Users\user\.dotnet\tools\ilspycmd.exe`):
+
+   ```
+   ilspycmd -p --decompile-baml -o <newdir> <path>\FGOLocalPlatform.dll
+   ```
+
+2. Re-apply the fixes below, then diff `<newdir>` against `src\` to see what the author changed and
+   port the translation forward.
+
+### Compile fixes the decompile needs
+
+| # | File | Fix |
+| --- | --- | --- |
+| 1 | `FGOLocalPlatform.csproj` | `TargetFramework` `net6.0` -> `net6.0-windows` (`UseWPF` requires the Windows TFM) |
+| 2 | `FGOLocalPlatform.csproj` | add `ApplicationDefinition` for `app.xaml` and `Page` items for the other 12 XAML files; explicit `Compile` items with `EnableDefaultItems=false` |
+| 3 | `FGOLocalPlatform.csproj` | `platform.ico`, `aprilfoolfgofirsthassan.ico`, `assets\crying-emoji.png` from `EmbeddedResource` to `Resource` (they are addressed by pack URI, which reads `.g.resources`). The two JSON tables stay `EmbeddedResource` — they are read with `GetManifestResourceStream` |
+| 4 | XAML file names | `FGOLocalPlatform.MainWindow.xaml` -> `mainwindow.xaml`, and the same for the other 11: the resource key comes from the file path and the originals are `mainwindow.baml` etc. at the root |
+| 5 | `app.xaml` | add `StartupUri="MainWindow.xaml"`; the original sets it in the generated `App.InitializeComponent`, which the BAML decompiler does not reproduce |
+| 6 | `MainWindow.cs`, `ThemedMessageBox.cs` | 6 occurrences of `((Rect)(ref x)).Height` / `((Size)(ref x)).Width` reduced to `x.Height` / `x.Width` |
+| 7 | `MainWindow.cs` | remove the generated `_CreateDelegate` helper (PresentationBuildTasks regenerates it from `mainwindow.xaml`) |
+| 8 | `PhotoWindow.cs`, `MainWindow.cs` | `(val - 70 > 1 && val - 116 > 5) \|\| 1 == 0` -> `(uint)(val - 70) > 1u && (uint)(val - 116) > 5u`. Semantic fix: the original excludes `Key.LWin`/`Key.RWin` and the six modifier keys from key binding; the signed rendering rejects almost every key |
+| 9 | `MainWindow.cs` | remove the dead `int num; _ = num - 1; _ = 1;` |
+| 10 | `MainWindow.cs` | `new(string, double)[10]` -> `new (string Name, double Value)[10]`; the LINQ query below it addresses `item.Name` / `item.Value` |
+
+Expect about 165 `CS8632` warnings and zero errors.
+
+### Things the translation must not change
+
+- Every XAML `Tag` value, every `SelectedIndex` order, and the item order of any combo box whose
+  index is persisted (cursor mode, input mode, movement and controller-number selectors, the two
+  summon filters, photo-mode weapon mode and bone array).
+- Resolution captions: they are parsed back with `^\s*(\d{3,4})\s*[xX×]\s*(\d{3,4})\s*$`, so they
+  must stay in `1920x1080` form.
+- The JSON keys and field names of `FGOLocalPlatform.CardNames.json` (`SVT#####` / `CE#####`,
+  `Japanese` / `Chinese`) and `FGOLocalPlatform.CraftEffects.json` (`CE#####`, `Normal`,
+  `NormalJapanese`, `Maximum`, `MaximumJapanese`) — English goes into the existing `Chinese`,
+  `Normal` and `Maximum` fields.
+- Config keys and enum values shared with `FGO_Launcher.ps1` and the author's tooling
+  (`windowed` / `borderless` / `exclusive`, `keyboard` / `xinput`, `16:9`, the `graphics` block).
+- Interpolation holes in format strings, `StringFormat` placeholders, and the `|` in the
+  `OpenFileDialog` filter.
+
+## Overlay
+
+`overlay\` mirrors the install root. The release packager copies it over an existing V1.01 install
+after backing up what it replaces; the files under `D:\FGOA\App` and `D:\FGOA\Server` are left alone
+during development.
+
+| Overlay file | Why |
+| --- | --- |
+| `App\FGO_EnvironmentCheck.ps1` | its whole stdout is the environment-check panel |
+| `App\FGO_Launcher.ps1` | two lines reach the launcher log panel |
+| `App\FGO_StartupChecks.ps1` | one line reaches the startup failure dialog |
+| `Server\Start-FGOLocalServer.ps1` | three lines reach the server log panel |
+| `Server\Stop-FGOLocalServerWhenIdle.ps1` | also recognises `FGOA scooby.exe` as a running front end |
+| `Server\tools\fgo_account.py` | every `message` it emits is shown verbatim by the account page |
+| `Server\tools\fgo_server_config.py` | port and address validation errors on the server page |

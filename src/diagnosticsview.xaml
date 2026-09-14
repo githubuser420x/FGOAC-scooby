@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="FGOLocalPlatform.DiagnosticsView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:fgolocalplatform="clr-namespace:FGOLocalPlatform;assembly=FGOLocalPlatform">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="20">
+      <TextBlock Text="诊断与帮助" FontSize="22" FontWeight="Bold" />
+      <Button Name="EnvironmentCheckButton" Content="运行环境检查" HorizontalAlignment="Left" Padding="18,10" Margin="0,16,0,8" Click="EnvironmentCheck_OnClick" />
+      <TextBlock Name="EnvironmentCheckText" Text="检查基础库、脚本版本、音频设备和目录权限；不会启动服务器。报告保存到 logs/environment-check.txt。" TextWrapping="Wrap" />
+      <TextBlock Text="错误代码与处理方法" Foreground="#F5F1F6" FontWeight="Bold" Margin="0,16,0,0" />
+      <TextBlock Name="ErrorGuideText" Foreground="#EDE7EF" TextWrapping="Wrap" Margin="8,12,8,12" />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

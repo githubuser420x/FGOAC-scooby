@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="FGOLocalPlatform.NewAccountDialog" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="新建本地账号" Width="460" SizeToContent="Height" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Background="#0C0A0E" Foreground="#FFFFFFFF" FontFamily="Microsoft YaHei UI, Segoe UI" xmlns:fgolocalplatform="clr-namespace:FGOLocalPlatform;assembly=FGOLocalPlatform">
+  <Border BorderBrush="#4A1D46" BorderThickness="1" Padding="20">
+    <StackPanel>
+      <TextBlock Text="MASTER 名（游戏内显示的玩家名）" Foreground="#B45A9F" FontWeight="SemiBold" />
+      <TextBox Name="MasterNameTextBox" MaxLength="32" Margin="0,6,0,14" />
+      <TextBlock Text="账号模式" Foreground="#B45A9F" FontWeight="SemiBold" />
+      <ComboBox Name="AccountModeComboBox" Margin="0,6,0,6" SelectedIndex="0">
+        <ComboBoxItem Content="normal · 普通账号（初始资源）" Tag="normal" />
+      </ComboBox>
+      <TextBlock TextWrapping="Wrap" Foreground="#BFB5C2" FontSize="12" Margin="0,0,0,16" Text="新账号从普通初始状态开始。创建后，可在账号页面按需使用打印入库与成长选项。" />
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+        <Button Content="创建" Width="96" IsDefault="True" Click="CreateButton_OnClick" />
+        <Button Content="取消" Width="96" IsCancel="True" />
+      </StackPanel>
+    </StackPanel>
+  </Border>
+</Window>

@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="FGOLocalPlatform.CardVariantsWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="选择卡片类型与数量" Background="#101017" Foreground="#F5F1F6" Width="880" Height="650" MinWidth="700" MinHeight="440" WindowStartupLocation="CenterOwner" xmlns:fgolocalplatform="clr-namespace:FGOLocalPlatform;assembly=FGOLocalPlatform">
+  <Grid Margin="18">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+    <StackPanel Margin="0,0,0,12">
+      <TextBlock FontWeight="Bold" FontSize="18" TextWrapping="Wrap" Text="{Binding JapaneseName}" />
+      <TextBlock Foreground="#D7BBDD" TextWrapping="Wrap" Text="{Binding ChineseName}" />
+      <TextBlock Foreground="#BFB5C2" Text="{Binding EntityLabel}" />
+      <TextBlock Name="Hint" TextWrapping="Wrap" Margin="0,8,0,0" />
+    </StackPanel>
+    <Border Name="CraftPreview" Grid.Row="1" Visibility="Collapsed" Background="#1B1720" Padding="12" Margin="0,0,0,12">
+      <Grid Height="235">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="170" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Image Name="CraftImage" Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality" />
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" Margin="14,0,0,0">
+          <StackPanel>
+            <TextBlock Text="普通效果 · 中文" Foreground="#F5F1F6" FontWeight="Bold" />
+            <TextBlock Name="NormalEffect" Foreground="#EDE7EF" TextWrapping="Wrap" Margin="0,6,0,16" />
+            <TextBlock Text="满破效果 · 中文" Foreground="#F5F1F6" FontWeight="Bold" />
+            <TextBlock Name="MaximumEffect" Foreground="#EDE7EF" TextWrapping="Wrap" Margin="0,6,0,12" />
+            <TextBlock Text="中文说明含机器翻译；悬停效果文本可查看日文原文。" Foreground="#BFB5C2" FontSize="11" TextWrapping="Wrap" />
+          </StackPanel>
+        </ScrollViewer>
+      </Grid>
+    </Border>
+    <DataGrid Name="Forms" Grid.Row="2" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" HeadersVisibility="Column" MinRowHeight="105" SelectionChanged="Forms_OnSelectionChanged" MouseDoubleClick="Forms_OnMouseDoubleClick">
+      <FrameworkElement.Resources>
+        <ResourceDictionary>
+          <Style x:Key="CenteredCell" TargetType="{x:Type TextBlock}">
+            <Setter Property="TextBlock.TextAlignment" Value="Center" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="6" />
+          </Style>
+          <Style x:Key="CenteredEdit" TargetType="{x:Type TextBox}">
+            <Setter Property="TextBox.TextAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+          </Style>
+          <Style x:Key="{x:Type DataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+          </Style>
+          <Style x:Key="{x:Type TextBlock}" TargetType="{x:Type TextBlock}">
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="6" />
+          </Style>
+        </ResourceDictionary>
+      </FrameworkElement.Resources>
+      <DataGrid.Columns>
+        <DataGridTemplateColumn Header="卡面" Width="78" IsReadOnly="True">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <Image Height="100" Width="70" Stretch="Uniform" Source="{Binding Card.Thumbnail}" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTextColumn ElementStyle="{StaticResource CenteredCell}" EditingElementStyle="{StaticResource CenteredEdit}" Header="类型 / 阶段 / 卡牌编号" Width="*" MinWidth="240" IsReadOnly="True" Binding="{Binding Label}" />
+        <DataGridTextColumn ElementStyle="{StaticResource CenteredCell}" EditingElementStyle="{StaticResource CenteredEdit}" Header="已入库" Width="85" IsReadOnly="True" Binding="{Binding Owned}" />
+        <DataGridTextColumn ElementStyle="{StaticResource CenteredCell}" EditingElementStyle="{StaticResource CenteredEdit}" Header="已加入" Width="85" IsReadOnly="True" Binding="{Binding Selected}" />
+        <DataGridTextColumn ElementStyle="{StaticResource CenteredCell}" EditingElementStyle="{StaticResource CenteredEdit}" Header="可加入" Width="85" IsReadOnly="True" Binding="{Binding Maximum}" />
+        <DataGridTextColumn ElementStyle="{StaticResource CenteredCell}" EditingElementStyle="{StaticResource CenteredEdit}" Header="加入数量" Width="100" Binding="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" />
+      </DataGrid.Columns>
+    </DataGrid>
+    <StackPanel Grid.Row="3" Margin="0,12,0,0">
+      <TextBlock Name="Error" Foreground="#E7C56A" TextWrapping="Wrap" />
+      <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+        <Button Content="取消" IsCancel="True" />
+        <Button Content="加入所选类型与数量" Click="Add_OnClick" />
+      </StackPanel>
+    </StackPanel>
+  </Grid>
+</Window>

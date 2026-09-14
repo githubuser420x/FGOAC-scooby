@@ -1,0 +1,62 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <AssemblyName>FGOLocalPlatform</AssemblyName>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <OutputType>WinExe</OutputType>
+    <UseWPF>True</UseWPF>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Platforms>AnyCPU</Platforms>
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>Latest</LangVersion>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <NoWarn>$(NoWarn);CS0169;CS0414;CS0649;CS8500;NU1701</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <RootNamespace />
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="DeckReaderUI\**\*.cs" />
+    <Compile Include="DeckReaderUI.Kancolle\**\*.cs" />
+    <Compile Include="FGOLocalPlatform\**\*.cs" />
+    <Compile Include="FGOLocalPlatform.PhotoAssets\**\*.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="app.xaml" />
+    <Page Include="audiosettingsview.xaml" />
+    <Page Include="cardquantitywindow.xaml" />
+    <Page Include="cardvariantswindow.xaml" />
+    <Page Include="controlsettingsview.xaml" />
+    <Page Include="cursorsettingsview.xaml" />
+    <Page Include="debugsettingsview.xaml" />
+    <Page Include="diagnosticsview.xaml" />
+    <Page Include="mainwindow.xaml" />
+    <Page Include="newaccountdialog.xaml" />
+    <Page Include="photocontrols.xaml" />
+    <Page Include="serversettingsview.xaml" />
+    <Page Include="summonsettingswindow.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="assets\crying-emoji.png" />
+    <Resource Include="aprilfoolfgofirsthassan.ico" />
+    <Resource Include="platform.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FGOLocalPlatform.CardNames.json" LogicalName="FGOLocalPlatform.CardNames.json" />
+    <EmbeddedResource Include="FGOLocalPlatform.CraftEffects.json" LogicalName="FGOLocalPlatform.CraftEffects.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="ZstdSharp">
+      <HintPath>D:\FGOA\ZstdSharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="FGOLocalPlatform.DebugSettingsView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:fgolocalplatform="clr-namespace:FGOLocalPlatform;assembly=FGOLocalPlatform">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="20" MaxWidth="720" HorizontalAlignment="Stretch">
+      <TextBlock Text="调试" FontSize="22" FontWeight="Bold" Margin="0,0,0,12" />
+      <TextBlock Text="本地战斗调试预设。所有项目默认关闭，不修改账号存档。" Foreground="#FFB0C4DE" TextWrapping="Wrap" Margin="0,0,0,12" />
+      <Border BorderBrush="#70445F" BorderThickness="1" Background="#241B20" Padding="12" Margin="0,0,0,18">
+        <TextBlock Text="固定伤害已实机验证。其余项目已接入验证版，保存后约一秒生效。宝具及特殊敌人的覆盖范围仍需实战验证。" Foreground="#FFD27A" TextWrapping="Wrap" />
+      </Border>
+      <TabControl MinWidth="0">
+        <TabItem Header="叮叮叮">
+          <StackPanel Margin="18">
+            <CheckBox Name="OneHit" Content="固定伤害 999999" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <TextBlock Text="玩家有效命中的伤害固定为 999999，不修改面板攻击力；关闭后恢复正常计算。" Foreground="#FFB0C4DE" TextWrapping="Wrap" Margin="24,0,0,14" />
+            <CheckBox Name="AttackStun" Content="攻击触发昏倒" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <TextBlock Text="玩家命中敌人时请求游戏原生昏倒；保留免疫、恢复间隔及自然解除规则。格挡和未命中不触发。" Foreground="#FFB0C4DE" TextWrapping="Wrap" Margin="24,0,0,14" />
+            <CheckBox Name="FullNp" Content="NP 保持全满" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <TextBlock Text="保持玩家角色当前可用的 NP 上限，释放后恢复。" Foreground="#FFB0C4DE" Margin="24,0,0,14" />
+            <CheckBox Name="InstantNoble" Content="瞬发宝具" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <TextBlock Text="跳过宝具蓄力等待，保留宝具演出和正常结算。" Foreground="#FFB0C4DE" Margin="24,0,0,14" />
+            <CheckBox Name="Invincible" Content="角色无敌" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <TextBlock Text="阻止敌方攻击扣除玩家 HP；保留剧情强制退场，不修改敌人。" Foreground="#FFB0C4DE" Margin="24,0,0,14" />
+          </StackPanel>
+        </TabItem>
+      </TabControl>
+      <WrapPanel Margin="0,18,0,12">
+        <Button Content="保存预设" Width="150" Height="40" Margin="0,0,8,0" Click="Save_OnClick" />
+        <Button Content="全部关闭" Width="150" Height="40" Click="DisableAll_OnClick" />
+      </WrapPanel>
+      <TextBlock Name="StatusText" Foreground="#FFB0C4DE" TextWrapping="Wrap" />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>
