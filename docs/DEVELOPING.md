@@ -13,11 +13,12 @@ The deliverable is a self-contained single-file host published from `src\` and n
 
 | Path | Contents |
 | --- | --- |
-| `src\` | buildable C#/XAML project (`FGOLocalPlatform.csproj`) |
+| `src\` | buildable C#/XAML project (`FGOLocalPlatform.csproj`). `DeckReaderUI\` and `DeckReaderUI.Kancolle\` are the author's card-reader namespaces, compiled into the same assembly; the names are kept as decompiled so a new upstream version can be diffed against them |
+| `compat\` | the OpenGL compatibility layer for AMD and Intel graphics, shipped as received (see its README) |
 | `overlay\` | English replacements for files that live outside the assembly, laid out by their path relative to the install root |
 | `patch\` | `Apply-EN-Patch.ps1` (the installer players run) and `Build-Manifest.ps1` (writes the `manifest.json` it checks against) |
 | `dist\` | build output, `FGOAC scooby.exe` (not tracked) |
-| `docs\` | player guide, design, release steps, history, and this file |
+| `docs\` | player guide, design, release steps, and this file |
 | `package\` | the README that ships inside the release zip |
 | `build.cmd` | `dotnet build -c Release` (compile check only) |
 | `publish.cmd` | publish + copy to `dist\FGOAC scooby.exe` |
