@@ -9,12 +9,12 @@ namespace FGOLocalPlatform;
 
 internal static class ThemedMessageBox
 {
-	public static MessageBoxResult Show(string message, string caption = "FGO 本地平台", MessageBoxButton buttons = MessageBoxButton.OK, MessageBoxImage image = MessageBoxImage.None, MessageBoxResult defaultResult = MessageBoxResult.None)
+	public static MessageBoxResult Show(string message, string caption = "FGOA scooby", MessageBoxButton buttons = MessageBoxButton.OK, MessageBoxImage image = MessageBoxImage.None, MessageBoxResult defaultResult = MessageBoxResult.None)
 	{
 		return Show(null, message, caption, buttons, image, defaultResult);
 	}
 
-	public static MessageBoxResult Show(Window? owner, string message, string caption = "FGO 本地平台", MessageBoxButton buttons = MessageBoxButton.OK, MessageBoxImage image = MessageBoxImage.None, MessageBoxResult defaultResult = MessageBoxResult.None)
+	public static MessageBoxResult Show(Window? owner, string message, string caption = "FGOA scooby", MessageBoxButton buttons = MessageBoxButton.OK, MessageBoxImage image = MessageBoxImage.None, MessageBoxResult defaultResult = MessageBoxResult.None)
 	{
 		//IL_01c5: Unknown result type (might be due to invalid IL or missing references)
 		//IL_01ca: Unknown result type (might be due to invalid IL or missing references)
@@ -46,10 +46,10 @@ internal static class ThemedMessageBox
 		};
 		string text = image switch
 		{
-			MessageBoxImage.Hand => "错误", 
-			MessageBoxImage.Exclamation => "请注意", 
-			MessageBoxImage.Question => "请确认", 
-			_ => "提示", 
+			MessageBoxImage.Hand => "Error", 
+			MessageBoxImage.Exclamation => "Warning", 
+			MessageBoxImage.Question => "Confirm", 
+			_ => "Notice", 
 		};
 		stackPanel.Children.Add(new TextBlock
 		{
@@ -115,10 +115,10 @@ internal static class ThemedMessageBox
 			Button button2 = button;
 			button2.Content = choice switch
 			{
-				MessageBoxResult.Yes => "是（Y）", 
-				MessageBoxResult.No => "否（N）", 
-				MessageBoxResult.Cancel => "取消", 
-				_ => "确定", 
+				MessageBoxResult.Yes => "Yes (Y)", 
+				MessageBoxResult.No => "No (N)", 
+				MessageBoxResult.Cancel => "Cancel", 
+				_ => "OK", 
 			};
 			button.MinWidth = 88.0;
 			button.MinHeight = 36.0;

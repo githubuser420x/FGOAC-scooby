@@ -7,7 +7,7 @@
       <SolidColorBrush x:Key="AccentBrush" Color="#8A2E78" />
       <SolidColorBrush x:Key="AccentSoftBrush" Color="#4A1D46" />
       <Style x:Key="{x:Type ContextMenu}" TargetType="{x:Type ContextMenu}">
-        <Setter Property="FontFamily" Value="Microsoft YaHei UI, Segoe UI" />
+        <Setter Property="FontFamily" Value="Segoe UI, Microsoft YaHei UI" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="Foreground" Value="#EDE7EF" />
         <Setter Property="Background" Value="#17131B" />
@@ -62,7 +62,7 @@
         </Setter>
       </Style>
       <Style x:Key="{x:Type ToolTip}" TargetType="{x:Type ToolTip}">
-        <Setter Property="FontFamily" Value="Microsoft YaHei UI, Segoe UI" />
+        <Setter Property="FontFamily" Value="Segoe UI, Microsoft YaHei UI" />
         <Setter Property="FontSize" Value="12" />
         <Setter Property="Foreground" Value="#EDE7EF" />
         <Setter Property="Background" Value="#1B1720" />
@@ -94,7 +94,7 @@
         <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
         <Setter Property="Background" Value="#0C0A0E" />
         <Setter Property="Foreground" Value="#FFFFFFFF" />
-        <Setter Property="FontFamily" Value="Microsoft YaHei UI, Segoe UI" />
+        <Setter Property="FontFamily" Value="Segoe UI, Microsoft YaHei UI" />
       </Style>
       <Style x:Key="{x:Type Button}" TargetType="{x:Type Button}">
         <Setter Property="Margin" Value="3" />
@@ -400,7 +400,7 @@
         </Setter>
       </Style>
       <Style x:Key="{x:Type UserControl}" TargetType="{x:Type UserControl}">
-        <Setter Property="FontFamily" Value="Microsoft YaHei UI, Segoe UI" />
+        <Setter Property="FontFamily" Value="Segoe UI, Microsoft YaHei UI" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="Foreground" Value="#EDE7EF" />
         <Setter Property="FrameworkElement.UseLayoutRounding" Value="True" />

@@ -16,15 +16,10 @@ internal static class WindowTheme
 	{
 		window.Background = new SolidColorBrush(Color.FromRgb(12, 10, 14));
 		window.Foreground = Brushes.White;
-		window.FontFamily = new FontFamily("Microsoft YaHei UI, Segoe UI");
+		window.FontFamily = new FontFamily("Segoe UI, Microsoft YaHei UI");
 		window.FontSize = 14.0;
 		window.UseLayoutRounding = true;
 		TextOptions.SetTextFormattingMode((DependencyObject)(object)window, (TextFormattingMode)1);
-		string authorSuffix = ProtectedBranding.AuthorSuffix;
-		if (!window.Title.EndsWith(authorSuffix, StringComparison.Ordinal))
-		{
-			window.Title = window.Title + " · " + authorSuffix;
-		}
 		window.SourceInitialized += delegate
 		{
 			EnableDarkTitleBar(window);

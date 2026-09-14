@@ -642,8 +642,8 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 
 	private void ApplyProtectedBranding()
 	{
-		base.Title = "FGOA scooby";
-		HeaderBrandText.Text = "FGOA scooby";
+		base.Title = ProtectedBranding.WindowTitle;
+		HeaderBrandText.Text = ProtectedBranding.HeaderText;
 		FooterNoticeText.Text = ProtectedBranding.FooterNotice;
 	}
 
