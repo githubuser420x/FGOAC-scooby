@@ -26,6 +26,11 @@ First release, for Cloud23333's FGO Arcade local platform V1.01.
   caused by Windows Defender Controlled Folder Access.
 - First start sets everything up by itself: installs the patch, checks the folders, creates the
   account Master with a full roster, and picks windowed 1280x720 on the main monitor.
+- Windows Firewall is set up for you: one inbound allow rule each for the local server, the game and
+  the cabinet service, so Windows does not interrupt the first launch with a question that opens
+  behind the game window. Missing rules are put back on any later start.
+- The Stop Game question stays above the game, appears in the task bar and takes focus, so it cannot
+  be lost behind the game window or answered by something else stealing focus.
 
 ### Installer
 

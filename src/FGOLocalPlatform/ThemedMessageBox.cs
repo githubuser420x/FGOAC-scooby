@@ -9,12 +9,17 @@ namespace FGOLocalPlatform;
 
 internal static class ThemedMessageBox
 {
-	public static MessageBoxResult Show(string message, string caption = "FGOA scooby", MessageBoxButton buttons = MessageBoxButton.OK, MessageBoxImage image = MessageBoxImage.None, MessageBoxResult defaultResult = MessageBoxResult.None)
+	public static MessageBoxResult Show(string message, string caption = "FGOA scooby", MessageBoxButton buttons = MessageBoxButton.OK, MessageBoxImage image = MessageBoxImage.None, MessageBoxResult defaultResult = MessageBoxResult.None, bool foreground = false)
 	{
-		return Show(null, message, caption, buttons, image, defaultResult);
+		return Show(null, message, caption, buttons, image, defaultResult, foreground);
 	}
 
-	public static MessageBoxResult Show(Window? owner, string message, string caption = "FGOA scooby", MessageBoxButton buttons = MessageBoxButton.OK, MessageBoxImage image = MessageBoxImage.None, MessageBoxResult defaultResult = MessageBoxResult.None)
+	/// <summary>
+	/// Set <paramref name="foreground" /> for a question asked while the game is on screen: the
+	/// dialog then stays above other windows, appears in the task bar, takes focus, and answers
+	/// nothing at all if it is closed without a button being pressed.
+	/// </summary>
+	public static MessageBoxResult Show(Window? owner, string message, string caption = "FGOA scooby", MessageBoxButton buttons = MessageBoxButton.OK, MessageBoxImage image = MessageBoxImage.None, MessageBoxResult defaultResult = MessageBoxResult.None, bool foreground = false)
 	{
 		//IL_01c5: Unknown result type (might be due to invalid IL or missing references)
 		//IL_01ca: Unknown result type (might be due to invalid IL or missing references)
@@ -32,7 +37,8 @@ internal static class ThemedMessageBox
 			Width = 500.0,
 			SizeToContent = SizeToContent.Height,
 			ResizeMode = ResizeMode.NoResize,
-			ShowInTaskbar = (owner == null || !owner.IsVisible),
+			ShowInTaskbar = (foreground || owner == null || !owner.IsVisible),
+			Topmost = foreground,
 			WindowStartupLocation = ((owner == null || !owner.IsVisible) ? WindowStartupLocation.CenterScreen : WindowStartupLocation.CenterOwner)
 		};
 		if (owner != null && owner.IsVisible)
@@ -139,7 +145,7 @@ internal static class ThemedMessageBox
 		}
 		dialog.Closing += delegate
 		{
-			if (!selected)
+			if (!selected && !foreground)
 			{
 				if (buttons == MessageBoxButton.YesNo)
 				{
@@ -154,6 +160,10 @@ internal static class ThemedMessageBox
 		dialog.Loaded += delegate
 		{
 			initialFocus?.Focus();
+			if (foreground)
+			{
+				dialog.Activate();
+			}
 		};
 		dialog.PreviewKeyDown += delegate(object _, KeyEventArgs e)
 		{

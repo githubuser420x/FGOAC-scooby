@@ -23,6 +23,18 @@ internal sealed class FirstRun
 
 	private static readonly string[] UpgradeActions = new string[7] { "servants", "craft-essences", "materials", "levels", "bond", "costumes", "quests" };
 
+	/// <summary>
+	/// The three programs that listen or connect on the cabinet network. Without a rule for each,
+	/// Windows asks about them the first time the game runs, and the question can open behind the
+	/// game window.
+	/// </summary>
+	private static readonly (string Name, string Program, string Description)[] FirewallPrograms = new (string, string, string)[3]
+	{
+		("FGOA scooby server", "Server\\python\\python.exe", "the local server"),
+		("FGOA scooby game", "App\\ago.exe", "the game"),
+		("FGOA scooby service", "App\\am\\amdaemon.exe", "the cabinet service")
+	};
+
 	private readonly Window owner;
 
 	private readonly Func<string[], Task<ToolResult>> accountTool;
@@ -60,10 +72,12 @@ internal sealed class FirstRun
 		report("Checking your account...");
 		ToolResult accounts = await accountTool(new string[2] { "list", "--json" });
 		bool needsAccount = NeedsFirstAccount(accounts);
-		if (patched || needsAccount)
+		bool firstTime = patched || needsAccount;
+		if (firstTime)
 		{
 			await CheckEnvironmentAsync();
 		}
+		await EnsureFirewallRulesAsync(firstTime);
 		bool accountCreated = needsAccount && await CreateFirstAccountAsync(accounts);
 		bool defaultsWritten = ApplyMissingDefaults();
 		if (summary.Count == 0)
@@ -71,7 +85,9 @@ internal sealed class FirstRun
 			return patched || accountCreated || defaultsWritten;
 		}
 		report("Everything is ready - press Play when you are.");
-		ThemedMessageBox.Show(owner, "FGOA scooby is ready." + Environment.NewLine + Environment.NewLine + string.Join(Environment.NewLine, summary) + Environment.NewLine + Environment.NewLine + "Press Play to start the game. Windows asks for permission once, because the game needs administrator rights to run.", "FGOA scooby - First Run", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+		// The setup can take a few minutes, so the player may well be looking at something else:
+		// this one has to come to the front and be findable in the task bar.
+		ThemedMessageBox.Show(owner, "FGOA scooby is ready." + Environment.NewLine + Environment.NewLine + string.Join(Environment.NewLine, summary) + Environment.NewLine + Environment.NewLine + "Press Play to start the game. Windows asks for permission once, because the game needs administrator rights to run.", "FGOA scooby - First Run", MessageBoxButton.OK, MessageBoxImage.Asterisk, MessageBoxResult.OK, foreground: true);
 		return true;
 	}
 
@@ -243,6 +259,103 @@ internal sealed class FirstRun
 			text2 = text2.Substring(0, num);
 		}
 		summary.Add($"- Environment check: {array.Length} item(s) need attention, starting with {text2}. The full report is on the Advanced > Diagnostics and Help page.");
+	}
+
+	/// <summary>
+	/// Adds one inbound allow rule per program, so Windows never has to ask. Runs on every start,
+	/// because a rule can be removed later; a rule that is already there is left alone, and one
+	/// that points somewhere else is replaced, which is what happens when the game folder moves.
+	/// </summary>
+	private async Task EnsureFirewallRulesAsync(bool announce)
+	{
+		List<string> created = new List<string>();
+		List<string> failed = new List<string>();
+		foreach ((string Name, string Program, string Description) firewallProgram in FirewallPrograms)
+		{
+			string path = Path.Combine(installRoot, firewallProgram.Program);
+			if (!File.Exists(path))
+			{
+				continue;
+			}
+			try
+			{
+				(int ExitCode, string Output) tuple = await RunNetshAsync("advfirewall", "firewall", "show", "rule", "name=" + firewallProgram.Name, "verbose");
+				if (tuple.ExitCode == 0 && tuple.Output.Contains(path, StringComparison.OrdinalIgnoreCase))
+				{
+					continue;
+				}
+				report("Allowing " + firewallProgram.Description + " through Windows Firewall...");
+				if (tuple.ExitCode == 0)
+				{
+					await RunNetshAsync("advfirewall", "firewall", "delete", "rule", "name=" + firewallProgram.Name);
+				}
+				(int ExitCode, string Output) tuple2 = await RunNetshAsync("advfirewall", "firewall", "add", "rule", "name=" + firewallProgram.Name, "dir=in", "action=allow", "program=" + path, "enable=yes", "profile=any");
+				if (tuple2.ExitCode == 0)
+				{
+					created.Add(firewallProgram.Description);
+					log("Added the Windows Firewall rule " + firewallProgram.Name + " for " + path);
+				}
+				else
+				{
+					failed.Add(firewallProgram.Description);
+					log("The Windows Firewall rule " + firewallProgram.Name + " could not be added: " + tuple2.Output.Trim());
+				}
+			}
+			catch (Exception ex)
+			{
+				failed.Add(firewallProgram.Description);
+				log("The Windows Firewall rule " + firewallProgram.Name + " could not be added: " + ex.Message);
+			}
+		}
+		if (!announce)
+		{
+			return;
+		}
+		if (failed.Count > 0)
+		{
+			summary.Add("- Windows Firewall could not be set up for " + string.Join(" and ", failed) + ". The first time you press Play, Windows asks whether to allow it through - say yes. That question can open behind the game window, so look for it in the task bar.");
+		}
+		else if (created.Count > 0)
+		{
+			summary.Add("- Allowed " + string.Join(", ", created) + " through Windows Firewall, so Windows does not interrupt you when you press Play.");
+		}
+	}
+
+	private static async Task<(int ExitCode, string Output)> RunNetshAsync(params string[] arguments)
+	{
+		ProcessStartInfo processStartInfo = new ProcessStartInfo(Path.Combine(Environment.SystemDirectory, "netsh.exe"))
+		{
+			UseShellExecute = false,
+			CreateNoWindow = true,
+			RedirectStandardOutput = true,
+			RedirectStandardError = true,
+			StandardOutputEncoding = Encoding.UTF8,
+			StandardErrorEncoding = Encoding.UTF8
+		};
+		foreach (string item in arguments)
+		{
+			processStartInfo.ArgumentList.Add(item);
+		}
+		using Process process = Process.Start(processStartInfo) ?? throw new IOException("Windows Firewall could not be reached.");
+		Task<string> outputTask = process.StandardOutput.ReadToEndAsync();
+		Task<string> errorTask = process.StandardError.ReadToEndAsync();
+		using CancellationTokenSource timeout = new CancellationTokenSource(TimeSpan.FromSeconds(20.0));
+		try
+		{
+			await process.WaitForExitAsync(timeout.Token);
+		}
+		catch (OperationCanceledException)
+		{
+			try
+			{
+				process.Kill(entireProcessTree: true);
+			}
+			catch
+			{
+			}
+			throw new IOException("Windows Firewall did not answer within 20 seconds.");
+		}
+		return (process.ExitCode, await outputTask + await errorTask);
 	}
 
 	private bool NeedsFirstAccount(ToolResult accounts)

@@ -1,7 +1,7 @@
 <#
 Builds the release package for FGOA scooby.
 
-  .\package.ps1                       # D:\FGOA\release\FGOA-scooby-v1.0[.zip]
+  .\package.ps1                       # D:\FGOA\release\FGOA-scooby-v1.0.1[.zip]
   .\package.ps1 -Version 1.1
   .\package.ps1 -Publish              # run publish.cmd first
   .\package.ps1 -SkipZip              # leave the folder, do not zip it
@@ -13,7 +13,7 @@ Exit codes: 0 packaged, 1 unexpected error, 2 a source the package needs is miss
 #>
 [CmdletBinding()]
 param(
-    [string]$Version = '1.0',
+    [string]$Version = '1.0.1',
     [string]$GameRoot = 'D:\FGOA',
     [string]$OutputRoot = 'D:\FGOA\release',
     [switch]$Publish,
@@ -81,6 +81,11 @@ try {
     Write-Host 'Copying the launcher, the installer and the release notes'
     Copy-Item -LiteralPath $launcher -Destination ([IO.Path]::Combine($packageRoot, 'FGOA scooby.exe')) -Force
     Copy-Item -LiteralPath ([IO.Path]::Combine($repository, 'patch\Apply-EN-Patch.ps1')) -Destination ([IO.Path]::Combine($packageRoot, 'Apply-EN-Patch.ps1')) -Force
+    foreach ($guide in @('GUIDE_EN.md', 'GUIDE_EN.pdf')) {
+        $source = [IO.Path]::Combine($GameRoot, 'docs', $guide)
+        if (!(Test-Path -LiteralPath $source -PathType Leaf)) { Stop-WithMessage "The user guide is missing: $source" 2 }
+        Copy-Item -LiteralPath $source -Destination ([IO.Path]::Combine($packageRoot, $guide)) -Force
+    }
     $today = (Get-Date).ToString('yyyy-MM-dd')
     foreach ($document in @('README.md', 'CHANGELOG.md')) {
         $text = [IO.File]::ReadAllText([IO.Path]::Combine($repository, 'package', $document))
@@ -93,7 +98,7 @@ try {
     if ($LASTEXITCODE -ne 0) { Stop-WithMessage 'The manifest could not be built, so the package is not complete.' 1 }
 
     $sums = New-Object 'System.Collections.Generic.List[string]'
-    foreach ($name in @('FGOA scooby.exe', 'Apply-EN-Patch.ps1', 'manifest.json', 'README.md', 'CHANGELOG.md')) {
+    foreach ($name in @('FGOA scooby.exe', 'Apply-EN-Patch.ps1', 'manifest.json', 'README.md', 'CHANGELOG.md', 'GUIDE_EN.md', 'GUIDE_EN.pdf')) {
         $hash = (Get-FileHash -LiteralPath ([IO.Path]::Combine($packageRoot, $name)) -Algorithm SHA256).Hash.ToLowerInvariant()
         $sums.Add("$hash *$name")
     }

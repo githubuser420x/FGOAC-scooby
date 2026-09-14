@@ -15,11 +15,20 @@ platform install (Cloud23333's V1.01 package), and the patch is applied on top o
 3. Click Yes on the Windows permission prompt.
 
 The first start does the rest: it installs the English files, checks that the game can write to its
-folders, creates the account **Master** with a full Servant and Craft Essence roster, and sets the
-display to windowed 1280x720 on your main monitor. Then press **Play**. The game needs about a
-minute to reach the title screen.
+folders, allows the game and the local server through Windows Firewall, creates the account
+**Master** with a full Servant and Craft Essence roster, and sets the display to windowed 1280x720
+on your main monitor. Then press **Play**. The game needs about a minute to reach the title screen.
+
+If the firewall rules could not be created - a company policy or security suite can block that -
+Windows asks you instead the first time you press Play: once for the local server
+(`Server\python\python.exe`) and once for the game (`App\ago.exe`). Allow both. Those Windows
+questions can open **behind** the game window, so if the game seems stuck at a black screen, look
+for them in the task bar.
 
 Later starts skip all of that and go straight to Play.
+
+**GUIDE_EN.pdf** in this folder is the full guide: requirements, how to get Servants without the
+gacha, controls, the exchange shops, and troubleshooting.
 
 Two things to know before you start:
 

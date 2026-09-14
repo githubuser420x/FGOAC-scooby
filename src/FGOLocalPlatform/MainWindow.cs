@@ -531,7 +531,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		catch (Exception ex)
 		{
 			AppendAccountLog("First-run setup error: " + ex.Message);
-			ThemedMessageBox.Show(this, "The first-run setup did not finish:\n" + ex.Message + "\n\nYou can still set everything up by hand from the Account and Settings pages.", "FGOA scooby - First Run", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+			ThemedMessageBox.Show(this, "The first-run setup did not finish:\n" + ex.Message + "\n\nYou can still set everything up by hand from the Account and Settings pages.", "FGOA scooby - First Run", MessageBoxButton.OK, MessageBoxImage.Exclamation, MessageBoxResult.OK, foreground: true);
 		}
 		finally
 		{
@@ -3234,7 +3234,8 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 
 	private async void StopGameButton_OnClick(object sender, RoutedEventArgs e)
 	{
-		if (ThemedMessageBox.Show("Stop the current game session?", "FGOA scooby", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+		// The game is in front when this is asked, so the question has to come with it.
+		if (ThemedMessageBox.Show(this, "Stop the current game session?", "FGOA scooby", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes, foreground: true) != MessageBoxResult.Yes)
 		{
 			return;
 		}
