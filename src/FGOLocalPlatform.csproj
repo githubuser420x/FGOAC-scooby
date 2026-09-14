@@ -22,7 +22,6 @@
   <PropertyGroup>
     <LangVersion>Latest</LangVersion>
     <Nullable>annotations</Nullable>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup>

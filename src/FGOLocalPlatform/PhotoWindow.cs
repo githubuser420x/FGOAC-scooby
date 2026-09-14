@@ -535,9 +535,9 @@ public sealed class PhotoWindow : UserControl
 				{
 					e.Handled = true;
 					Key val = ((e.Key == Key.System) ? e.SystemKey : e.Key);
-					if ((uint)(val - 70) > 1u && (uint)(val - 116) > 5u)
+					if (val != Key.LWin && val != Key.RWin && (val < Key.LeftShift || val > Key.RightAlt))
 					{
-						if ((int)val != 13)
+						if (val != Key.Escape)
 						{
 							keys[index] = KeyInterop.VirtualKeyFromKey(val);
 						}
@@ -634,7 +634,7 @@ public sealed class PhotoWindow : UserControl
 		{
 			32 => "Space", 
 			13 => "Enter", 
-			_ => ((object)KeyInterop.KeyFromVirtualKey(key)/*cast due to constrained. prefix*/).ToString(), 
+			_ => KeyInterop.KeyFromVirtualKey(key).ToString(), 
 		};
 	}
 

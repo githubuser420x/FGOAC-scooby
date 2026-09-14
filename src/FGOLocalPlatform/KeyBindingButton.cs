@@ -66,7 +66,7 @@ public sealed class KeyBindingButton : Button
 		}
 		e.Handled = true;
 		Key val = ((e.Key == Key.System) ? e.SystemKey : ((e.Key == Key.ImeProcessed) ? e.ImeProcessedKey : e.Key));
-		if ((int)val == 13)
+		if (val == Key.Escape)
 		{
 			Value = value;
 			return;
@@ -278,7 +278,7 @@ public sealed class KeyBindingButton : Button
 		case 111:
 			return "Numpad /";
 		default:
-			return ((int)KeyInterop.KeyFromVirtualKey(vk) == 0) ? $"Key 0x{vk:X}" : ((object)KeyInterop.KeyFromVirtualKey(vk)/*cast due to constrained. prefix*/).ToString();
+			return (KeyInterop.KeyFromVirtualKey(vk) == Key.None) ? $"Key 0x{vk:X}" : KeyInterop.KeyFromVirtualKey(vk).ToString();
 		}
 	}
 }

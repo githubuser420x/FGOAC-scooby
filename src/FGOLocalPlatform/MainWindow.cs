@@ -3129,7 +3129,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 
 	private void UpdateHideUiKeyLabel()
 	{
-		HideUiKeyButton.Content = ((object)KeyInterop.KeyFromVirtualKey(hideUiVirtualKey)/*cast due to constrained. prefix*/).ToString();
+		HideUiKeyButton.Content = KeyInterop.KeyFromVirtualKey(hideUiVirtualKey).ToString();
 	}
 
 	private void HideUiKeyButton_OnClick(object sender, RoutedEventArgs e)
@@ -3153,9 +3153,9 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		}
 		e.Handled = true;
 		Key val = ((e.Key == Key.System) ? e.SystemKey : e.Key);
-		if ((uint)(val - 70) > 1u && (uint)(val - 116) > 5u)
+		if (val != Key.LWin && val != Key.RWin && (val < Key.LeftShift || val > Key.RightAlt))
 		{
-			if ((int)val != 13)
+			if (val != Key.Escape)
 			{
 				hideUiVirtualKey = KeyInterop.VirtualKeyFromKey(val);
 			}

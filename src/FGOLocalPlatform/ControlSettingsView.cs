@@ -425,7 +425,7 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 	[DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
 	private static extern bool WritePrivateProfileString(string section, string key, string value, string file);
 
-	public unsafe ControlSettingsView()
+	public ControlSettingsView()
 	{
 		InitializeComponent();
 		(string, string, int)[] array = new(string, string, int)[4]
@@ -488,9 +488,9 @@ public partial class ControlSettingsView : UserControl, IComponentConnector
 		for (int j = 8; j <= 254; j++)
 		{
 			Key val = KeyInterop.KeyFromVirtualKey(j);
-			if ((int)val != 0 && KeyInterop.VirtualKeyFromKey(val) == j)
+			if (val != Key.None && KeyInterop.VirtualKeyFromKey(val) == j)
 			{
-				list.Add(new Choice(((object)(*(Key*)(&val))/*cast due to constrained. prefix*/).ToString(), j));
+				list.Add(new Choice(val.ToString(), j));
 			}
 		}
 		array = new(string, string, int)[12]
