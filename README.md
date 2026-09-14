@@ -151,4 +151,11 @@ everything what the English release calls it. **Fate/Grand Order Arcade is Sega'
 they own the game. This is a fan translation applied to files you already have, it is not sold, and
 it carries no game files of its own.
 
-Released under the [MIT licence](LICENSE).
+## Licence
+
+The work in this repository - the translation, the launcher changes, the installer, the scripts and
+the documentation - is released under the [MIT licence](LICENSE). It does not cover what is not ours:
+`src\` is a translated rebuild of Cloud23333's `FGOLocalPlatform` front end and remains his work,
+included so the English version can be built and improved in the open; `compatgoglcompat.dll` is
+a community-built library shipped as received; and the game itself belongs to Sega and TYPE-MOON.
+If you are the author of any of that and want it credited differently or taken out, open an issue.
