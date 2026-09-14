@@ -1,0 +1,19 @@
+* text=auto eol=crlf
+
+*.cs      text diff=csharp
+*.csproj  text
+*.xaml    text
+*.json    text
+*.md      text
+*.ps1     text
+*.py      text
+*.cmd     text eol=crlf
+*.yml     text eol=lf
+*.sh      text eol=lf
+
+*.png binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.dll binary
+*.exe binary

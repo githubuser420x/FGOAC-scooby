@@ -1,0 +1,30 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = crlf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = tab
+max_line_length = 110
+
+[*.{md,json,yml,yaml}]
+indent_style = space
+indent_size = 2
+
+[*.{csproj,xaml}]
+indent_style = space
+indent_size = 2
+
+[*.{ps1,psm1}]
+indent_style = space
+indent_size = 4
+
+[*.py]
+indent_style = space
+indent_size = 4
+
+[*.cs]
+indent_style = tab
+csharp_new_line_before_open_brace = all
+dotnet_sort_system_directives_first = true

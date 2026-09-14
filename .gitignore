@@ -1,5 +1,8 @@
 bin/
 obj/
 dist/
+release/
+packages/
+.vs/
 *.user
 patch/manifest.json

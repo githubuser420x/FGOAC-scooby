@@ -1,10 +1,14 @@
-<#
+﻿<#
 Builds the release package for FGOAC scooby.
 
-  .\package.ps1                       # version read from the built launcher
-  .\package.ps1 -Version 1.1.1        # override it
-  .\package.ps1 -Publish              # run publish.cmd first
-  .\package.ps1 -SkipZip              # leave the folder, do not zip it
+  .\package.ps1 -GameRoot D:\games\FGOA                 # version read from the built launcher
+  .\package.ps1 -GameRoot D:\games\FGOA -Version 1.1.1  # override it
+  .\package.ps1 -GameRoot D:\games\FGOA -Publish        # run publish.cmd first
+  .\package.ps1 -GameRoot D:\games\FGOA -SkipZip        # leave the folder, do not zip it
+
+-GameRoot is the FGO Arcade install the English game files are taken from: the folder that
+holds App and Server. The package is written to release\ beside this script unless
+-OutputRoot says otherwise.
 
 The run is repeatable: the payload is mirrored, so a second run only copies what changed and
 removes what is no longer part of the package.
@@ -14,8 +18,8 @@ Exit codes: 0 packaged, 1 unexpected error, 2 a source the package needs is miss
 [CmdletBinding()]
 param(
     [string]$Version = '',
-    [string]$GameRoot = 'D:\FGOA',
-    [string]$OutputRoot = 'D:\FGOA\release',
+    [Parameter(Mandatory)][string]$GameRoot,
+    [string]$OutputRoot = '',
     [switch]$Publish,
     [switch]$SkipZip
 )
@@ -30,6 +34,7 @@ function Stop-WithMessage {
 
 try {
     $repository = $PSScriptRoot
+    if ([string]::IsNullOrWhiteSpace($OutputRoot)) { $OutputRoot = [IO.Path]::Combine($repository, 'release') }
     $launcher = [IO.Path]::Combine($repository, 'dist\FGOAC scooby.exe')
     if ($Publish -or !(Test-Path -LiteralPath $launcher -PathType Leaf)) {
         Write-Host 'Publishing the launcher...'
@@ -88,16 +93,16 @@ try {
     Copy-Item -LiteralPath $launcher -Destination ([IO.Path]::Combine($packageRoot, 'FGOAC scooby.exe')) -Force
     Copy-Item -LiteralPath ([IO.Path]::Combine($repository, 'patch\Apply-EN-Patch.ps1')) -Destination ([IO.Path]::Combine($packageRoot, 'Apply-EN-Patch.ps1')) -Force
     foreach ($guide in @('GUIDE_EN.md', 'GUIDE_EN.pdf')) {
-        $source = [IO.Path]::Combine($GameRoot, 'docs', $guide)
+        $source = [IO.Path]::Combine($repository, 'docs', $guide)
         if (!(Test-Path -LiteralPath $source -PathType Leaf)) { Stop-WithMessage "The user guide is missing: $source" 2 }
         Copy-Item -LiteralPath $source -Destination ([IO.Path]::Combine($packageRoot, $guide)) -Force
     }
     $today = (Get-Date).ToString('yyyy-MM-dd')
-    foreach ($document in @('README.md', 'CHANGELOG.md')) {
-        $text = [IO.File]::ReadAllText([IO.Path]::Combine($repository, 'package', $document))
-        $text = $text.Replace('{{VERSION}}', $Version).Replace('{{DATE}}', $today)
-        [IO.File]::WriteAllText([IO.Path]::Combine($packageRoot, $document), $text, [Text.UTF8Encoding]::new($false))
-    }
+    $text = [IO.File]::ReadAllText([IO.Path]::Combine($repository, 'package\README.md'))
+    $text = $text.Replace('{{VERSION}}', $Version).Replace('{{DATE}}', $today)
+    [IO.File]::WriteAllText([IO.Path]::Combine($packageRoot, 'README.md'), $text, [Text.UTF8Encoding]::new($false))
+    # One changelog: the root CHANGELOG.md is the whole history and it ships as it stands.
+    Copy-Item -LiteralPath ([IO.Path]::Combine($repository, 'CHANGELOG.md')) -Destination ([IO.Path]::Combine($packageRoot, 'CHANGELOG.md')) -Force
 
     Write-Host 'Building the manifest'
     & ([IO.Path]::Combine($repository, 'patch\Build-Manifest.ps1')) -PackageRoot $packageRoot -Version $Version

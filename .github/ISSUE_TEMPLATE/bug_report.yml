@@ -1,0 +1,68 @@
+name: Bug report
+description: Something in the game or the launcher does not work.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Check **Advanced > Diagnostics and Help** in the launcher first. It lists the game's error
+        codes with the fix for each one, and the answer is usually there.
+  - type: input
+    id: version
+    attributes:
+      label: Launcher version
+      description: Advanced > About, or the version of the release zip you installed.
+      placeholder: "1.1.0"
+    validations:
+      required: true
+  - type: input
+    id: screen
+    attributes:
+      label: Which screen were you on
+      description: The launcher page, or the game screen.
+      placeholder: "Launcher, Cards and Deck - or in game, Formation"
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happened instead
+      description: Any error code or message, word for word.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: checkboxes
+    id: logs
+    attributes:
+      label: Logs
+      description: >
+        Attach what you have from the `logs` folder next to `App`. Drag the files onto this box.
+        `environment-check.txt` is written by Advanced > Diagnostics and Help.
+      options:
+        - label: "fgo-last-launch.log - the launch script, from start to exit code"
+        - label: "fgozh.log - the English file hook: which files the game actually loaded"
+        - label: "server-control.log - the local server"
+        - label: "artemis-stderr.log - the game server process"
+        - label: "mariadb.log - the database"
+        - label: "environment-check.txt - the environment check"
+  - type: textarea
+    id: system
+    attributes:
+      label: System
+      description: Windows version, graphics card and driver version, and the drive the game is on.
+      placeholder: "Windows 11 23H2, RTX 4070 driver 566.03, installed on D:"

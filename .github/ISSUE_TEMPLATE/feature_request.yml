@@ -1,0 +1,27 @@
+name: Feature request
+description: Suggest something the launcher or the translation should do.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Two things this project will not do: add online play, which does not exist to connect to,
+        and distribute game files. Anything else is fair to ask for.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is the problem
+      description: What are you trying to do, and what gets in the way today.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What should happen instead
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Anything you already tried
+      description: Other ways round it, and why they were not good enough.
