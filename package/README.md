@@ -1,8 +1,8 @@
-# FGOA scooby {{VERSION}} - FGO Arcade in English
+# FGOAC scooby {{VERSION}} - FGO Arcade in English
 
 An English patch for the FGO Arcade local platform. It puts the game itself into English - menus,
 tutorial, story text, battle screens, shops, help - and replaces the Chinese front end with an
-English one called **FGOA scooby**, which starts the server, manages your account and builds your
+English one called **FGOAC scooby**, which starts the server, manages your account and builds your
 card deck.
 
 This is not a game download. It does nothing on its own: you need an existing FGO Arcade local
@@ -11,7 +11,7 @@ platform install (Cloud23333's V1.01 package), and the patch is applied on top o
 ## Install
 
 1. Unzip this package into your FGO Arcade folder - the one that holds `App` and `Server`.
-2. Run **FGOA scooby**.
+2. Run **FGOAC scooby**.
 3. Click Yes on the Windows permission prompt.
 
 The first start does the rest: it installs the English files, checks that the game can write to its
@@ -82,7 +82,7 @@ each one; check it first, the answer is usually there.
 ## Credits
 
 - **Cloud23333** wrote the FGO Arcade local platform - the server package, the launcher
-  (`FGOLocalPlatform`) that FGOA scooby is built from, and the file hook this patch loads its English
+  (`FGOLocalPlatform`) that FGOAC scooby is built from, and the file hook this patch loads its English
   through. None of this exists without his work. His package is free; if anyone sold it to you, ask
   for your money back.
 - The **FGO Arcade wiki** and **Atlas Academy** were used for the official English names of

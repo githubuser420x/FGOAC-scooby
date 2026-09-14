@@ -9,7 +9,7 @@ namespace FGOLocalPlatform;
 
 internal static class ThemedMessageBox
 {
-	public static MessageBoxResult Show(string message, string caption = "FGOA scooby", MessageBoxButton buttons = MessageBoxButton.OK, MessageBoxImage image = MessageBoxImage.None, MessageBoxResult defaultResult = MessageBoxResult.None, bool foreground = false)
+	public static MessageBoxResult Show(string message, string caption = "FGOAC scooby", MessageBoxButton buttons = MessageBoxButton.OK, MessageBoxImage image = MessageBoxImage.None, MessageBoxResult defaultResult = MessageBoxResult.None, bool foreground = false)
 	{
 		return Show(null, message, caption, buttons, image, defaultResult, foreground);
 	}
@@ -19,7 +19,7 @@ internal static class ThemedMessageBox
 	/// dialog then stays above other windows, appears in the task bar, takes focus, and answers
 	/// nothing at all if it is closed without a button being pressed.
 	/// </summary>
-	public static MessageBoxResult Show(Window? owner, string message, string caption = "FGOA scooby", MessageBoxButton buttons = MessageBoxButton.OK, MessageBoxImage image = MessageBoxImage.None, MessageBoxResult defaultResult = MessageBoxResult.None, bool foreground = false)
+	public static MessageBoxResult Show(Window? owner, string message, string caption = "FGOAC scooby", MessageBoxButton buttons = MessageBoxButton.OK, MessageBoxImage image = MessageBoxImage.None, MessageBoxResult defaultResult = MessageBoxResult.None, bool foreground = false)
 	{
 		//IL_01c5: Unknown result type (might be due to invalid IL or missing references)
 		//IL_01ca: Unknown result type (might be due to invalid IL or missing references)

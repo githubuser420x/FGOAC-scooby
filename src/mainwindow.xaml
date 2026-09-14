@@ -662,7 +662,7 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                   <StackPanel Margin="20" MaxWidth="720" HorizontalAlignment="Stretch">
                     <TextBlock Text="About" FontSize="22" FontWeight="Bold" Margin="0,0,0,8" />
-                    <TextBlock Text="FGOA scooby - English build of the FGO Arcade local platform, version 1.01" TextWrapping="Wrap" Foreground="#BFB5C2" Margin="0,0,0,10" />
+                    <TextBlock Text="FGOAC scooby - English build of the FGO Arcade local platform, version 1.01" TextWrapping="Wrap" Foreground="#BFB5C2" Margin="0,0,0,10" />
                     <TextBlock Text="FGOLocalPlatform by Cloud23333" Foreground="#F5F1F6" FontWeight="SemiBold" Margin="0,0,0,6" />
                     <TextBlock Text="This program is free. If you paid for it, demand a full refund and report the seller." TextWrapping="Wrap" Foreground="#E7C56A" Margin="0,0,0,24" />
                     <TextBlock Text="Upstream project" Foreground="#B45A9F" FontSize="16" FontWeight="Bold" Margin="0,0,0,8" />

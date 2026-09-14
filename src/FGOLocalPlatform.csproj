@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <AssemblyName>FGOLocalPlatform</AssemblyName>
-    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
     <OutputType>WinExe</OutputType>
     <UseWPF>True</UseWPF>
     <TargetFramework>net6.0-windows</TargetFramework>
@@ -9,8 +9,12 @@
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <EnableDefaultItems>false</EnableDefaultItems>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
+    <!-- The one place the version is written. The About page and the updater both read it back
+         from the assembly, and package.ps1 names the release zip after it. -->
+    <Version>1.1.0</Version>
+    <Product>FGOAC scooby</Product>
+    <AssemblyTitle>FGOAC scooby</AssemblyTitle>
+    <Company>FGOAC scooby</Company>
   </PropertyGroup>
   <PropertyGroup>
     <LangVersion>Latest</LangVersion>

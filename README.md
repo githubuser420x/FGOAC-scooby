@@ -1,9 +1,9 @@
-# FGOA scooby — English launcher
+# FGOAC scooby — English launcher
 
 English rebuild of the FGO Arcade local platform front end (`FGOLocalPlatform`, V1.01, by Cloud23333).
 `src\` is a decompile of the author's managed assembly with the compile fixes listed below and the
 user-facing strings translated. The deliverable is a self-contained single-file host published from
-`src\` and named `FGOA scooby.exe`.
+`src\` and named `FGOAC scooby.exe`.
 
 ## Layout
 
@@ -12,9 +12,9 @@ user-facing strings translated. The deliverable is a self-contained single-file 
 | `src\` | buildable C#/XAML project (`FGOLocalPlatform.csproj`) |
 | `overlay\` | English replacements for files that live outside the assembly, laid out by their path relative to the install root |
 | `patch\` | `Apply-EN-Patch.ps1` (the installer players run) and `Build-Manifest.ps1` (writes the `manifest.json` it checks against) |
-| `dist\` | build output, `FGOA scooby.exe` (not tracked) |
+| `dist\` | build output, `FGOAC scooby.exe` (not tracked) |
 | `build.cmd` | `dotnet build -c Release` (compile check only) |
-| `publish.cmd` | publish + copy to `dist\FGOA scooby.exe` |
+| `publish.cmd` | publish + copy to `dist\FGOAC scooby.exe` |
 
 ## Build
 
@@ -30,7 +30,7 @@ published host carries its own .NET runtime, so a player does not have to instal
 Deploy with a single copy:
 
 ```
-copy /y "dist\FGOA scooby.exe" "D:\FGOA\FGOA scooby.exe"
+copy /y "dist\FGOAC scooby.exe" "D:\FGOA\FGOAC scooby.exe"
 ```
 
 `AssemblyName` stays `FGOLocalPlatform`: pack URIs in code and XAML are built from it, and the
@@ -96,7 +96,7 @@ during development.
 | `App\FGO_Launcher.ps1` | two lines reach the launcher log panel |
 | `App\FGO_StartupChecks.ps1` | one line reaches the startup failure dialog |
 | `Server\Start-FGOLocalServer.ps1` | three lines reach the server log panel |
-| `Server\Stop-FGOLocalServerWhenIdle.ps1` | also recognises `FGOA scooby.exe` as a running front end |
+| `Server\Stop-FGOLocalServerWhenIdle.ps1` | also recognises `FGOAC scooby.exe` as a running front end |
 | `Server\tools\fgo_account.py` | every `message` it emits is shown verbatim by the account page |
 | `Server\tools\fgo_server_config.py` | port and address validation errors on the server page |
 | `Server\artemis\titles\fgo\data\summon_candidates.json` | the acquisition notes shown in the Draw Rates status line. The Japanese card names and quest titles in that file stay as they are — the column they feed is labelled Japanese Name |
@@ -108,7 +108,7 @@ start. It works against a release package laid out like this, which is also what
 package into the game folder produces:
 
 ```
-FGOA scooby.exe
+FGOAC scooby.exe
 Apply-EN-Patch.ps1
 manifest.json
 payload\App\zh\...

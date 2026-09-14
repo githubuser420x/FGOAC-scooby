@@ -30,10 +30,16 @@ internal sealed class FirstRun
 	/// </summary>
 	private static readonly (string Name, string Program, string Description)[] FirewallPrograms = new (string, string, string)[3]
 	{
-		("FGOA scooby server", "Server\\python\\python.exe", "the local server"),
-		("FGOA scooby game", "App\\ago.exe", "the game"),
-		("FGOA scooby service", "App\\am\\amdaemon.exe", "the cabinet service")
+		("FGOAC scooby server", "Server\\python\\python.exe", "the local server"),
+		("FGOAC scooby game", "App\\ago.exe", "the game"),
+		("FGOAC scooby service", "App\\am\\amdaemon.exe", "the cabinet service")
 	};
+
+	/// <summary>
+	/// Rule names used before the launcher was renamed. Deleting them keeps an install that ran
+	/// 1.0.1 from carrying two rules per program.
+	/// </summary>
+	private static readonly string[] RetiredFirewallRules = new string[3] { "FGOA scooby server", "FGOA scooby game", "FGOA scooby service" };
 
 	private readonly Window owner;
 
@@ -87,7 +93,7 @@ internal sealed class FirstRun
 		report("Everything is ready - press Play when you are.");
 		// The setup can take a few minutes, so the player may well be looking at something else:
 		// this one has to come to the front and be findable in the task bar.
-		ThemedMessageBox.Show(owner, "FGOA scooby is ready." + Environment.NewLine + Environment.NewLine + string.Join(Environment.NewLine, summary) + Environment.NewLine + Environment.NewLine + "Press Play to start the game. Windows asks for permission once, because the game needs administrator rights to run.", "FGOA scooby - First Run", MessageBoxButton.OK, MessageBoxImage.Asterisk, MessageBoxResult.OK, foreground: true);
+		ThemedMessageBox.Show(owner, "FGOAC scooby is ready." + Environment.NewLine + Environment.NewLine + string.Join(Environment.NewLine, summary) + Environment.NewLine + Environment.NewLine + "Press Play to start the game. Windows asks for permission once, because the game needs administrator rights to run.", "FGOAC scooby - First Run", MessageBoxButton.OK, MessageBoxImage.Asterisk, MessageBoxResult.OK, foreground: true);
 		return true;
 	}
 
@@ -270,6 +276,21 @@ internal sealed class FirstRun
 	{
 		List<string> created = new List<string>();
 		List<string> failed = new List<string>();
+		foreach (string retired in RetiredFirewallRules)
+		{
+			try
+			{
+				if ((await RunNetshAsync("advfirewall", "firewall", "show", "rule", "name=" + retired)).ExitCode == 0)
+				{
+					await RunNetshAsync("advfirewall", "firewall", "delete", "rule", "name=" + retired);
+					log("Removed the Windows Firewall rule " + retired + ", left over from an earlier version.");
+				}
+			}
+			catch (Exception ex)
+			{
+				log("The Windows Firewall rule " + retired + " could not be removed: " + ex.Message);
+			}
+		}
 		foreach ((string Name, string Program, string Description) firewallProgram in FirewallPrograms)
 		{
 			string path = Path.Combine(installRoot, firewallProgram.Program);

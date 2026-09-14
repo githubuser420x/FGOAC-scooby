@@ -531,7 +531,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		catch (Exception ex)
 		{
 			AppendAccountLog("First-run setup error: " + ex.Message);
-			ThemedMessageBox.Show(this, "The first-run setup did not finish:\n" + ex.Message + "\n\nYou can still set everything up by hand from the Account and Settings pages.", "FGOA scooby - First Run", MessageBoxButton.OK, MessageBoxImage.Exclamation, MessageBoxResult.OK, foreground: true);
+			ThemedMessageBox.Show(this, "The first-run setup did not finish:\n" + ex.Message + "\n\nYou can still set everything up by hand from the Account and Settings pages.", "FGOAC scooby - First Run", MessageBoxButton.OK, MessageBoxImage.Exclamation, MessageBoxResult.OK, foreground: true);
 		}
 		finally
 		{
@@ -1351,7 +1351,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		string fullPath = Path.GetFullPath(Path.Combine(GamePaths.GameRoot, "..", "Server", "Start-FGOLocalServer.ps1"));
 		if (!File.Exists(fullPath))
 		{
-			ThemedMessageBox.Show("The server start script is missing:\n" + fullPath, "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Hand);
+			ThemedMessageBox.Show("The server start script is missing:\n" + fullPath, "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Hand);
 			return;
 		}
 		serverConfiguring = true;
@@ -1493,7 +1493,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		}
 		if (IsThisGameRunning() || launcherProcessRunning)
 		{
-			ThemedMessageBox.Show("Stop the game before stopping the local server.", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+			ThemedMessageBox.Show("Stop the game before stopping the local server.", "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 		}
 		else
 		{
@@ -1669,7 +1669,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		catch (Exception ex)
 		{
 			AppendAccountLog("Account operation error: " + ex.Message);
-			ThemedMessageBox.Show("Account operation failed:\n" + ex.Message, "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Hand);
+			ThemedMessageBox.Show("Account operation failed:\n" + ex.Message, "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Hand);
 		}
 		finally
 		{
@@ -1705,7 +1705,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			AppendAccountLog("list failed: " + text);
 			if (showErrors)
 			{
-				ThemedMessageBox.Show("Could not read the local account list:\n" + text, "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+				ThemedMessageBox.Show("Could not read the local account list:\n" + text, "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 			}
 			return;
 		}
@@ -1981,12 +1981,12 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 
 	private static void ShowServerRunningAccountWarning()
 	{
-		ThemedMessageBox.Show("The local server is running, so this account operation cannot run.\nClick Stop Server at the top, then try again.", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+		ThemedMessageBox.Show("The local server is running, so this account operation cannot run.\nClick Stop Server at the top, then try again.", "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 	}
 
 	private static void ShowGameRunningAccountWarning()
 	{
-		ThemedMessageBox.Show("The game is running, so accounts cannot be switched, created, deleted, reset or repaired.\nEnd the current game session first, so the access code still matches the save that is logged in.", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+		ThemedMessageBox.Show("The game is running, so accounts cannot be switched, created, deleted, reset or repaired.\nEnd the current game session first, so the access code still matches the save that is logged in.", "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 	}
 
 	private bool ReportAccountToolFailure(AccountToolResult result, string operation)
@@ -2008,7 +2008,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		}
 		else
 		{
-			ThemedMessageBox.Show("Account operation (" + operation + ") failed:\n" + text, "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Hand);
+			ThemedMessageBox.Show("Account operation (" + operation + ") failed:\n" + text, "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Hand);
 		}
 		return true;
 	}
@@ -2030,7 +2030,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		AccountEntry account = SelectedAccount;
 		if (account == null)
 		{
-			ThemedMessageBox.Show("Pick an account in the Select drop-down first.", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+			ThemedMessageBox.Show("Pick an account in the Select drop-down first.", "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 			return;
 		}
 		await ExecuteAccountActionAsync(async delegate
@@ -2040,7 +2040,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			{
 				AppendAccountLog($"Current account set to {account.MasterName} (ID {account.AimeId}); access code written to DEVICE/aime.txt");
 				await RefreshAccountsAsync(showErrors: false);
-				ThemedMessageBox.Show($"Switched to the account {account.MasterName} (ID {account.AimeId}).", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+				ThemedMessageBox.Show($"Switched to the account {account.MasterName} (ID {account.AimeId}).", "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 			}
 		});
 	}
@@ -2081,15 +2081,15 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 				AppendAccountLog($"Created account {name} (ID {aimeId}), mode {mode}, access code {accessCode}");
 				await RefreshAccountsAsync(showErrors: false);
 				SelectAccountById(aimeId);
-				ThemedMessageBox.Show($"Account created: {name} (ID {aimeId})\nAccess code: {accessCode}", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
-				if (ThemedMessageBox.Show("Switch to the new account now?", "FGOA scooby", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+				ThemedMessageBox.Show($"Account created: {name} (ID {aimeId})\nAccess code: {accessCode}", "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+				if (ThemedMessageBox.Show("Switch to the new account now?", "FGOAC scooby", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
 				{
 					AccountToolResult result = await RunAccountToolAsync("use", "--aime-id", aimeId.ToString(), "--json");
 					if (!ReportAccountToolFailure(result, "use"))
 					{
 						AppendAccountLog($"Switched to the new account {name} (ID {aimeId})");
 						await RefreshAccountsAsync(showErrors: false);
-						ThemedMessageBox.Show($"Switched to the new account {name} (ID {aimeId}).", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+						ThemedMessageBox.Show($"Switched to the new account {name} (ID {aimeId}).", "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 					}
 				}
 			}
@@ -2108,7 +2108,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		AccountEntry account = SelectedAccount;
 		if (account == null)
 		{
-			ThemedMessageBox.Show("Pick the account to delete in the Select drop-down first.", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+			ThemedMessageBox.Show("Pick the account to delete in the Select drop-down first.", "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 			return;
 		}
 		if (await IsPortOpenAsync(ServerSettingsView.ConfiguredPorts()[0]))
@@ -2139,7 +2139,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 				}
 				await RefreshAccountsAsync(showErrors: false);
 				string value = ((!deletedCurrent) ? "" : ((replacementAimeId > 0) ? $"\nThe current account switched automatically to Aime ID {replacementAimeId}." : "\nThe current access code is cleared - create a new account before starting the game."));
-				ThemedMessageBox.Show($"The account {account.MasterName} (ID {account.AimeId}) was fully deleted.{value}\n\n" + (cleanupComplete ? "Its save data, Aime identity, card mapping and leftover backups have all been cleaned up; the lowest free ID will be reused by the next new account." : "The save data, Aime identity and card mapping were deleted, but some old backups could not be cleaned up - see the log on the right. The lowest free ID will still be reused by the next new account."), "FGOA scooby", MessageBoxButton.OK, cleanupComplete ? MessageBoxImage.Asterisk : MessageBoxImage.Exclamation);
+				ThemedMessageBox.Show($"The account {account.MasterName} (ID {account.AimeId}) was fully deleted.{value}\n\n" + (cleanupComplete ? "Its save data, Aime identity, card mapping and leftover backups have all been cleaned up; the lowest free ID will be reused by the next new account." : "The save data, Aime identity and card mapping were deleted, but some old backups could not be cleaned up - see the log on the right. The lowest free ID will still be reused by the next new account."), "FGOAC scooby", MessageBoxButton.OK, cleanupComplete ? MessageBoxImage.Asterisk : MessageBoxImage.Exclamation);
 			}
 		});
 	}
@@ -2197,7 +2197,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		AccountEntry account = SelectedAccount;
 		if (account == null)
 		{
-			ThemedMessageBox.Show("Pick the account to reset in the Select drop-down first.", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+			ThemedMessageBox.Show("Pick the account to reset in the Select drop-down first.", "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 			return;
 		}
 		if (await IsPortOpenAsync(ServerSettingsView.ConfiguredPorts()[0]))
@@ -2207,7 +2207,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			return;
 		}
 		lastKnownServerRunning = false;
-		if (ThemedMessageBox.Show($"Reset the account {account.MasterName} (ID {account.AimeId}) to a brand new normal account?\n\nThis clears owned Servants, points, items, print history and all game progress. Resetting the current account also clears the sortie deck, and it cannot be undone.", "FGOA scooby", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) != MessageBoxResult.Yes)
+		if (ThemedMessageBox.Show($"Reset the account {account.MasterName} (ID {account.AimeId}) to a brand new normal account?\n\nThis clears owned Servants, points, items, print history and all game progress. Resetting the current account also clears the sortie deck, and it cannot be undone.", "FGOAC scooby", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) != MessageBoxResult.Yes)
 		{
 			return;
 		}
@@ -2226,7 +2226,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 				AppendAccountLog($"Account {account.MasterName} (ID {account.AimeId}) reset to a new normal account");
 				await RefreshAccountsAsync(showErrors: false);
 				SelectAccountById(account.AimeId);
-				ThemedMessageBox.Show("Reset finished: the account " + account.MasterName + " has had its Servants, resources and progress cleared.", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+				ThemedMessageBox.Show("Reset finished: the account " + account.MasterName + " has had its Servants, resources and progress cleared.", "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 			}
 		});
 	}
@@ -2243,7 +2243,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		AccountEntry account = SelectedAccount;
 		if (account == null)
 		{
-			ThemedMessageBox.Show("Pick the account to repair first.", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+			ThemedMessageBox.Show("Pick the account to repair first.", "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 			return;
 		}
 		if (await IsPortOpenAsync(ServerSettingsView.ConfiguredPorts()[0]))
@@ -2253,7 +2253,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			return;
 		}
 		lastKnownServerRunning = false;
-		if (ThemedMessageBox.Show("This rebuilds the EXP, materials, Bond and quest progress of the account " + account.MasterName + " from the recorded cabinet traffic.\n\nThe account files are backed up first. Continue?", "FGOA scooby", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+		if (ThemedMessageBox.Show("This rebuilds the EXP, materials, Bond and quest progress of the account " + account.MasterName + " from the recorded cabinet traffic.\n\nThe account files are backed up first. Continue?", "FGOAC scooby", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
 		{
 			return;
 		}
@@ -2267,7 +2267,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 				AppendAccountLog($"Account {account.AimeId} repaired from history: {captures} results, {questRows} quest states");
 				await RefreshAccountsAsync(showErrors: false);
 				SelectAccountById(account.AimeId);
-				ThemedMessageBox.Show($"Repair finished: {captures} past results and {questRows} quest states processed.", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+				ThemedMessageBox.Show($"Repair finished: {captures} past results and {questRows} quest states processed.", "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 			}
 		});
 	}
@@ -2277,7 +2277,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		AccountEntry account = SelectedAccount;
 		if (account == null)
 		{
-			ThemedMessageBox.Show("Pick the account that should receive the bonus items first.", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+			ThemedMessageBox.Show("Pick the account that should receive the bonus items first.", "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 			return;
 		}
 		await ExecuteAccountActionAsync(async delegate
@@ -2306,7 +2306,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 				}
 				if (entries.Count == 0)
 				{
-					ThemedMessageBox.Show("The installed data has no bonus items that can be granted.", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+					ThemedMessageBox.Show("The installed data has no bonus items that can be granted.", "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 				}
 				else
 				{
@@ -2468,7 +2468,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 						}
 						if (!entries.Any((BenefitGrantEntry item) => item.GrantAmount > 0))
 						{
-							ThemedMessageBox.Show("Enter an amount greater than 0 for at least one item.", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+							ThemedMessageBox.Show("Enter an amount greater than 0 for at least one item.", "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 						}
 						else
 						{
@@ -2510,7 +2510,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 							AppendAccountLog($"Granted {summary.Count} bonus items to account {account.AimeId}");
 							await RefreshAccountsAsync(showErrors: false);
 							SelectAccountById(account.AimeId);
-							ThemedMessageBox.Show("Queued for the Present Box - reopen the Present Box in game to claim. The amount actually granted is capped at the maximum.\nAfter a first-time server code update the server has to be restarted once.\n\n" + string.Join("\n", summary), "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+							ThemedMessageBox.Show("Queued for the Present Box - reopen the Present Box in game to claim. The amount actually granted is capped at the maximum.\nAfter a first-time server code update the server has to be restarted once.\n\n" + string.Join("\n", summary), "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 						}
 					}
 				}
@@ -2931,7 +2931,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		height = 0;
 		if (!int.TryParse(CustomWidthTextBox.Text, out width) || !int.TryParse(CustomHeightTextBox.Text, out height) || width < 480 || width > 7680 || height < 480 || height > 7680)
 		{
-			ThemedMessageBox.Show("Enter whole numbers from 480 to 7680 in the width and height boxes, for example 1920x1080, 720x1280 or 1080x2560.", "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+			ThemedMessageBox.Show("Enter whole numbers from 480 to 7680 in the width and height boxes, for example 1920x1080, 720x1280 or 1080x2560.", "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 			return false;
 		}
 		try
@@ -3017,7 +3017,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		}
 		catch (Exception ex)
 		{
-			ThemedMessageBox.Show("Could not save the launch settings:\n" + ex.Message, "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Hand);
+			ThemedMessageBox.Show("Could not save the launch settings:\n" + ex.Message, "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Hand);
 			return false;
 		}
 	}
@@ -3129,14 +3129,14 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			return;
 		}
 		PublishDeck();
-		if (!SaveLauncherSettings(out string displayMode, out int width, out int height, out string inputMode, out int targetFps) || (cardCollection.SelectedCards.Count == 0 && ThemedMessageBox.Show("The deck is empty. Start the game anyway?", "FGOA scooby", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) != MessageBoxResult.Yes))
+		if (!SaveLauncherSettings(out string displayMode, out int width, out int height, out string inputMode, out int targetFps) || (cardCollection.SelectedCards.Count == 0 && ThemedMessageBox.Show("The deck is empty. Start the game anyway?", "FGOAC scooby", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) != MessageBoxResult.Yes))
 		{
 			return;
 		}
 		string launcher = Path.Combine(GamePaths.GameRoot, "FGO_Launcher.ps1");
 		if (!File.Exists(launcher))
 		{
-			ThemedMessageBox.Show("The launch script is missing:\n" + launcher, "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Hand);
+			ThemedMessageBox.Show("The launch script is missing:\n" + launcher, "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Hand);
 			return;
 		}
 		launcherCancellationRequested = false;
@@ -3167,7 +3167,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			CompleteLauncherOutputCapture(-1);
 			StartGameButton.IsEnabled = true;
 			RuntimeStatusText.Text = "The launcher did not start";
-			ThemedMessageBox.Show("Could not start the game script:\n" + ex.Message, "FGOA scooby", MessageBoxButton.OK, MessageBoxImage.Hand);
+			ThemedMessageBox.Show("Could not start the game script:\n" + ex.Message, "FGOAC scooby", MessageBoxButton.OK, MessageBoxImage.Hand);
 			return;
 		}
 		runningLauncher = launcherProcess;
@@ -3235,7 +3235,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 	private async void StopGameButton_OnClick(object sender, RoutedEventArgs e)
 	{
 		// The game is in front when this is asked, so the question has to come with it.
-		if (ThemedMessageBox.Show(this, "Stop the current game session?", "FGOA scooby", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes, foreground: true) != MessageBoxResult.Yes)
+		if (ThemedMessageBox.Show(this, "Stop the current game session?", "FGOAC scooby", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes, foreground: true) != MessageBoxResult.Yes)
 		{
 			return;
 		}

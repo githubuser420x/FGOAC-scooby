@@ -1,7 +1,7 @@
 <#
-Applies the FGOA scooby English patch to an FGO Arcade local-platform install.
+Applies the FGOAC scooby English patch to an FGO Arcade local-platform install.
 
-The script is shipped at the root of the release package, next to "FGOA scooby.exe",
+The script is shipped at the root of the release package, next to "FGOAC scooby.exe",
 manifest.json and the payload folder. Unzipping the package into the game folder already puts
 every file beside the install, so a normal run copies the payload into place, checks every file
 against manifest.json and writes the marker App\zh\en-patch.json. Re-running the same version
@@ -50,7 +50,10 @@ if ([string]::IsNullOrWhiteSpace($PackageRoot)) { $PackageRoot = $PSScriptRoot }
 
 $ProtectedPrefixes = @('Server\state\', 'Server\data\', 'DEVICE\', 'AMFS\', 'GameData\', '_en-patch-backup\', '_update-backup\')
 $ProtectedFiles = @('App\fgo-launcher.json', 'App\deck.json', 'App\deck.json.bak')
-$RunningNames = @('ago.exe', 'amdaemon.exe', 'inject.exe', 'FGOLocalPlatform.exe', 'FGOA scooby.exe')
+# "FGOA scooby.exe" is the name this launcher shipped under before 1.1.0. It stays in the list so an
+# upgrade still refuses to run while the old build is open.
+$RunningNames = @('ago.exe', 'amdaemon.exe', 'inject.exe', 'FGOLocalPlatform.exe', 'FGOAC scooby.exe', 'FGOA scooby.exe')
+$RetiredLauncherName = 'FGOA scooby.exe'
 
 function Test-FgoInstallRoot {
     param([string]$Path)
@@ -93,7 +96,7 @@ function Select-FgoInstallRoot {
             if (Test-FgoInstallRoot -Path $picker.SelectedPath) { return $picker.SelectedPath }
             [void][Windows.Forms.MessageBox]::Show(
                 "That folder is not an FGO Arcade install. Choose the folder that holds App\ago.exe and the Server folder." + [Environment]::NewLine + [Environment]::NewLine + "You chose: " + $picker.SelectedPath,
-                'FGOA scooby - English patch', [Windows.Forms.MessageBoxButtons]::OK, [Windows.Forms.MessageBoxIcon]::Warning)
+                'FGOAC scooby - English patch', [Windows.Forms.MessageBoxButtons]::OK, [Windows.Forms.MessageBoxIcon]::Warning)
         }
         return ''
     } finally { $picker.Dispose() }
@@ -302,6 +305,7 @@ foreach ($entry in $entries) {
         Destination = $destination
         Expected    = [string]$entry.Value
         InPlace     = $source.Equals($destination, [StringComparison]::OrdinalIgnoreCase)
+        IsLauncher  = [IO.Path]::GetFileName($destination) -eq 'FGOAC scooby.exe'
     })
 }
 
@@ -346,7 +350,16 @@ if ($toCopy.Count -eq 0) {
     Write-Host "Copying $($toCopy.Count) files..."
     $copied = 0
     foreach ($item in $toCopy) {
-        Copy-FgoFile -Source $item.Source -Destination $item.Destination
+        try {
+            Copy-FgoFile -Source $item.Source -Destination $item.Destination
+        } catch {
+            if (!$item.IsLauncher) { throw }
+            # A running program cannot overwrite its own file, so the new launcher is left beside the
+            # old one. The launcher swaps it in and restarts itself when it closes.
+            $item.Destination = $item.Destination + '.new'
+            Copy-FgoFile -Source $item.Source -Destination $item.Destination
+            Write-Host 'The launcher is open, so the new one was staged next to it and is swapped in when it closes.'
+        }
         $copied++
         if (($copied % 200) -eq 0) { Write-Host "  copied $copied of $($toCopy.Count) files" }
     }
@@ -363,6 +376,19 @@ if ($toCopy.Count -eq 0) {
         exit 6
     }
     Write-Host "Backup of the replaced files: $backup"
+}
+
+# Before 1.1.0 the launcher was called "FGOA scooby.exe". Once the new one is in place the old file is
+# only a second icon that starts an out-of-date build, so it goes.
+$retiredLauncher = [IO.Path]::Combine($InstallRoot, $RetiredLauncherName)
+if ([IO.File]::Exists($retiredLauncher) -and [IO.File]::Exists([IO.Path]::Combine($InstallRoot, 'FGOAC scooby.exe'))) {
+    try {
+        Clear-FgoReadOnly -Path $retiredLauncher
+        Remove-Item -LiteralPath $retiredLauncher -Force
+        Write-Host "Removed $RetiredLauncherName, which this version replaces."
+    } catch {
+        Write-Host "$RetiredLauncherName is still there and could not be removed: $($_.Exception.Message). Delete it yourself so you do not start the old build by mistake."
+    }
 }
 
 # chineseEnabled is the switch that makes the game read App\zh, which now holds the English set.

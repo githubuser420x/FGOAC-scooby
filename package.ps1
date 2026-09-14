@@ -1,8 +1,8 @@
 <#
-Builds the release package for FGOA scooby.
+Builds the release package for FGOAC scooby.
 
-  .\package.ps1                       # D:\FGOA\release\FGOA-scooby-v1.0.1[.zip]
-  .\package.ps1 -Version 1.1
+  .\package.ps1                       # version read from the built launcher
+  .\package.ps1 -Version 1.1.1        # override it
   .\package.ps1 -Publish              # run publish.cmd first
   .\package.ps1 -SkipZip              # leave the folder, do not zip it
 
@@ -13,7 +13,7 @@ Exit codes: 0 packaged, 1 unexpected error, 2 a source the package needs is miss
 #>
 [CmdletBinding()]
 param(
-    [string]$Version = '1.0.1',
+    [string]$Version = '',
     [string]$GameRoot = 'D:\FGOA',
     [string]$OutputRoot = 'D:\FGOA\release',
     [switch]$Publish,
@@ -30,7 +30,7 @@ function Stop-WithMessage {
 
 try {
     $repository = $PSScriptRoot
-    $launcher = [IO.Path]::Combine($repository, 'dist\FGOA scooby.exe')
+    $launcher = [IO.Path]::Combine($repository, 'dist\FGOAC scooby.exe')
     if ($Publish -or !(Test-Path -LiteralPath $launcher -PathType Leaf)) {
         Write-Host 'Publishing the launcher...'
         & ([IO.Path]::Combine($repository, 'publish.cmd'))
@@ -38,6 +38,12 @@ try {
     }
     if (!(Test-Path -LiteralPath $launcher -PathType Leaf)) {
         Stop-WithMessage "The launcher is missing: $launcher. Run publish.cmd, or pass -Publish." 2
+    }
+    if ([string]::IsNullOrWhiteSpace($Version)) {
+        # The csproj is the one place the version is written; read it back off the built launcher.
+        $Version = [Diagnostics.FileVersionInfo]::GetVersionInfo($launcher).ProductVersion
+        if ($Version -match '^(\d+\.\d+\.\d+)') { $Version = $Matches[1] }
+        Write-Host "Version $Version, from the launcher"
     }
     $englishSet = [IO.Path]::Combine($GameRoot, 'App\zh')
     if (!(Test-Path -LiteralPath $englishSet -PathType Container)) {
@@ -48,7 +54,7 @@ try {
         Stop-WithMessage "The overlay folder is missing: $overlay" 2
     }
 
-    $packageName = "FGOA-scooby-v$Version"
+    $packageName = "FGOAC-scooby-v$Version"
     $packageRoot = [IO.Path]::Combine($OutputRoot, $packageName)
     $payloadRoot = [IO.Path]::Combine($packageRoot, 'payload')
     [void][IO.Directory]::CreateDirectory($payloadRoot)
@@ -79,7 +85,7 @@ try {
     }
 
     Write-Host 'Copying the launcher, the installer and the release notes'
-    Copy-Item -LiteralPath $launcher -Destination ([IO.Path]::Combine($packageRoot, 'FGOA scooby.exe')) -Force
+    Copy-Item -LiteralPath $launcher -Destination ([IO.Path]::Combine($packageRoot, 'FGOAC scooby.exe')) -Force
     Copy-Item -LiteralPath ([IO.Path]::Combine($repository, 'patch\Apply-EN-Patch.ps1')) -Destination ([IO.Path]::Combine($packageRoot, 'Apply-EN-Patch.ps1')) -Force
     foreach ($guide in @('GUIDE_EN.md', 'GUIDE_EN.pdf')) {
         $source = [IO.Path]::Combine($GameRoot, 'docs', $guide)
@@ -98,7 +104,7 @@ try {
     if ($LASTEXITCODE -ne 0) { Stop-WithMessage 'The manifest could not be built, so the package is not complete.' 1 }
 
     $sums = New-Object 'System.Collections.Generic.List[string]'
-    foreach ($name in @('FGOA scooby.exe', 'Apply-EN-Patch.ps1', 'manifest.json', 'README.md', 'CHANGELOG.md', 'GUIDE_EN.md', 'GUIDE_EN.pdf')) {
+    foreach ($name in @('FGOAC scooby.exe', 'Apply-EN-Patch.ps1', 'manifest.json', 'README.md', 'CHANGELOG.md', 'GUIDE_EN.md', 'GUIDE_EN.pdf')) {
         $hash = (Get-FileHash -LiteralPath ([IO.Path]::Combine($packageRoot, $name)) -Algorithm SHA256).Hash.ToLowerInvariant()
         $sums.Add("$hash *$name")
     }

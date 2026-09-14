@@ -1,12 +1,12 @@
 <#
-Builds the patch manifest for a staged FGOA scooby package.
+Builds the patch manifest for a staged FGOAC scooby package.
 
-The package root holds "FGOA scooby.exe", the payload folder and (after this script runs)
+The package root holds "FGOAC scooby.exe", the payload folder and (after this script runs)
 manifest.json. Every file under payload\ is listed by the path it takes inside the game
-install, so payload\App\zh\rom\... becomes App\zh\rom\... . "FGOA scooby.exe" lists itself,
+install, so payload\App\zh\rom\... becomes App\zh\rom\... . "FGOAC scooby.exe" lists itself,
 because the package is unzipped into the install folder and the exe is already in place.
 
-  .\Build-Manifest.ps1 -PackageRoot D:\FGOA\release\FGOA-scooby-v1.0 -Version 1.0
+  .\Build-Manifest.ps1 -PackageRoot D:\FGOA\release\FGOAC-scooby-v1.0 -Version 1.0
 
 Exit codes: 0 manifest written, 1 unexpected error, 2 package root is not a staged package.
 #>
@@ -26,7 +26,7 @@ try {
     }
     $PackageRoot = (Resolve-Path -LiteralPath $PackageRoot).Path.TrimEnd('\')
     $payload = [IO.Path]::Combine($PackageRoot, 'payload')
-    $launcher = [IO.Path]::Combine($PackageRoot, 'FGOA scooby.exe')
+    $launcher = [IO.Path]::Combine($PackageRoot, 'FGOAC scooby.exe')
     if (!(Test-Path -LiteralPath $payload -PathType Container)) {
         Write-Host "Payload folder not found: $payload"
         exit 2
@@ -45,7 +45,7 @@ try {
             FullName = $file.FullName
         })
     }
-    $entries.Add([pscustomobject]@{ Relative = 'FGOA scooby.exe'; FullName = $launcher })
+    $entries.Add([pscustomobject]@{ Relative = 'FGOAC scooby.exe'; FullName = $launcher })
 
     $sorted = $entries | Sort-Object -Property Relative -CaseSensitive
     $files = [ordered]@{}

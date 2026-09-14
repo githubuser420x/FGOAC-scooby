@@ -17,7 +17,7 @@ First release, for Cloud23333's FGO Arcade local platform V1.01.
 
 ### Launcher
 
-- FGOA scooby, an English build of the author's V1.01 front end, on five pages: Play, Account,
+- FGOAC scooby, an English build of the author's V1.01 front end, on five pages: Play, Account,
   Cards and Deck, Settings, Advanced.
 - Card library in English: 1,384 card names and 1,264 Craft Essence effects, searchable by their
   English names.
