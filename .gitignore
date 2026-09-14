@@ -2,3 +2,4 @@ bin/
 obj/
 dist/
 *.user
+patch/manifest.json

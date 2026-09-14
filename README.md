@@ -11,6 +11,7 @@ user-facing strings translated. The deliverable is a self-contained single-file 
 | --- | --- |
 | `src\` | buildable C#/XAML project (`FGOLocalPlatform.csproj`) |
 | `overlay\` | English replacements for files that live outside the assembly, laid out by their path relative to the install root |
+| `patch\` | `Apply-EN-Patch.ps1` (the installer players run) and `Build-Manifest.ps1` (writes the `manifest.json` it checks against) |
 | `dist\` | build output, `FGOA scooby.exe` (not tracked) |
 | `build.cmd` | `dotnet build -c Release` (compile check only) |
 | `publish.cmd` | publish + copy to `dist\FGOA scooby.exe` |
@@ -99,3 +100,34 @@ during development.
 | `Server\tools\fgo_account.py` | every `message` it emits is shown verbatim by the account page |
 | `Server\tools\fgo_server_config.py` | port and address validation errors on the server page |
 | `Server\artemis\titles\fgo\data\summon_candidates.json` | the acquisition notes shown in the Draw Rates status line. The Japanese card names and quest titles in that file stay as they are — the column they feed is labelled Japanese Name |
+
+## The English patch
+
+`patch\Apply-EN-Patch.ps1` is what a player runs, and what the launcher runs for them on first
+start. It works against a release package laid out like this, which is also what unzipping the
+package into the game folder produces:
+
+```
+FGOA scooby.exe
+Apply-EN-Patch.ps1
+manifest.json
+payload\App\zh\...
+payload\App\FGO_EnvironmentCheck.ps1
+payload\Server\...
+```
+
+`manifest.json` maps each install-relative path to its SHA-256, and carries the patch version and a
+`manifestHash` over the whole list. `patch\Build-Manifest.ps1 -PackageRoot <dir> -Version <v>` writes
+it from a staged package; `package.ps1` calls it, so the manifest always describes the bytes that
+ship.
+
+The apply run finds the install (its own folder, then the parent, then a scan of the fixed drives,
+then a folder picker), refuses drive E: and Y:, refuses to run while the game or a launcher is open
+from that folder, backs up every file it replaces to `_en-patch-backup\<timestamp>\`, copies, checks
+the copies against the manifest, sets `chineseEnabled` in `App\fgo-launcher.json` and writes
+`App\zh\en-patch.json` with the version and the manifest hash. A second run with the same manifest
+does nothing. `-Rollback` restores the newest backup, using the `en-patch-restore.json` written
+beside it to also remove the files the patch added. Exit codes are listed at the top of the script.
+
+Accounts, decks, `Server\state`, the database and the rest of `App\fgo-launcher.json` are never
+written; `Apply-EN-Patch.ps1` refuses a manifest that lists a path under any of them.
