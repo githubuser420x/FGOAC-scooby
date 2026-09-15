@@ -419,6 +419,14 @@ try {
     Write-Host 'Open the launcher and turn English Text on yourself.'
 }
 
+# Windows marks every file that came out of a downloaded zip, and Windows PowerShell then refuses
+# to load App\FGO_Runtime.dll (0x80131515). A platform update puts the mark back, so this runs on
+# every pass, not only when files were copied.
+$marked = @(Get-ChildItem -LiteralPath ([IO.Path]::Combine($InstallRoot, 'App')) -File -ErrorAction SilentlyContinue |
+    Where-Object { $_.Extension -in '.dll', '.exe', '.ps1' }) +
+    @(Get-ChildItem -LiteralPath ([IO.Path]::Combine($InstallRoot, 'Server')) -Filter '*.ps1' -File -ErrorAction SilentlyContinue)
+foreach ($file in $marked) { Unblock-File -LiteralPath $file.FullName -ErrorAction SilentlyContinue }
+
 Write-FgoJson -Path $markerPath -Value ([ordered]@{
     version      = $version
     appliedUtc   = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ')

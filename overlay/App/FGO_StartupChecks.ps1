@@ -46,6 +46,8 @@ function Protect-FgoChildProcessStreams {
     # Background processes must not retain the launcher's output pipes: the
     # frontend waits for EOF after the startup script finishes.
     if (!('FgoChildStreams' -as [type])) {
+        # A DLL still marked as downloaded cannot be loaded by Windows PowerShell (0x80131515).
+        Unblock-File -LiteralPath (Join-Path $PSScriptRoot 'FGO_Runtime.dll') -ErrorAction SilentlyContinue
         [void][Reflection.Assembly]::LoadFrom((Join-Path $PSScriptRoot 'FGO_Runtime.dll'))
     }
     [FgoChildStreams]::Protect()
@@ -55,6 +57,7 @@ function Start-FgoBackgroundProcess {
     param([string]$FilePath,[string[]]$ArgumentList,[string]$WorkingDirectory,
           [string]$RedirectStandardOutput,[string]$RedirectStandardError)
     if (!('FgoBackgroundProcess' -as [type])) {
+        Unblock-File -LiteralPath (Join-Path $PSScriptRoot 'FGO_Runtime.dll') -ErrorAction SilentlyContinue
         [void][Reflection.Assembly]::LoadFrom((Join-Path $PSScriptRoot 'FGO_Runtime.dll'))
     }
     [pscustomobject]@{ Id=[FgoBackgroundProcess]::Start($FilePath,$ArgumentList,$WorkingDirectory,$RedirectStandardOutput,$RedirectStandardError) }

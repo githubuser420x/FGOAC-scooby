@@ -20,6 +20,8 @@ Add-Check 'Startup Path Length' ($tooLong.Count -eq 0) $(if($tooLong.Count){
 }else{'The critical startup paths are short enough for the native modules. Very deep resource subfolders can still hit the native path length limit.'})
 try {
     if (!('FgoEnvironmentNative' -as [type])) {
+        # A DLL still marked as downloaded cannot be loaded by Windows PowerShell (0x80131515).
+        Unblock-File -LiteralPath (Join-Path $PSScriptRoot 'FGO_Runtime.dll') -ErrorAction SilentlyContinue
         [void][Reflection.Assembly]::LoadFrom((Join-Path $PSScriptRoot 'FGO_Runtime.dll'))
     }
     function Test-Library([string]$Folder,[string]$Name) {
