@@ -236,13 +236,20 @@ internal static class Updater
 	{
 		string launcher = Environment.ProcessPath;
 		string swap = Path.Combine(Path.GetTempPath(), "update-swap.cmd");
-		string[] lines = new string[8]
+		// The move is retried for a while: the virus scanner can still be reading the staged file, or
+		// the closing process may not have released its own file yet.
+		string[] lines = new string[13]
 		{
 			"@echo off",
 			"setlocal",
+			"set tries=0",
 			":wait",
 			"tasklist /fi \"PID eq " + Environment.ProcessId + "\" | find \"" + Environment.ProcessId + "\" >nul && (timeout /t 1 /nobreak >nul & goto wait)",
-			"move /y \"" + stagedPath + "\" \"" + launcher + "\" >nul",
+			":move",
+			"move /y \"" + stagedPath + "\" \"" + launcher + "\" >nul 2>&1 && goto run",
+			"set /a tries+=1",
+			"if %tries% lss 60 (timeout /t 1 /nobreak >nul & goto move)",
+			":run",
 			"start \"\" \"" + launcher + "\"",
 			"del \"%~f0\"",
 			""

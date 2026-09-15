@@ -150,6 +150,23 @@ function Copy-FgoFile {
     Clear-FgoReadOnly -Path $Destination
 }
 
+# Windows Defender keeps reading a file this large for some seconds after it is written, and a rename
+# during that time fails. Waits until the file can be opened with no sharing, or gives up quietly.
+function Wait-FgoFileReleased {
+    param([string]$Path, [int]$Seconds)
+    $deadline = (Get-Date).AddSeconds($Seconds)
+    while ($true) {
+        try {
+            $stream = [IO.File]::Open($Path, [IO.FileMode]::Open, [IO.FileAccess]::Read, [IO.FileShare]::None)
+            $stream.Dispose()
+            return
+        } catch {
+            if ((Get-Date) -gt $deadline) { return }
+            Start-Sleep -Milliseconds 500
+        }
+    }
+}
+
 function Write-FgoJson {
     param([string]$Path, $Value)
     $parent = Split-Path -Parent $Path
@@ -415,6 +432,10 @@ if ($toCopy.Count -eq 0) {
         exit 6
     }
     Write-Host "Backup of the replaced files: $backup"
+    # The launcher swaps the staged build in the moment it closes; that has to find the file free.
+    foreach ($item in $toCopy) {
+        if ($item.IsLauncher -and $item.Destination.EndsWith('.new')) { Wait-FgoFileReleased -Path $item.Destination -Seconds 90 }
+    }
 }
 
 # Before 1.1.0 the launcher was called "FGOA scooby.exe". Once the new one is in place the old file is
