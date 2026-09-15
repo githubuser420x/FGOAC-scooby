@@ -105,12 +105,14 @@ internal sealed class FirstRun
 		}
 		string version = "";
 		string manifestHash = "";
+		JsonObject files = new JsonObject();
 		try
 		{
 			if (JsonNode.Parse(File.ReadAllText(ManifestPath)) is JsonObject manifest)
 			{
 				version = manifest["version"]?.GetValue<string>() ?? "";
 				manifestHash = manifest["manifestHash"]?.GetValue<string>() ?? "";
+				files = manifest["files"] as JsonObject ?? files;
 			}
 		}
 		catch (Exception ex)
@@ -123,7 +125,7 @@ internal sealed class FirstRun
 			log("The English patch manifest has no version, so the patch was skipped.");
 			return false;
 		}
-		if (IsPatchInstalled(version, manifestHash))
+		if (IsPatchInstalled(version, manifestHash, files))
 		{
 			return false;
 		}
@@ -153,20 +155,42 @@ internal sealed class FirstRun
 		return true;
 	}
 
-	private bool IsPatchInstalled(string version, string manifestHash)
+	private bool IsPatchInstalled(string version, string manifestHash, JsonObject files)
 	{
 		try
 		{
-			if (File.Exists(MarkerPath) && JsonNode.Parse(File.ReadAllText(MarkerPath)) is JsonObject marker)
+			if (!(File.Exists(MarkerPath) && JsonNode.Parse(File.ReadAllText(MarkerPath)) is JsonObject marker))
 			{
-				return marker["version"]?.GetValue<string>() == version && marker["manifestHash"]?.GetValue<string>() == manifestHash;
+				return false;
+			}
+			if (marker["version"]?.GetValue<string>() != version || marker["manifestHash"]?.GetValue<string>() != manifestHash)
+			{
+				return false;
 			}
 		}
 		catch (Exception ex)
 		{
 			log("The patch marker could not be read, so the patch is applied again: " + ex.Message);
+			return false;
 		}
-		return false;
+		// A platform update copies its own launch scripts, server tools and Chinese text over the
+		// patched ones and leaves the marker alone, so the marker on its own is not proof. The
+		// files outside App\zh\rom are few and small, and an update overwrites those too, so
+		// checking them on every start is cheap and enough.
+		foreach (KeyValuePair<string, JsonNode?> file in files)
+		{
+			if (file.Key.StartsWith("App\\zh\\rom\\", StringComparison.OrdinalIgnoreCase) || file.Key.Equals("FGOAC scooby.exe", StringComparison.OrdinalIgnoreCase))
+			{
+				continue;
+			}
+			string path = Path.Combine(installRoot, file.Key);
+			if (!File.Exists(path) || !string.Equals(Updater.HashFile(path), file.Value?.GetValue<string>(), StringComparison.OrdinalIgnoreCase))
+			{
+				log("The English patch version " + version + " is recorded as installed, but " + file.Key + " has been replaced since, usually by a platform update, so it is applied again.");
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private async Task<int> RunPatchScriptAsync(StringBuilder transcript)

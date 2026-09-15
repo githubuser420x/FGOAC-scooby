@@ -5,7 +5,8 @@ The script is shipped at the root of the release package, next to "FGOAC scooby.
 manifest.json and the payload folder. Unzipping the package into the game folder already puts
 every file beside the install, so a normal run copies the payload into place, checks every file
 against manifest.json and writes the marker App\zh\en-patch.json. Re-running the same version
-does nothing.
+does nothing, unless a platform update has since put its own scripts and text over the patched
+ones; then the files that differ are copied back.
 
 Usage
   .\Apply-EN-Patch.ps1
@@ -279,8 +280,21 @@ if (!$Force -and [IO.File]::Exists($markerPath)) {
     try {
         $marker = Get-Content -LiteralPath $markerPath -Raw -Encoding UTF8 | ConvertFrom-Json
         if ([string]$marker.version -eq $version -and [string]$marker.manifestHash -eq $manifestHash) {
-            Write-Host "The English patch version $version is already installed in $InstallRoot. Nothing was changed."
-            exit 0
+            # A platform update copies its own launch scripts, server tools and Chinese text over
+            # the patched ones and leaves the marker alone, so the marker on its own is not proof.
+            # The files outside App\zh\rom are few and small, and an update overwrites those too,
+            # so checking them on every run is cheap and enough.
+            $replaced = ''
+            foreach ($entry in $entries) {
+                if ($entry.Name.StartsWith('App\zh\rom\', [StringComparison]::OrdinalIgnoreCase) -or $entry.Name -eq 'FGOAC scooby.exe') { continue }
+                $installed = [IO.Path]::Combine($InstallRoot, $entry.Name)
+                if (!([IO.File]::Exists($installed)) -or (Get-FgoFileHash -Path $installed) -ne [string]$entry.Value) { $replaced = $entry.Name; break }
+            }
+            if ($replaced -eq '') {
+                Write-Host "The English patch version $version is already installed in $InstallRoot. Nothing was changed."
+                exit 0
+            }
+            Write-Host "The English patch version $version is recorded as installed, but $replaced has been replaced since, usually by a platform update, so the patch is applied again."
         }
     } catch {
         Write-Host 'The patch marker already there could not be read, so the patch will be applied again.'
