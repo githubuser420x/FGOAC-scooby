@@ -197,6 +197,7 @@ if (!(Test-FgoInstallRoot -Path $InstallRoot)) {
     Stop-WithMessage "That folder is not an FGO Arcade install: $InstallRoot. Choose the folder that holds App\ago.exe, App\fgo-launcher.json and the Server folder." 2
 }
 $InstallRoot = (Resolve-Path -LiteralPath $InstallRoot).Path.TrimEnd('\')
+$PackageRoot = (Resolve-Path -LiteralPath $PackageRoot).Path.TrimEnd('\')
 $rootPrefix = $InstallRoot + '\'
 $driveLetter = $InstallRoot.Substring(0, 1).ToUpperInvariant()
 if ($driveLetter -eq 'E' -or $driveLetter -eq 'Y') {
@@ -329,6 +330,22 @@ foreach ($entry in $entries) {
         InPlace     = $source.Equals($destination, [StringComparison]::OrdinalIgnoreCase)
         IsLauncher  = [IO.Path]::GetFileName($destination) -eq 'FGOAC scooby.exe'
     })
+}
+
+# When the package sits somewhere else, as it does when a launcher's updater unpacks it into the
+# temporary folder, the game folder gets its own copy of the package first - installer, manifest,
+# payload, the rest - the way an unzip by hand leaves it, so the next start finds the version it is
+# on and a later re-apply or -Rollback has its files. The launcher is left to its manifest entry,
+# which stages it as .new while it runs; manifest.json goes last, so a copy that stops half way
+# still describes the previous package.
+if (!$PackageRoot.Equals($InstallRoot, [StringComparison]::OrdinalIgnoreCase)) {
+    Write-Host 'Copying the package into the game folder...'
+    $packagePrefix = $PackageRoot + '\'
+    foreach ($file in (Get-ChildItem -LiteralPath $PackageRoot -File -Recurse)) {
+        if ($file.Name -eq 'FGOAC scooby.exe' -or $file.FullName.Equals($manifestPath, [StringComparison]::OrdinalIgnoreCase)) { continue }
+        Copy-FgoFile -Source $file.FullName -Destination ([IO.Path]::Combine($InstallRoot, $file.FullName.Substring($packagePrefix.Length)))
+    }
+    Copy-FgoFile -Source $manifestPath -Destination ([IO.Path]::Combine($InstallRoot, 'manifest.json'))
 }
 
 Write-Host "Checking $($plan.Count) files against the package..."
