@@ -682,6 +682,7 @@
                     <local:EasterEggSettingsView Margin="0,0,0,26" />
                     <Border Height="1" Background="{StaticResource LineBrush}" Margin="0,0,0,16" />
                     <TextBlock Style="{StaticResource HelpTextStyle}" Foreground="{StaticResource TextFaintBrush}" Text="Thanks to Cloud23333, whose FGO Arcade local platform made this possible." />
+                    <TextBlock Style="{StaticResource HelpTextStyle}" Foreground="{StaticResource TextFaintBrush}" Margin="0,6,0,0"><Run Text="AMD and Intel compatibility layer by fluphus: " /><Hyperlink Foreground="{StaticResource IceBrush}" NavigateUri="https://github.com/fluphus/fgo-arcade-amd-shim" RequestNavigate="AboutLink_OnRequestNavigate">github.com/fluphus/fgo-arcade-amd-shim</Hyperlink></TextBlock>
                   </StackPanel>
                 </ScrollViewer>
               </TabItem>

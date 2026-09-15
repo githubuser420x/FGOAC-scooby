@@ -117,7 +117,13 @@ The local server restores two in-game shops:
 
 | Error | Fix |
 | --- | --- |
-| 4102 | Server unreachable - start it from the Play page and wait for it to report ready. |
+| 4102 | Server unreachable - start it from the Play page and wait for it to report ready. If it keeps happening on V1.01, update to Cloud23333's V1.02, which fixes it. |
+| 8404 at boot | The game's own Startup Mode was saved as Satellite (Sub Unit). On the error screen press F1 for the Game Test Menu (F2 moves the arrow, F1 confirms), open Game Settings, set Startup Mode to Main Unit, then Exit. |
+| Cannot use Aime card, at the title | The first message to the local server timed out on that boot - close the game, check the server shows ready, press Play again. |
+| 0x80131515 at Play | Windows marked `App\FGO_Runtime.dll` as downloaded. The launcher clears the mark itself; if it comes back, right-click the file, Properties, tick Unblock. |
+| "Some of the files the game needs are missing" | The zip was not unzipped into the game folder itself, or the folder never had Cloud23333's V1.01 update - unzip beside `App` and `Server`, and apply V1.01 or V1.02 first. |
+| The game window opens and closes again (exit code 22) | Try windowed 1280x720 on the primary monitor; when reporting it, attach `logs\ago-crash-*.dmp` with your graphics card and driver version. |
+| "Update failed" at the end of Cloud23333's V1.02 updater | His files are in place; only the last step (recovering Servants enhanced before V1.02) stopped, because his bundled Python points at a folder that exists only on his PC. Run FGOAC scooby as usual. To run that recovery anyway: `Server\python\python.exe Server\tools\repair_fgo_grail.py --logs logs --report logs\grail-recovery.json --apply` from the game folder. |
 | 4104 | The install is on drive E: or Y: - move the whole folder to any other drive. |
 | 4105 | The game was not run as administrator - click Yes on the UAC prompt. |
 | 0xC0000005, a few seconds after launch | Windows Defender Controlled Folder Access is blocking the game folder - add the game folder (or the exe) to the allowed list. |

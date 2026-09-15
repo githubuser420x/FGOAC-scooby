@@ -658,7 +658,7 @@ if ($audioEndpointInspectionSucceeded) {
     Write-Host "Audio out  : $($activeAudioEndpoints.Name -join ', ')"
 }
 Write-Host "High GPU   : $preferHighPerformanceGpu"
-Write-Host "GL compat  : $(if (Test-Path -LiteralPath $glCompatPath -PathType Leaf) { 'fgoglcompat.dll (before fgohook)' } else { 'not installed' })"
+Write-Host "GL compat  : $(if (Test-Path -LiteralPath $glCompatPath -PathType Leaf) { 'fgoglcompat.dll (before fgohook)' } elseif (Test-Path -LiteralPath (Join-Path $gameRoot 'opengl32.dll') -PathType Leaf) { 'opengl32.dll shim in App' } else { 'not installed' })"
 Write-Host "GP lock    : 2333 (consumption disabled)"
 Write-Host "Diagnostics: $enableDiagnostics"
 Write-Host "Protocol diag: $enableProtocolDiagnostics"

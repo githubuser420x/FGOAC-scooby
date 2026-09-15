@@ -2931,17 +2931,7 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 				text2 = jsonObject["aspectRatio"]?.GetValue<string>() ?? "";
 				device = jsonObject["monitorDevice"]?.GetValue<string>() ?? "";
 				ChineseEnabledCheckBox.IsChecked = jsonObject["chineseEnabled"]?.GetValue<bool>() ?? false;
-				GpuCompatCheckBox.IsChecked = GpuCompat.IsInstalled;
-				bool nvidiaPresent = GpuCompat.HasNvidiaAdapter();
-				GpuCompatCheckBox.IsEnabled = GpuCompat.IsInstalled || (GpuCompat.SourceAvailable && !nvidiaPresent);
-				if (!GpuCompat.SourceAvailable)
-				{
-					GpuCompatHelpText.Text = "The layer's file is missing: " + GpuCompat.SourcePath;
-				}
-				else if (nvidiaPresent && !GpuCompat.IsInstalled)
-				{
-					GpuCompatHelpText.Text = "Not available on this PC: an NVIDIA card is present, and on NVIDIA the layer turns the game into a white window. It is for AMD and Intel only.";
-				}
+				RefreshGpuCompatSection();
 				if (jsonObject["graphics"] is JsonObject jsonObject2)
 				{
 					SelectTag(SmaaComboBox, (jsonObject2["smaa"]?.GetValue<int>() ?? 0).ToString());
@@ -3184,7 +3174,81 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 			HoldStatus("The graphics compatibility layer could not be changed: " + ex.Message);
 			return;
 		}
+		RefreshGpuCompatSection();
 		HoldStatus("Graphics settings saved - they take effect the next time the game starts.");
+	}
+
+	/// <summary>
+	/// The switch, the help line under it and the button that moves an install between the two
+	/// layers. An install keeps the layer it has, and the switch is never greyed out: the help
+	/// line says what to expect on NVIDIA or with a foreign App\opengl32.dll, and the choice is
+	/// the player's.
+	/// </summary>
+	private void RefreshGpuCompatSection()
+	{
+		GpuCompat.Layer layer = GpuCompat.Installed;
+		bool nvidiaPresent = GpuCompat.HasNvidiaAdapter();
+		GpuCompatCheckBox.IsChecked = layer != GpuCompat.Layer.None;
+		GpuCompatCheckBox.IsEnabled = GpuCompatCheckBox.IsChecked == true || GpuCompat.SourceAvailable;
+		GpuCompatSwitchButton.Visibility = Visibility.Collapsed;
+		switch (layer)
+		{
+		case GpuCompat.Layer.Foreign:
+			GpuCompatHelpText.Text = "On: an App\\opengl32.dll that the AMD shim's own installer put there, not this launcher's copy. Off removes it; on again installs the bundled layer.";
+			break;
+		case GpuCompat.Layer.Shim:
+			GpuCompatHelpText.Text = "On: fluphus's AMD layer (App\\opengl32.dll). Tested by its author on an RX 7900 XTX at 1920x1080 only, with a 60 fps cap; other cards and resolutions can show rendering errors.";
+			if (GpuCompat.LegacySourceAvailable)
+			{
+				GpuCompatSwitchButton.Content = "Go back to the older layer";
+				GpuCompatSwitchButton.Visibility = Visibility.Visible;
+			}
+			break;
+		case GpuCompat.Layer.Legacy:
+			GpuCompatHelpText.Text = "On: the older layer (App\\fgoglcompat.dll), left as it was. The newer AMD layer by fluphus is one click away, and one click back.";
+			if (GpuCompat.ShimSourceAvailable)
+			{
+				GpuCompatSwitchButton.Content = "Switch to the newer AMD layer";
+				GpuCompatSwitchButton.Visibility = Visibility.Visible;
+			}
+			break;
+		default:
+			if (!GpuCompat.SourceAvailable)
+			{
+				GpuCompatHelpText.Text = "The layer's files are missing: " + GpuCompat.ShimSourcePath;
+			}
+			else if (nvidiaPresent)
+			{
+				GpuCompatHelpText.Text = "Off. An NVIDIA card is present, and on NVIDIA the layer turns the game into a white window; it is for AMD and Intel. The switch is yours all the same.";
+			}
+			else
+			{
+				GpuCompatHelpText.Text = "Turned on by itself on a PC with no NVIDIA card. Tested by its author on an RX 7900 XTX at 1920x1080 only, with a 60 fps cap. Leave it off on NVIDIA.";
+			}
+			break;
+		}
+	}
+
+	private void GpuCompatSwitchButton_OnClick(object sender, RoutedEventArgs e)
+	{
+		try
+		{
+			if (GpuCompat.Installed == GpuCompat.Layer.Legacy)
+			{
+				GpuCompat.SwitchToShim();
+			}
+			else
+			{
+				GpuCompat.SwitchToLegacy();
+			}
+		}
+		catch (Exception ex)
+		{
+			HoldStatus("The graphics compatibility layer could not be switched: " + ex.Message);
+			return;
+		}
+		RefreshGpuCompatSection();
+		HoldStatus("Graphics compatibility layer switched - it is used the next time the game starts.");
 	}
 
 	private void ResetDamageUi_OnClick(object sender, RoutedEventArgs e)

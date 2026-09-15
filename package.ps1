@@ -97,10 +97,14 @@ try {
         if (!(Test-Path -LiteralPath $source -PathType Leaf)) { Stop-WithMessage "The user guide is missing: $source" 2 }
         Copy-Item -LiteralPath $source -Destination ([IO.Path]::Combine($packageRoot, $guide)) -Force
     }
-    $compat = [IO.Path]::Combine($repository, 'compat\fgoglcompat.dll')
-    if (!(Test-Path -LiteralPath $compat -PathType Leaf)) { Stop-WithMessage "The graphics compatibility layer is missing: $compat" 2 }
-    [void][IO.Directory]::CreateDirectory([IO.Path]::Combine($packageRoot, 'compat'))
-    Copy-Item -LiteralPath $compat -Destination ([IO.Path]::Combine($packageRoot, 'compat\fgoglcompat.dll')) -Force
+    $shimFiles = @('compat\amd-shim\opengl32.dll', 'compat\amd-shim\amdcfg\amdOglpSettings.cfg', 'compat\amd-shim\LICENSE')
+    foreach ($relative in $shimFiles) {
+        $source = [IO.Path]::Combine($repository, $relative)
+        if (!(Test-Path -LiteralPath $source -PathType Leaf)) { Stop-WithMessage "The graphics compatibility layer is missing: $source" 2 }
+        $destination = [IO.Path]::Combine($packageRoot, $relative)
+        [void][IO.Directory]::CreateDirectory((Split-Path -Parent $destination))
+        Copy-Item -LiteralPath $source -Destination $destination -Force
+    }
     $today = (Get-Date).ToString('yyyy-MM-dd')
     $text = [IO.File]::ReadAllText([IO.Path]::Combine($repository, 'package\README.md'))
     $text = $text.Replace('{{VERSION}}', $Version).Replace('{{DATE}}', $today)
@@ -113,7 +117,7 @@ try {
     if ($LASTEXITCODE -ne 0) { Stop-WithMessage 'The manifest could not be built, so the package is not complete.' 1 }
 
     $sums = New-Object 'System.Collections.Generic.List[string]'
-    foreach ($name in @('FGOAC scooby.exe', 'Apply-EN-Patch.ps1', 'manifest.json', 'README.md', 'CHANGELOG.md', 'GUIDE_EN.md', 'GUIDE_EN.pdf', 'compat\fgoglcompat.dll')) {
+    foreach ($name in (@('FGOAC scooby.exe', 'Apply-EN-Patch.ps1', 'manifest.json', 'README.md', 'CHANGELOG.md', 'GUIDE_EN.md', 'GUIDE_EN.pdf') + $shimFiles)) {
         $hash = (Get-FileHash -LiteralPath ([IO.Path]::Combine($packageRoot, $name)) -Algorithm SHA256).Hash.ToLowerInvariant()
         $sums.Add("$hash *$name")
     }
