@@ -275,7 +275,7 @@
                   </StackPanel>
                 </Grid>
                 <TextBlock Text="First time here" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,14" />
-                <Grid Height="30">
+                <Grid MinHeight="30">
                   <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="24" />
                     <ColumnDefinition Width="*" />
@@ -283,7 +283,7 @@
                   <TextBlock Text="1" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource IceBrush}" />
                   <TextBlock Grid.Column="1" FontSize="14" LineHeight="20" TextWrapping="Wrap" Foreground="{StaticResource TextBrush}" Text="An account called Master is already set up for you, and it owns every Servant." />
                 </Grid>
-                <Grid Height="30">
+                <Grid MinHeight="30">
                   <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="24" />
                     <ColumnDefinition Width="*" />
@@ -291,7 +291,7 @@
                   <TextBlock Text="2" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource IceBrush}" />
                   <TextBlock Grid.Column="1" FontSize="14" LineHeight="20" TextWrapping="Wrap" Foreground="{StaticResource TextBrush}" Text="Go to Cards and Deck and pick up to 30 cards. They load into the game on Play." />
                 </Grid>
-                <Grid Height="30">
+                <Grid MinHeight="30">
                   <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="24" />
                     <ColumnDefinition Width="*" />
@@ -299,7 +299,7 @@
                   <TextBlock Text="3" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource IceBrush}" />
                   <TextBlock Grid.Column="1" FontSize="14" LineHeight="20" TextWrapping="Wrap" Foreground="{StaticResource TextBrush}" Text="Go to Settings to choose the monitor, the resolution and the controls." />
                 </Grid>
-                <Grid Height="30">
+                <Grid MinHeight="30">
                   <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="24" />
                     <ColumnDefinition Width="*" />
@@ -390,8 +390,8 @@
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,0,10">
                       <TextBlock Text="Drag cards into the deck, or double-click one to pick its art and quantity. Drag a deck card to reorder it, or back to the library to remove it." FontSize="13" Foreground="{StaticResource TextSoftBrush}" Margin="0,0,0,8" />
-                      <DockPanel LastChildFill="True">
-                        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                      <WrapPanel>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,16,0">
                           <TextBlock Text="Show" Foreground="{StaticResource TextSoftBrush}" VerticalAlignment="Center" Margin="0,0,6,0" />
                           <ComboBox Name="CardTypeComboBox" Width="150" SelectedIndex="0" ToolTip="List Servant cards and Craft Essence cards separately">
                             <ComboBoxItem Content="All Cards" Tag="0" />
@@ -400,13 +400,13 @@
                           </ComboBox>
                           <ToggleButton Name="OwnedCardsOnlyCheckBox" Style="{StaticResource OwnedOnlyToggleStyle}" AutomationProperties.Name="Owned cards only" IsEnabled="False" VerticalAlignment="Center" Margin="8,3,3,3" ToolTip="Show only cards this account already owns. Cards still waiting to be printed are left out." Checked="OwnedCardsOnlyCheckBox_OnChanged" Unchecked="OwnedCardsOnlyCheckBox_OnChanged" />
                         </StackPanel>
-                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                           <Button Name="BuildThumbnailCacheButton" Content="Cache Thumbnails" ToolTip="Build a local JPEG thumbnail cache in DEVICE/cache/card-thumbnails" Click="BuildThumbnailCacheButton_OnClick" />
                           <TextBlock Text="View" Foreground="{StaticResource TextSoftBrush}" VerticalAlignment="Center" Margin="10,0,4,0" />
                           <Button Name="ListViewModeButton" Content="List" Click="ListViewModeButton_OnClick" />
                           <Button Name="IconViewModeButton" Content="Icons" Click="IconViewModeButton_OnClick" />
                         </StackPanel>
-                      </DockPanel>
+                      </WrapPanel>
                       <TextBlock Name="CardCatalogSummaryText" Text="Reading the card folder..." Margin="0,8,0,0" FontSize="13" Foreground="{StaticResource TextSoftBrush}" TextTrimming="CharacterEllipsis" />
                       <DockPanel Margin="0,6,0,0">
                         <TextBlock Text="Search" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="{StaticResource TextSoftBrush}" />
@@ -499,6 +499,7 @@
                     <TextBlock Style="{StaticResource HelpTextStyle}" Margin="0,0,0,26" Text="Off leaves the game in Japanese. The switch takes effect the next time you press Play." />
                     <TextBlock Text="Graphics card" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,10" />
                     <ToggleButton Name="GpuCompatCheckBox" Style="{StaticResource SwitchToggleStyle}" Content="AMD and Intel compatibility layer" AutomationProperties.Name="AMD and Intel compatibility layer" HorizontalAlignment="Left" MinWidth="210" Margin="0,0,0,8" ToolTip="Puts a translation layer in front of the game so its NVIDIA-only OpenGL features run on AMD and Intel graphics. Applied when you save the display settings; used the next time you start the game." />
+                    <Button Name="GpuCompatSwitchButton" Visibility="Collapsed" HorizontalAlignment="Left" Margin="0,0,0,8" ToolTip="Moves this install between the older layer it has and the newer one. Used the next time you start the game; one click back." Click="GpuCompatSwitchButton_OnClick" />
                     <TextBlock Name="GpuCompatHelpText" Style="{StaticResource HelpTextStyle}" Margin="0,0,0,26" Text="Turned on by itself on a PC with no NVIDIA card. Leave it off on NVIDIA." />
                     <TextBlock Text="Display and Resolution" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,14" />
                     <WrapPanel>
