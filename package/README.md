@@ -11,9 +11,15 @@ is applied on top of it.
 
 ## Install
 
+### Windows
 1. Unzip this package into your FGO Arcade folder - the one that holds `App` and `Server`.
-2. Run **FGOAC scooby**.
+2. Run **FGOAC scooby.exe**.
 3. Click Yes on the Windows permission prompt.
+
+### Linux (Lutris / Proton)
+1. Unzip this package into your FGO Arcade folder beside `App` and `Server`.
+2. Run `./linux/setup-fgoa-linux.sh` to configure network and Proton shims.
+3. Open Lutris, set up the game profile using `linux/fgolocalplatform.lutris.yml`, and press **Play**! See `LINUX_GUIDE.md` for complete details.
 
 The first start does the rest: it installs the English files, checks that the game can write to its
 folders, allows the game and the local server through Windows Firewall, creates the account
@@ -28,7 +34,7 @@ for them in the task bar.
 
 Later starts skip all of that and go straight to Play.
 
-**GUIDE_EN.pdf** in this folder is the full guide: requirements, how to get Servants, controls, the
+**GUIDE_EN.pdf** (and **LINUX_GUIDE.md** for Linux players) in this folder is the full guide: requirements, how to get Servants, controls, the
 exchange shops, and troubleshooting.
 
 Two things to know before you start:
