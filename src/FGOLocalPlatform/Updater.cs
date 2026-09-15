@@ -14,8 +14,9 @@ using System.Threading.Tasks;
 namespace FGOLocalPlatform;
 
 /// <summary>
-/// Checks GitHub Releases for a newer build and installs it by running the release's own
-/// Apply-EN-Patch.ps1. Every failure is silent on screen during the startup check and written to
+/// Checks GitHub Releases for a newer build and installs it the way a player would by hand: the
+/// release zip is unpacked into the game folder and the Apply-EN-Patch.ps1 that came with it is
+/// run. Every failure is silent on screen during the startup check and written to
 /// logs\update.log; the manual check on the About page reports what happened in one sentence.
 /// </summary>
 internal static class Updater
@@ -91,9 +92,9 @@ internal static class Updater
 	}
 
 	/// <summary>
-	/// Downloads the release, checks it against its published SHA-256, unzips it to the temporary
-	/// folder and runs its Apply-EN-Patch.ps1 against this install. Returns true when the patch
-	/// finished; <paramref name="report" /> gets one sentence per step.
+	/// Downloads the release, checks it against its published SHA-256, unzips it into the game
+	/// folder and runs the Apply-EN-Patch.ps1 it brought. Returns true when the patch finished;
+	/// <paramref name="report" /> gets one sentence per step.
 	/// </summary>
 	public static async Task<bool> InstallAsync(Release release, string installRoot, Action<string> report, CancellationToken cancellation)
 	{
@@ -126,19 +127,18 @@ internal static class Updater
 				return false;
 			}
 
-			report("Unpacking the update...");
-			string payload = Path.Combine(staging, "package");
-			ZipFile.ExtractToDirectory(archive, payload);
-			string script = Path.Combine(payload, "Apply-EN-Patch.ps1");
+			report("Unpacking the update into the game folder...");
+			ExtractIntoGameFolder(archive, installRoot);
+			string script = Path.Combine(installRoot, "Apply-EN-Patch.ps1");
 			if (!File.Exists(script))
 			{
-				Log("No Apply-EN-Patch.ps1 in " + payload);
+				Log("No Apply-EN-Patch.ps1 in " + release.ZipName);
 				report("The update package has no installer in it, so nothing was installed. Download the release from GitHub and unzip it into the game folder yourself.");
 				return false;
 			}
 
 			report("Installing " + release.Version + "...");
-			int exitCode = await RunPatchAsync(script, payload, installRoot, report, cancellation);
+			int exitCode = await RunPatchAsync(script, installRoot, installRoot, report, cancellation);
 			if (exitCode != 0)
 			{
 				Log("Apply-EN-Patch.ps1 exited with " + exitCode);
@@ -153,6 +153,38 @@ internal static class Updater
 			Log("Install failed: " + ex);
 			report("The update could not be installed: " + ex.Message + ". Try again, or download the release from GitHub yourself.");
 			return false;
+		}
+	}
+
+	/// <summary>
+	/// Unzips the release into the game folder, the layout a player gets by unzipping it by hand,
+	/// so the folder keeps the installer, the manifest and the payload of the version it is on
+	/// and the next start finds nothing to redo. The running launcher cannot be overwritten, so
+	/// its new build lands beside it as .new and is swapped in when the launcher closes.
+	/// manifest.json goes last: until it is there the folder still describes the previous
+	/// package, so an extraction that stops half way is not taken for a complete one.
+	/// </summary>
+	private static void ExtractIntoGameFolder(string archive, string installRoot)
+	{
+		string root = Path.GetFullPath(installRoot).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+		using ZipArchive zip = ZipFile.OpenRead(archive);
+		foreach (ZipArchiveEntry entry in zip.Entries.OrderBy((ZipArchiveEntry e) => string.Equals(e.FullName, "manifest.json", StringComparison.OrdinalIgnoreCase)))
+		{
+			if (entry.Name.Length == 0)
+			{
+				continue;
+			}
+			string target = Path.GetFullPath(Path.Combine(root, entry.FullName));
+			if (!target.StartsWith(root, StringComparison.OrdinalIgnoreCase))
+			{
+				throw new IOException("The update lists a path outside the game folder: " + entry.FullName);
+			}
+			if (string.Equals(entry.FullName, "FGOAC scooby.exe", StringComparison.OrdinalIgnoreCase) && File.Exists(target))
+			{
+				target += ".new";
+			}
+			Directory.CreateDirectory(Path.GetDirectoryName(target));
+			entry.ExtractToFile(target, overwrite: true);
 		}
 	}
 
@@ -250,7 +282,7 @@ internal static class Updater
 		return null;
 	}
 
-	private static string HashFile(string path)
+	internal static string HashFile(string path)
 	{
 		using FileStream stream = File.OpenRead(path);
 		using SHA256 sha = SHA256.Create();
