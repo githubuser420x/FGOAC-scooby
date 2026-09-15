@@ -137,6 +137,8 @@ Other notes:
 - **Cloud23333** wrote the FGO Arcade local platform - the server package, the launcher
   (FGOLocalPlatform) that FGOAC scooby is built from, and the file hook this patch loads through. His
   package is free; if anyone sold it to you, ask for your money back.
+- **fluphus** wrote the AMD and Intel compatibility layer (fgo-arcade-amd-shim, MIT), shipped under
+  `compat\amd-shim`.
 - The **FGO Arcade wiki** and **Atlas Academy** gave the official English names for Servants, Craft
   Essences, skills, and items.
 - FGO Arcade belongs to **Sega** and **TYPE-MOON**. This is a fan translation applied to files you

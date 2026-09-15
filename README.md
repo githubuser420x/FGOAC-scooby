@@ -147,7 +147,9 @@ looks for an asset whose name starts with `FGOAC-scooby-v` and ends in `.zip`, a
 through. None of this exists without that work, and his package is free - if anyone sold it to you,
 ask for your money back. The **FGO Arcade wiki** and **Atlas Academy** are where the official English
 names of Servants, Craft Essences, skills and items come from, so the game and the launcher call
-everything what the English release calls it. **Fate/Grand Order Arcade is Sega's and TYPE-MOON's**;
+everything what the English release calls it. **fluphus** wrote the AMD and Intel compatibility
+layer, [fgo-arcade-amd-shim](https://github.com/fluphus/fgo-arcade-amd-shim), shipped under
+`compat\amd-shim` with its MIT licence. **Fate/Grand Order Arcade is Sega's and TYPE-MOON's**;
 they own the game. This is a fan translation applied to files you already have, it is not sold, and
 it carries no game files of its own.
 

@@ -66,7 +66,7 @@ try {
 } catch { Add-Check 'Audio Check' $false $_.Exception.Message }
 $required=@('App\ago.exe','App\am\amdaemon.exe','App\fgohook.dll','App\FGO_Runtime.dll','App\inject.exe','App\Tools\Locale_Remulator\LRHookx64.dll','App\config.json','App\segatools.ini','AMFS\ICF1','AMFS\ICF2','Server\mariadb-10.11.16-winx64\bin\mariadbd.exe')
 $missing=@($required | Where-Object {!(Test-Path -LiteralPath (Join-Path $root $_) -PathType Leaf)})
-Add-Check 'Game and Server Files' ($missing.Count -eq 0) $(if($missing.Count){'Missing: '+($missing -join ', ')+'. Restore the full installation package; an incremental update does not contain the game itself.'}else{'The core program files are present; this check does not verify every ROM resource.'})
+Add-Check 'Game and Server Files' ($missing.Count -eq 0) $(if($missing -contains 'App\FGO_Runtime.dll'){'Missing: '+($missing -join ', ')+'. App\FGO_Runtime.dll comes with Cloud23333''s V1.01 update: apply his V1.01 or V1.02 update to the game folder, then run FGOAC scooby again.'}elseif($missing.Count){'Missing: '+($missing -join ', ')+'. Restore the full installation package; an incremental update does not contain the game itself.'}else{'The core program files are present; this check does not verify every ROM resource.'})
 try {
     $python=Join-Path $root 'Server\python\python.exe'
     $result=& $python -I -c "import sys,yaml,sqlalchemy,aiomysql,uvicorn,starlette,Crypto; print(sys.version.split()[0])" 2>&1
