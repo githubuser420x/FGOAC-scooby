@@ -1,4 +1,4 @@
-﻿<div align="center">
+<div align="center">
 
 # FGOAC scooby
 
@@ -23,19 +23,25 @@ carries no game files: it is applied on top of an FGO Arcade local platform inst
 | | |
 | --- | --- |
 | The game | An existing **FGO Arcade local platform V1.01 or V1.02** install (Cloud23333's package) - the folder that holds `App` and `Server`. V1.02 is the one to be on: it fixes ERROR 4102, the blank Servant records and the sync error after enhancing a Servant |
-| OS | Windows 10 or 11, 64-bit |
+| OS | Windows 10 or 11, 64-bit; or **Linux** (via Proton / Lutris, see [`docs/LINUX_GUIDE.md`](docs/LINUX_GUIDE.md)) |
 | GPU | NVIDIA on a current driver. AMD and Intel run through the bundled compatibility layer by fluphus, which the launcher turns on by itself on a PC without an NVIDIA card (and keeps off on NVIDIA, where it does not work). Tested by its author on an RX 7900 XTX at 1920x1080 only, with a 60 fps cap |
 | Drive | Any drive **except E: or Y:** - see the table further down |
-| Rights | Administrator: one Windows prompt when the launcher starts |
+| Rights | Administrator: one Windows prompt when the launcher starts (or sudo once on Linux for network setup) |
 
 .NET and Python are not needed. The launcher carries its own runtime, and the platform brings its own
 Python.
 
 ## Install
 
+### Windows
 1. Download the latest release zip and unzip it into your FGO Arcade folder, beside `App` and `Server`.
 2. Run **FGOAC scooby.exe** and click **Yes** on the Windows permission prompt.
 3. Press **Play**. The game takes about a minute to reach the title screen.
+
+### Linux (Lutris / Proton)
+1. Download the latest release zip and unzip it into your FGO Arcade folder, beside `App` and `Server`.
+2. Run `./linux/setup-fgoa-linux.sh` (one-click configuration for network, Wine PowerShell shim, and GPU offload).
+3. Open Lutris, configure the game profile, and press **Play**! See [`docs/LINUX_GUIDE.md`](docs/LINUX_GUIDE.md) for full details.
 
 The first start does the rest on its own: it installs the English files, checks the game can write to
 its own folders, allows the game and the local server through Windows Firewall, creates the account
@@ -43,7 +49,7 @@ its own folders, allows the game and the local server through Windows Firewall, 
 your main monitor. Later starts go straight to Play.
 
 [`docs/GUIDE_EN.pdf`](docs/GUIDE_EN.pdf) is the full player guide: getting Servants, controls, a
-sortie step by step, the exchange shops and troubleshooting.
+sortie step by step, the exchange shops and troubleshooting. For Linux players, see [`docs/LINUX_GUIDE.md`](docs/LINUX_GUIDE.md).
 
 ## What works
 

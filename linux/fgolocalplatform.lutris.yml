@@ -1,0 +1,19 @@
+# ==============================================================================
+# Lutris Game Configuration Template for FGO Arcade Offline Build
+# Import this into Lutris or use it to configure your game profile
+# ==============================================================================
+game:
+  exe: /path/to/FGOA_Cloud23333/FGOAC scooby.exe
+  prefix: /path/to/wineprefix
+  working_dir: /path/to/FGOA_Cloud23333
+system:
+  env:
+    DOTNET_BUNDLE_EXTRACT_BASE_DIR: C:\dotnet_bundle_extract
+    UMU_NO_RUNTIME: '1'
+    __NV_PRIME_RENDER_OFFLOAD: '1'
+    __GLX_VENDOR_LIBRARY_NAME: nvidia
+    __VK_LAYER_NV_optimus: NVIDIA_only
+    DXVK_FILTER_DEVICE_NAME: GeForce
+    WINEDLLOVERRIDES: 'xinput1_4=n,b'
+wine:
+  version: proton-cachyos-slr

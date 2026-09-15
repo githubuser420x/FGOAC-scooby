@@ -1,4 +1,4 @@
-﻿<#
+<#
 Builds the release package for FGOAC scooby.
 
   .\package.ps1 -GameRoot D:\games\FGOA                 # version read from the built launcher
@@ -92,10 +92,11 @@ try {
     Write-Host 'Copying the launcher, the installer and the release notes'
     Copy-Item -LiteralPath $launcher -Destination ([IO.Path]::Combine($packageRoot, 'FGOAC scooby.exe')) -Force
     Copy-Item -LiteralPath ([IO.Path]::Combine($repository, 'patch\Apply-EN-Patch.ps1')) -Destination ([IO.Path]::Combine($packageRoot, 'Apply-EN-Patch.ps1')) -Force
-    foreach ($guide in @('GUIDE_EN.md', 'GUIDE_EN.pdf')) {
+    foreach ($guide in @('GUIDE_EN.md', 'GUIDE_EN.pdf', 'LINUX_GUIDE.md')) {
         $source = [IO.Path]::Combine($repository, 'docs', $guide)
-        if (!(Test-Path -LiteralPath $source -PathType Leaf)) { Stop-WithMessage "The user guide is missing: $source" 2 }
-        Copy-Item -LiteralPath $source -Destination ([IO.Path]::Combine($packageRoot, $guide)) -Force
+        if (Test-Path -LiteralPath $source -PathType Leaf) {
+            Copy-Item -LiteralPath $source -Destination ([IO.Path]::Combine($packageRoot, $guide)) -Force
+        }
     }
     $shimFiles = @('compat\amd-shim\opengl32.dll', 'compat\amd-shim\amdcfg\amdOglpSettings.cfg', 'compat\amd-shim\LICENSE')
     foreach ($relative in $shimFiles) {
@@ -105,6 +106,14 @@ try {
         [void][IO.Directory]::CreateDirectory((Split-Path -Parent $destination))
         Copy-Item -LiteralPath $source -Destination $destination -Force
     }
+    
+    # Linux support files
+    $linuxDir = [IO.Path]::Combine($repository, 'linux')
+    if (Test-Path -LiteralPath $linuxDir -PathType Container) {
+        Write-Host 'Copying Linux compatibility scripts and profiles'
+        Copy-Item -LiteralPath $linuxDir -Destination ([IO.Path]::Combine($packageRoot, 'linux')) -Recurse -Force
+    }
+
     $today = (Get-Date).ToString('yyyy-MM-dd')
     $text = [IO.File]::ReadAllText([IO.Path]::Combine($repository, 'package\README.md'))
     $text = $text.Replace('{{VERSION}}', $Version).Replace('{{DATE}}', $today)
@@ -116,10 +125,17 @@ try {
     & ([IO.Path]::Combine($repository, 'patch\Build-Manifest.ps1')) -PackageRoot $packageRoot -Version $Version
     if ($LASTEXITCODE -ne 0) { Stop-WithMessage 'The manifest could not be built, so the package is not complete.' 1 }
 
+    $linuxList = if (Test-Path -LiteralPath $linuxDir -PathType Container) {
+        @(Get-ChildItem -LiteralPath $linuxDir -File -Recurse | ForEach-Object { [IO.Path]::Combine('linux', $_.Name) })
+    } else { @() }
+
     $sums = New-Object 'System.Collections.Generic.List[string]'
-    foreach ($name in (@('FGOAC scooby.exe', 'Apply-EN-Patch.ps1', 'manifest.json', 'README.md', 'CHANGELOG.md', 'GUIDE_EN.md', 'GUIDE_EN.pdf') + $shimFiles)) {
-        $hash = (Get-FileHash -LiteralPath ([IO.Path]::Combine($packageRoot, $name)) -Algorithm SHA256).Hash.ToLowerInvariant()
-        $sums.Add("$hash *$name")
+    foreach ($name in (@('FGOAC scooby.exe', 'Apply-EN-Patch.ps1', 'manifest.json', 'README.md', 'CHANGELOG.md', 'GUIDE_EN.md', 'GUIDE_EN.pdf', 'LINUX_GUIDE.md') + $shimFiles + $linuxList)) {
+        $filePath = [IO.Path]::Combine($packageRoot, $name)
+        if (Test-Path -LiteralPath $filePath -PathType Leaf) {
+            $hash = (Get-FileHash -LiteralPath $filePath -Algorithm SHA256).Hash.ToLowerInvariant()
+            $sums.Add("$hash *$name")
+        }
     }
     $sums.Add('')
     $sums.Add('The payload files are listed with their SHA-256 in manifest.json, and Apply-EN-Patch.ps1 checks every one of them after it copies.')

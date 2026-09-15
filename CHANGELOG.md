@@ -1,4 +1,4 @@
-﻿# Changelog
+# Changelog
 
 All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project follows
@@ -8,6 +8,17 @@ Version numbers cover the whole release: the launcher, the English game files it
 installer that puts them there.
 
 ## [Unreleased]
+
+### Added
+
+- **First-class Linux support** (via Proton / Lutris / Wine):
+  - Automated 1-Click setup script (`linux/setup-fgoa-linux.sh`).
+  - Python PowerShell Shim (`linux/ps_shim.py`) to manage local MariaDB and Artemis server instances seamlessly under Wine.
+  - Linux host network configuration script (`linux/setup-linux-network.sh`) to configure loopback virtual bridge `192.168.100.1/32` and privileged port binding.
+  - Pre-configured Lutris game profile template (`linux/fgolocalplatform.lutris.yml`).
+  - Comprehensive Linux player and troubleshooting guide (`docs/LINUX_GUIDE.md`).
+- Automated 25-byte IAT patch for `App/ago.exe` (offset `0x1971978`) fixing `SetWindowFeedbackSetting` crash (`0x80000100` / `STATUS_WINE_STUB`) under Wine.
+- Dual-GPU hybrid graphics support via automatic NVIDIA PRIME render offload.
 
 ## [1.1.1] - 2026-09-15
 
