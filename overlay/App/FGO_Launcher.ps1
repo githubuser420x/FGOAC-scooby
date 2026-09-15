@@ -643,7 +643,6 @@ Write-Host "Virtual LAN: $localIp (local bridge=$($network.Local))"
 Write-Host "Server     : $serverHost"
 Write-Host "Version    : $effectiveGameVersion"
 Write-Host "Input      : $effectiveInputMode"
-Write-Host "Cabinet    : $($effectiveCabinetMode.ToUpperInvariant()) (test menu is persisted as SATELLITE:MAIN)"
 Write-Host "Display    : $effectiveDisplayMode $($effectiveResolutionWidth)x$($effectiveResolutionHeight)"
 Write-Host "Monitor    : $(if ($effectiveMonitorDevice) { $effectiveMonitorDevice } else { 'primary' }) (disconnected device falls back to primary)"
 if ($effectiveDisplayMode -eq "borderless") {
