@@ -31,6 +31,7 @@ Exit codes
   6  a file did not match its checksum after it was copied
   7  -Rollback found no backup to restore
   8  cancelled: no folder was chosen
+  9  the install has not had Cloud23333's V1.01 update, which the English scripts need
 #>
 [CmdletBinding()]
 param(
@@ -264,6 +265,13 @@ if ($Rollback) {
     Write-Host "Rollback finished: $restored files restored, $removed files removed."
     Write-Host 'The launcher settings were left as they are; turn English Text off in the launcher if you want the Chinese set back.'
     exit 0
+}
+
+# App\FGO_Runtime.dll came with Cloud23333's V1.01 update, and the English launch and server
+# scripts in this package load it. On the original 11.00 package they would leave the server
+# unable to start, so the patch stops here instead.
+if (!([IO.File]::Exists([IO.Path]::Combine($InstallRoot, 'App\FGO_Runtime.dll')))) {
+    Stop-WithMessage "This game folder has not had Cloud23333's V1.01 update yet: App\FGO_Runtime.dll is missing, and the English patch needs it. Apply his V1.01 or V1.02 update to $InstallRoot first, then run FGOAC scooby again." 9
 }
 
 $manifestPath = [IO.Path]::Combine($PackageRoot, 'manifest.json')

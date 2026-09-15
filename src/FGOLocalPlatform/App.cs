@@ -18,13 +18,13 @@ public partial class App : Application
 		catch (Exception ex)
 		{
 			MessageBox.Show(ex.Message, "FGOAC scooby - Startup Check", MessageBoxButton.OK, MessageBoxImage.Hand);
-			// The main window would still be created after this method returns; clearing the
-			// start-up page keeps it from opening against an install that just failed the check.
-			StartupUri = null;
 			Shutdown(4);
 			return;
 		}
 		base.OnStartup(e);
+		// The window is opened here rather than through StartupUri, so a failed check above never
+		// opens it against an install the launcher cannot run.
+		new MainWindow().Show();
 	}
 
 	private static void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
