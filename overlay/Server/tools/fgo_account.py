@@ -1876,7 +1876,8 @@ def command_gift(args) -> dict:
         if set(requested) - catalog.keys():
             return {"ok": False, "error": "unsupported_present_item"}
         batch_id = secrets.token_hex(16)
-        batch = {"version": 1, "id": batch_id, "aime_id": args.aime_id, "items": [
+        batch = {"version": 1, "id": batch_id, "aime_id": args.aime_id,
+                 "account_generation": profile.get("account_generation", ""), "items": [
             {"key": key, "amount": min(amount, catalog[key]["max_amount"]),
              "cap": catalog[key]["max_amount"], "name": catalog[key]["name"]}
             for key, amount in requested.items()]}
