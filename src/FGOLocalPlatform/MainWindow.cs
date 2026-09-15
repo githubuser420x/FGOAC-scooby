@@ -901,6 +901,11 @@ public partial class MainWindow : Window, IComponentConnector, IStyleConnector
 		filteredCardItems = ((IEnumerable)cardListView).Cast<CardStack>().ToList();
 		int count = filteredCardItems.Count;
 		UpdateCardItemsSource();
+		if (availableCardStacks.Count == 0)
+		{
+			CardCatalogSummaryText.Text = "No card images in " + Path.GetFullPath(Path.Combine(GamePaths.GameRoot, cardCollection.Path ?? "")) + ". They come with the full 1.0 package (DEVICE\\print\\FGO11_AllServants, 3,707 files), not with any update: extract that package into the game folder again, then click Reload.";
+			return;
+		}
 		int value = availableCardStacks.Count((CardStack stack) => stack.Card.CardTypeId == 1);
 		int value2 = availableCardStacks.Count((CardStack stack) => stack.Card.CardTypeId == 2);
 		string value3 = selectedCardType switch
