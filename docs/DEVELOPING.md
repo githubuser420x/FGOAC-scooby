@@ -134,7 +134,7 @@ which waits for it to close, moves the staged file into place and starts it agai
 
 ## Overlay
 
-`overlay\` mirrors the install root. The release packager copies it over an existing V1.01 install
+`overlay\` mirrors the install root. The release packager copies it over an existing V1.01 or V1.02 install
 after backing up what it replaces; the `App` and `Server` folders of the install used for
 development are left alone.
 

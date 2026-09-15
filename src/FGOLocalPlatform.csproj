@@ -11,7 +11,7 @@
     <EnableDefaultItems>false</EnableDefaultItems>
     <!-- The one place the version is written. The About page and the updater both read it back
          from the assembly, and package.ps1 names the release zip after it. -->
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <!-- Ahead-of-time compiled so the first window appears without waiting for the JIT. -->
     <PublishReadyToRun>true</PublishReadyToRun>
     <TieredPGO>true</TieredPGO>

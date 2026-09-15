@@ -15,8 +15,9 @@ V1.01 package) and is applied on top of it.
 
 | Requirement | Notes |
 | --- | --- |
+| Platform | Cloud23333's FGO Arcade local platform at **V1.01 or V1.02**. V1.02 is the one to be on: it fixes ERROR 4102, the blank Servant records and the sync error after enhancing a Servant |
 | OS | Windows 10 or 11, 64-bit |
-| GPU | NVIDIA on a current driver. AMD and Intel run through the bundled compatibility layer (Settings > Display), turned on by itself when no NVIDIA card is found and greyed out on NVIDIA, where it does not work |
+| GPU | NVIDIA on a current driver. AMD and Intel run through the bundled compatibility layer by fluphus (Settings > Display), turned on by itself when no NVIDIA card is found and left off on NVIDIA, where it does not work; the switch is yours either way. Tested by its author on an RX 7900 XTX at 1920x1080 only, with a 60 fps cap |
 | .NET / Python | Not needed - both are bundled with the install |
 | PowerShell | 5.1 (built into Windows) or 7 |
 | Rights | Administrator (one UAC prompt) |

@@ -9,6 +9,43 @@ installer that puts them there.
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-09-15
+
+Works on Cloud23333's V1.01 and V1.02. V1.02 is the one to be on: it fixes ERROR 4102, the blank
+Servant records and the sync error after enhancing a Servant. Unzip this release over your game
+folder and run the launcher, or take it through Check for updates. Nothing to do by hand; your
+accounts, decks and settings stay as they are.
+
+### Fixed
+
+- Updating through the launcher left the previous installer and file list in the game folder, so
+  the next start put the previous version's files back. The launcher now unpacks the release into
+  the game folder the way you would by hand.
+- After a platform update (V1.01 or V1.02) the English scripts and text were gone until the patch
+  marker was deleted by hand. The launcher now notices and puts them back on its own.
+- A game folder that never had V1.01 is refused with a message that says so. Before, the launcher
+  reported missing files and then crashed.
+- `App\FGO_Runtime.dll` fresh out of a zip is unblocked on every start, so PowerShell no longer
+  stops with 0x80131515 at Play.
+- The Cards and Deck page says when the card images folder is missing, instead of listing zero
+  Servants.
+- The first-time hints on the Play page no longer clip at narrow window widths, and the card
+  library toolbar no longer overlaps its own buttons with the log panel open.
+- Diagnostics and Help, the guide and the README cover ERROR 8404, "Cannot use Aime card" at the
+  title, 0x80131515, the missing-files dialog and the crash right after the game window opens.
+- The bond talk scenes V1.02 restores for swimsuit Musashi, swimsuit Jeanne and Koyanskaya of Light
+  are in English.
+
+### Changed
+
+- The AMD and Intel layer is now fluphus's open-source shim (`compat\amd-shim`, MIT). An install
+  that already runs the older layer keeps it; Settings > Display shows which layer is on and
+  switches to the newer one in one click, and back. A fresh install on a PC without an NVIDIA card
+  gets the new layer on its first run. An update never adds, removes or replaces a layer on its own.
+- The layer switch is no longer greyed out on NVIDIA PCs or when the shim's own installer put an
+  `App\opengl32.dll` there; the line under it says what to expect, and the choice is yours.
+- The launch log no longer prints a cabinet mode line; the game ignores that setting.
+
 ## [1.1.0] - 2026-09-14
 
 First public release, for Cloud23333's FGO Arcade local platform V1.01. Earlier version numbers were

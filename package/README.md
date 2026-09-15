@@ -6,7 +6,8 @@ English one called **FGOAC scooby**, which starts the server, manages your accou
 card deck.
 
 This is not a game download. It does nothing on its own: you need an existing FGO Arcade local
-platform install (Cloud23333's V1.01 package), and the patch is applied on top of it.
+platform install (Cloud23333's package at V1.01 or V1.02; V1.02 is the one to be on), and the patch
+is applied on top of it.
 
 ## Install
 
@@ -62,7 +63,8 @@ but keep them if you may want to roll back later.
   the later event shops. They are artwork, not text, and the rest of the game is unaffected.
 - The game is built for NVIDIA cards and wants a current driver; a black screen usually means the
   driver, not the patch. On AMD and Intel graphics the launcher turns on the bundled compatibility
-  layer by itself (Settings > Display, "AMD and Intel compatibility layer").
+  layer by fluphus by itself (Settings > Display, "AMD and Intel compatibility layer"); he tested it
+  on an RX 7900 XTX at 1920x1080 only, with a 60 fps cap.
 
 ## Reporting a problem
 

@@ -22,9 +22,9 @@ carries no game files: it is applied on top of an FGO Arcade local platform inst
 
 | | |
 | --- | --- |
-| The game | An existing **FGO Arcade local platform V1.01** install (Cloud23333's package) - the folder that holds `App` and `Server` |
+| The game | An existing **FGO Arcade local platform V1.01 or V1.02** install (Cloud23333's package) - the folder that holds `App` and `Server`. V1.02 is the one to be on: it fixes ERROR 4102, the blank Servant records and the sync error after enhancing a Servant |
 | OS | Windows 10 or 11, 64-bit |
-| GPU | NVIDIA on a current driver. AMD and Intel run through the bundled compatibility layer, which the launcher turns on by itself on a PC without an NVIDIA card (and keeps off on NVIDIA, where it does not work) |
+| GPU | NVIDIA on a current driver. AMD and Intel run through the bundled compatibility layer by fluphus, which the launcher turns on by itself on a PC without an NVIDIA card (and keeps off on NVIDIA, where it does not work). Tested by its author on an RX 7900 XTX at 1920x1080 only, with a 60 fps cap |
 | Drive | Any drive **except E: or Y:** - see the table further down |
 | Rights | Administrator: one Windows prompt when the launcher starts |
 
