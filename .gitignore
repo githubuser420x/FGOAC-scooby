@@ -6,3 +6,4 @@ packages/
 .vs/
 *.user
 patch/manifest.json
+patch/wine/touchshim.dll
