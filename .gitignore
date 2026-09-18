@@ -6,3 +6,5 @@ packages/
 .vs/
 *.user
 patch/manifest.json
+overlay/Mods/hide-retired-events/mod.json
+overlay/Mods/hide-historic-summon-banners/mod.json

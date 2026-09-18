@@ -709,6 +709,9 @@
               </TabItem>
             </TabControl>
           </TabItem>
+          <TabItem Header="Mods" Style="{StaticResource SidebarTabItemStyle}">
+            <local:ModsView />
+          </TabItem>
         </TabControl>
         <GridSplitter Name="LogPanelSplitter" Grid.Column="1" Style="{StaticResource PanelSplitterStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ResizeDirection="Columns" ResizeBehavior="PreviousAndNext" />
         <Grid Name="LogPanel" Grid.Column="2" Margin="0,10,10,10">

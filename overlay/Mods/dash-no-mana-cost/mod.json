@@ -1,0 +1,38 @@
+{
+  "id": "dash-no-mana-cost",
+  "name": "Dashing and dodging cost no mana",
+  "version": "1.0.0",
+  "description": "Makes dashing and dodging free. The game calls the resource mana (魔力); internally, in the master data and in the engine, it is 'stamina'. The in-game TIPS say it outright: tips_knowledge_table.69 is 'dashing and dodging consume mana' and .70 is 'when your mana runs out you can no longer dash or dodge', and there is a servant buff named exactly that ('dash mana consumption 0', buff 153) that has to exist because there is no numeric value that means 'free' for the dash cost. The three per-action parameters live in arms_mst_svt_action.bin, one row per action parameter set, 448 rows. stamina_run_frame 105/150/250/600/6000 -> 30000: this is how many frames of dashing one point of mana buys, so a bigger number is a cheaper dash, and 30000 is 500 seconds per point - five times the most generous value Sega ever shipped (6000) and longer than any battle. 30000 was chosen deliberately over a theoretically larger number: it still fits in a signed 16-bit field, so it cannot wrap whatever width the parser uses. stamina_run_start 1 -> 0 (397 rows changed, 51 already 0): the mana you must hold before a dash may start at all, so with this at 0 you can dash even on an empty gauge. stamina_step 3/2/1 -> 0 (393 rows changed, 55 already 0): the mana a dodge-step costs. 0 is already a shipped value for stamina_step and stamina_run_start, so both of those edits use a value the game is proven to accept; only stamina_run_frame gets a value Sega never used. NOT changed, on purpose: stamina_default (the gauge you spawn with), stamina_recover and stamina_recover_wait_time (the refill rate), stamina_attack_recover and stamina_guard_rate. With the dash and dodge costs at zero nothing else consumes mana, so the recovery numbers stop mattering; if some drain path turns out not to be covered by these three fields, the next lever is setting stamina_recover high and stamina_recover_wait_time to 1 rather than raising stamina_run_frame further. Caveat: this edits App/zh/rom/mst_data/arms_mst_asset.farc, the English-patched tree the game reads; re-running the EN patch would revert it and 'repair' puts it back. Also note this is client-side only - the server never reads these fields. Not verified in a battle: the semantics above are inferred from the field names, the value distribution across all 448 rows, the shipped-zero values for the two step/threshold fields, the existence of the DASH_ZERO_STAMINA buff and the game's own TIPS text, not from watching the gauge.",
+  "targets": [
+    {
+      "files": [ "App/zh/rom/mst_data/arms_mst_asset.farc" ],
+      "farc": { "member": "arms_mst_svt_action.bin" },
+      "rules": [
+        {
+          "id": "dash-cost-per-mana-point",
+          "pattern": "^(?<head>[ \\t]*svt_action\\.\\d+\\.stamina_run_frame[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "set",
+          "value": 30000,
+          "min": 0,
+          "max": 32767
+        },
+        {
+          "id": "dash-minimum-mana",
+          "pattern": "^(?<head>[ \\t]*svt_action\\.\\d+\\.stamina_run_start[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "set",
+          "value": 0,
+          "min": 0,
+          "max": 32767
+        },
+        {
+          "id": "dodge-step-cost",
+          "pattern": "^(?<head>[ \\t]*svt_action\\.\\d+\\.stamina_step[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "set",
+          "value": 0,
+          "min": 0,
+          "max": 32767
+        }
+      ]
+    }
+  ]
+}

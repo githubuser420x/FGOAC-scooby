@@ -15,7 +15,7 @@ The deliverable is a self-contained single-file host published from `src\` and n
 | --- | --- |
 | `src\` | buildable C#/XAML project (`FGOLocalPlatform.csproj`). `DeckReaderUI\` and `DeckReaderUI.Kancolle\` are the author's card-reader namespaces, compiled into the same assembly; the names are kept as decompiled so a new upstream version can be diffed against them |
 | `compat\` | fluphus's OpenGL compatibility layer for AMD and Intel graphics under `amd-shim\`, taken verbatim with its licence, plus `fgoglcompat.dll`, the older layer it replaced (see its README) |
-| `overlay\` | English replacements for files that live outside the assembly, laid out by their path relative to the install root |
+| `overlay\` | English replacements for files that live outside the assembly, laid out by their path relative to the install root. `overlay\Mods\` is the mods the launcher offers on the Mods page; see "The mods page" below |
 | `patch\` | `Apply-EN-Patch.ps1` (the installer players run) and `Build-Manifest.ps1` (writes the `manifest.json` it checks against) |
 | `dist\` | build output, `FGOAC scooby.exe` (not tracked) |
 | `docs\` | player guide, release steps, and this file |
@@ -179,3 +179,77 @@ beside it to also remove the files the patch added. Exit codes are listed at the
 
 Accounts, decks, `Server\state`, the database and the rest of `App\fgo-launcher.json` are never
 written; `Apply-EN-Patch.ps1` refuses a manifest that lists a path under any of them.
+
+## The mods page
+
+The Mods page (`modsview.xaml`, `FGOLocalPlatform\ModsView.cs`) changes the game and the local
+server the way the PowerShell mod manager does, with the same mod files. The engine is
+`FGOLocalPlatform\Mods\`: `ModEngine.cs` owns the baseline store and the journal, `ModRuleEngine.cs`
+the rewrite rules, `FarcTool.cs` the packed-archive member edit, and `ModDefinition.cs` the
+`mod.json` schema.
+
+`docs\MODS.md` is the manifest reference for anyone writing a mod, with a worked sample in
+`docs\mods\examples\` for each kind of file a mod can edit; it is not shipped and no page reads it.
+This section is the summary of what the engine does with one.
+
+A mod is a folder with a `mod.json` in it. `targets` name file globs and the rules that rewrite
+them; `overlay` names whole files the mod ships under its own `files\`. A rule captures `value`, and
+may capture `head` and `tail`, and the line is rebuilt as head + new value + tail, so a byte the
+rule did not name - a BOM, a CRLF ending - survives. The operations are `set`, `scale`, `shift`,
+`clamp` and `replace`; `min` and `max` clamp a numeric result. A target may name a member inside a
+packed `FARc` archive (`farc.member`) instead of a text file, and may carry raw byte patches
+(`patches`) for a file that is neither text nor a `FARc` container.
+
+Where it lives, all relative to the install root:
+
+| Path | Contents |
+| --- | --- |
+| `Mods\<id>\mod.json` | a mod. These ship through `overlay\Mods\`, so the English patch puts them in place |
+| `Mods\tools\farc.py` | the packed-archive reader/writer, run by the game's own Python |
+| `Mods\.state\baseline\` | the pristine original of every file a mod has touched |
+| `Mods\.state\state.json` | the journal: which files have a baseline, and which mods are applied |
+| `Mods\.state\params\<id>.json` | the knob values a mod with `parameters` is applied with |
+
+The intended state of a managed file is always recomputed from the baseline plus the applied mods,
+never read off the current disk, which is what lets the page both report an outside change
+(`Verify`) and undo it (`Repair`). A mod whose folder has gone is dropped from the journal and the
+files it wrote are put back, so removing a mod by hand reverts it rather than leaving its edit
+behind.
+
+`Mods\.state` is the launcher's own store and is separate from the journal of the standalone
+PowerShell manager, so the two must not be pointed at the same install at the same time - whichever
+ran first holds the true original.
+
+A mod must not be applied while the game or the server is running: the page refuses while any of the
+four platform ports (777, 9999, 7777, 8888) answers. The mute-quest-timer mod is the one mod that
+would otherwise have to ship a 3 MB game file, so it carries the two byte offsets and the new bytes
+instead and no game file travels with this repository.
+
+### Parameters, and the Battle Tuner
+
+Two optional fields extend the manifest for this launcher; a mod that uses neither stays portable
+to the PowerShell manager:
+
+- `parameters` declares the knobs the Battle Tuner tab shows. Each has an `id`, a `type`
+  (`number`, `switch` or `choice`), a default `value`, and, for a number, `min`/`max`/`step` and a
+  `unit`.
+- a rule may name a knob as `{id}` in place of a literal `value`, `factor`, `amount`, `min` or
+  `max`; and may carry `when`, a map of knob id to expected value, so the rule only runs for the
+  chosen mode. That is how one mod offers three mutually exclusive wave-timer shapes.
+
+The chosen values live in `Mods\.state\params\<id>.json`; anything not stored falls back to the
+mod's own default. A value is clamped to its range before it is used, so a hand-edited store cannot
+put a multiplier out of bounds.
+
+Because the intended state is recomputed from the baseline on every write, changing a number
+re-derives the file from the pristine original rather than applying the new factor on top of the
+old result. `Battle Tuner` is the one bundled mod that uses all of this: the wave timer, skill
+cooldown, Noble Phantasm gain and penalty, drop quantity, bond gain, and the HP and attack of both
+Servants and enemies, with a value of 1 meaning "leave it alone". It is applied or removed from the
+Mods tab like any other mod, and its numbers are edited on the Battle Tuner tab, which stays
+disabled until the bundle is applied.
+
+The two stat targets are `farc` members, so they go through `Mods\tools\farc.py` and the game's own
+Python like any other packed-archive mod; each scales `base` and `max` together, so the growth
+curve keeps its shape, and all four default to 1 when a knob is set back, which leaves the archive
+byte-identical rather than rewritten by an equivalent round trip.

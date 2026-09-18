@@ -1,0 +1,25 @@
+{
+  "id": "byte-patch",
+  "name": "Byte patch example - drop two sound cues to silence",
+  "version": "1.0.0",
+  "description": "Sets the volume digit of two cues in App/rom/sound/se_quest.farc to '0', which silences them without touching the audio. A patch carries the offsets and the new bytes rather than a copy of the 3 MB archive, so no game file ships with the mod. This is the example for a raw byte patch: a file that is neither text nor a FARc archive, and therefore has no member to unpack and no lines to rewrite. The size guard means a build the offsets were not measured against is left alone instead of being written at the wrong place, and both cues and their audio stay present while every other cue keeps its volume.",
+  "targets": [
+    {
+      "files": [ "App/rom/sound/se_quest.farc" ],
+      "patches": [
+        {
+          "id": "mute-que-time-ext-01",
+          "offset": 3013098,
+          "bytes": "30",
+          "size": 3013643
+        },
+        {
+          "id": "mute-que-warning-01",
+          "offset": 3013168,
+          "bytes": "30",
+          "size": 3013643
+        }
+      ]
+    }
+  ]
+}

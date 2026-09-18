@@ -1,0 +1,21 @@
+{
+  "id": "farc-member",
+  "name": "Packed archive example - cheaper Craft Essences",
+  "version": "1.0.0",
+  "description": "Halves the cost of every Craft Essence, so a deck an 84 limit would refuse fits inside the limit the game actually enforces. The fields are craft_essence.N.cost in member arms_mst_craft_essence.bin of App/zh/rom/mst_data/arms_mst_craft_essence.farc: the rules edit the member and the archive is repacked around it. This is the example for a packed archive: name the member in farc and the rules act on it as text. The whole archive is the unit that gets a baseline and gets restored, so removing the mod puts the original archive back. Every other field is untouched, and battle_cost is deliberately left alone because it is not the deck cost. Not verified in game.",
+  "targets": [
+    {
+      "files": [ "App/zh/rom/mst_data/arms_mst_craft_essence.farc" ],
+      "farc": { "member": "arms_mst_craft_essence.bin" },
+      "rules": [
+        {
+          "id": "ce-cost",
+          "pattern": "^(?<head>[ \\t]*craft_essence\\.\\d+\\.cost[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "scale",
+          "factor": 0.5,
+          "min": 0
+        }
+      ]
+    }
+  ]
+}

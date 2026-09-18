@@ -1,0 +1,20 @@
+{
+  "id": "text-field",
+  "name": "Text field example - longer command-skill cooldowns",
+  "version": "1.0.0",
+  "description": "Multiplies every command-skill cooldown by 1.5, so a skill spends half again as long before it can be used again. The fields are the gm_param.skill_reload_N rows of App/zh/rom/gm_param.properties, which the client reads; the server does not. min stops a cooldown reaching zero, which the game would treat as ready. This is the example for the ordinary case: a text file, one field per line, value is a number. Not verified in game.",
+  "targets": [
+    {
+      "files": [ "App/zh/rom/gm_param.properties" ],
+      "rules": [
+        {
+          "id": "skill-reload",
+          "pattern": "^(?<head>[ \\t]*gm_param\\.skill_reload_\\d+[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "scale",
+          "factor": 1.5,
+          "min": 1
+        }
+      ]
+    }
+  ]
+}

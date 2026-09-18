@@ -1,0 +1,19 @@
+{
+  "id": "battle-summon-never-show",
+  "name": "Never show the post-battle summon",
+  "version": "0.1.0",
+  "description": "Stops the game sending you to the summon banner list after every battle. The cabinet keeps its 'do not show the battle summon again today' choice in the battle_option member battle_summon_hide_limit, and that member is NOT an integer: the cabinet sends and reads it back as a timestamp, using 1900-01-01T00:00:00 to mean 'not hidden'. The server projected all sixteen battle_option members through an integer conversion, so int('2026-09-16T06:00:00+08:00') raised and the member fell back to 0 - the player's own choice was discarded on arrival, which is why the in-game control appeared to do nothing. This mod rewrites the single line that builds the start response's battle_option so it also overwrites that member with a far-future deadline, 2099-12-31T23:59:59+09:00, which is the same sentinel fgo.yaml already uses for summon end times. The client treats the member as 'hide while now < limit', so the screen never appears and there is nothing to re-arm each day. Only that one line changes and the line count stays the same, so Server/artemis/titles/fgo/index.py ends up byte-identical apart from that line. The pristine file is captured to the baseline store before the first write, so 'uninstall battle-summon-never-show' and 'restore' both put the exact original bytes back. Caveats: (1) while installed this is a one-way switch - the response always reports a hidden-until-2099 deadline, so the in-game control cannot turn the summon back on; uninstall to get it back. (2) The server's integer-conversion quirk for that member is left alone deliberately: it only affects the copy written into the saved profile, which the cabinet never reads for this purpose, because the start response value is what it acts on. (3) Uninstalling returns you to the original behaviour, where the in-game control works but must be pressed again once the deadline passes.",
+  "targets": [
+    {
+      "files": [ "Server/artemis/titles/fgo/index.py" ],
+      "rules": [
+        {
+          "id": "force-battle-summon-hide-deadline",
+          "pattern": "^(?<head>[ \\t]*)(?<value>battle_option = self\\._battle_option_for_profile\\(profile\\))(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "replace",
+          "value": "battle_option = {**self._battle_option_for_profile(profile), \"battle_summon_hide_limit\": \"2099-12-31T23:59:59+09:00\"}"
+        }
+      ]
+    }
+  ]
+}

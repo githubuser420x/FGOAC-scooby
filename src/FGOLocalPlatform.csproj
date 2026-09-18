@@ -46,6 +46,7 @@
     <Page Include="debugsettingsview.xaml" />
     <Page Include="diagnosticsview.xaml" />
     <Page Include="mainwindow.xaml" />
+    <Page Include="modsview.xaml" />
     <Page Include="nameprompt.xaml" />
     <Page Include="newaccountdialog.xaml" />
     <Page Include="photocontrols.xaml" />

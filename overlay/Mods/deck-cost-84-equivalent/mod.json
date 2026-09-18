@@ -1,0 +1,34 @@
+{
+  "id": "deck-cost-84-equivalent",
+  "name": "Deck cost: room for the deck an 84 limit would allow",
+  "version": "1.0.0",
+  "description": "A workaround, not the thing you asked for - read this before judging it. You asked for the deck cost limit to be 84. That limit is max_deck_cost in App/rom/mst_data/arms_mst_master_exp_table.farc and it cannot be reached: that archive is encrypted (no FARC name table, no zstd frame at any offset, and no deflate/gzip/bz2/lzma at any of ~90 offsets tried, no single-byte XOR, uniformly random from 0x10), so this manager cannot repack it. The plain copy the platform keeps at Server/data/fgo-master/master_exp_table/ is editable but the server reads only 'exp' from it and never max_deck_cost, so editing that would be a placebo. So this mod leaves the limit at 69 and makes the cards cheaper instead, which buys the same room: every card cost is multiplied by 0.8214285714, which is exactly 69/84. The limit still reads 69 on screen; what changes is that a deck which used to cost 84 now costs 69 and therefore fits. Resulting integers: servants 16->13, 12->10, 7->6, 4->3, 3->2 (rarity N/R/SR/SSR/SSR+ follow the FGO cost table 3/4/7/12/16); Craft Essences 12->10, 9->7, 5->4, and the 514 CEs already at 0 stay at 0. Checked against the deck shape the game itself uses: 3 servants plus one Craft Essence each, so the most expensive legal deck is 3x16 + 3x12 = 84 natively - which is where your 84 comes from - and after this mod it is 3x13 + 3x10 = 69, exactly the limit. Every other field is untouched: the two rules match only a line beginning svt.N.cost= or craft_essence.N.cost=, and the sibling field battle_cost cannot match because the literal svt.N. / craft_essence.N. prefix is followed by 'cost' in the pattern but by 'battle_cost' in the file. battle_cost is deliberately left alone - it is not the deck cost (a single servant's battle_cost is 79-108, already above the 69 limit, so the limit cannot be compared against it) and it may be what Grail War matching uses. Caveats: (1) every card's displayed cost gets smaller and any sort-by-cost order is proportionally compressed, though the ordering between cards never inverts because one factor is applied to all of them. (2) This is a guess about who computes the deck cost. I could not run the game, and what I verified is only that ago.exe contains the deck cost display and sort resources (info_total_cost_loop, total_cost_font_limit_tag, total_cost_auth_tag, p_btn_sort_up_cost_c, SEL_PALETTE_card_status_txt_cost) and that max_deck_cost lives in the player-level master table, while the server never reads a deck cost at all - so the client does the arithmetic, from the per-card cost fields in these two tables. If in game the deck still reads 69/69 and refuses, then the client is summing something other than these fields and this mod is a no-op. (3) Edit the factor below to retune: 1 would be a no-op. Any factor from about 0.82 to 0.84 rounds to the same integers. (4) NOT verified in game, and this mod ships the riskiest assumption of the four - it is the only one whose target field I inferred rather than read straight out of a table the code path I traced uses.",
+  "targets": [
+    {
+      "files": [ "App/zh/rom/mst_data/arms_mst_svt.farc" ],
+      "farc": { "member": "arms_mst_svt.bin" },
+      "rules": [
+        {
+          "id": "svt-deck-cost-x0.8214",
+          "pattern": "^(?<head>[ \\t]*svt\\.\\d+\\.cost[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "scale",
+          "factor": 0.8214285714,
+          "min": 0
+        }
+      ]
+    },
+    {
+      "files": [ "App/zh/rom/mst_data/arms_mst_craft_essence.farc" ],
+      "farc": { "member": "arms_mst_craft_essence.bin" },
+      "rules": [
+        {
+          "id": "ce-deck-cost-x0.8214",
+          "pattern": "^(?<head>[ \\t]*craft_essence\\.\\d+\\.cost[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "scale",
+          "factor": 0.8214285714,
+          "min": 0
+        }
+      ]
+    }
+  ]
+}

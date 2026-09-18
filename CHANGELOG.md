@@ -9,6 +9,26 @@ installer that puts them there.
 
 ## [Unreleased]
 
+### Added
+
+- A **Mods** page, with a Battle Tuner tab. It applies the game-side and server-side mods the
+  launcher ships - the quest-timer mute, the deck cost, the dash cost and the rest - and
+  takes them off again cleanly: the original of every file is stored first, so a mod comes off
+  exactly as it went on. Verify reports a file an update put back and Repair puts the mod's edit
+  there again, and a mod whose folder is removed is reverted by the launcher rather than left
+  half-applied.
+- **Battle Tuner**: one mod for the numbers behind a battle - the wave countdown (off, scaled per
+  wave, the first wave only, or pinned to a fixed number of seconds), command-skill cooldown,
+  Noble Phantasm gain from an Arts chain and from criticals, the penalty a botched Noble Phantasm
+  costs, enemy drop quantity, quest bond gain, and the HP and attack of both Servants and enemies.
+  Each is a slider on the Battle Tuner tab; set one back to 1 to leave it alone. The tab is off
+  until the bundle is applied from the Mods tab, and a changed number is re-derived from the
+  original file rather than stacked on the previous one.
+- `docs\MODS.md`, a guide to writing a mod: the manifest field by field, how a rule rebuilds a line
+  and how to pin one down, and a worked sample under `docs\mods\examples\` for each kind of file a
+  mod can edit - a text field, a value that is not a number, a member inside a packed archive, a raw
+  byte patch, a whole file, and one that puts numbers on the Battle Tuner tab.
+
 ## [1.1.2] - 2026-09-16
 
 Works on Cloud23333's V1.01 and V1.02. Unzip this release over your game folder and run the

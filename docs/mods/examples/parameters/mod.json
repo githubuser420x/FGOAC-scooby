@@ -1,0 +1,124 @@
+{
+  "id": "parameters",
+  "name": "Parameters example - a small battle tuner",
+  "version": "1.0.0",
+  "description": "The parameter shape in one mod, doing a little of what the bundled Battle Tuner does. Skill cooldown, the wave timer and the loot multiplier are knobs on the Battle Tuner tab, and the drop switch is a knob that decides which of two rules runs. Every default here is the value that leaves a file alone - a cooldown factor of 1, a timer mode of off, drops on at a loot multiplier of 1 - so applying this mod without touching the tab is meant to change nothing at all, and a non-zero hit count means the pattern or the defaults are wrong. The two timer shapes are mutually exclusive and each carries a when map, so only the chosen one is written; Off has no rule at all. The skill and timer fields are in the App/zh tree the client reads through the English patch. The server reads the App/rom copy of a quest file to award the result, so a mod that moves a quest number has to move it in both trees to keep the screen and the award agreeing, which is why the bundled Battle Tuner carries two bond rules instead of one.",
+  "parameters": [
+    {
+      "id": "skillCooldown",
+      "label": "Skill cooldown",
+      "type": "number",
+      "unit": "x",
+      "value": 1,
+      "min": 0.1,
+      "max": 4,
+      "step": 0.05,
+      "help": "Multiplies every command-skill cooldown. 1 leaves them alone; 0.9 brings them back a tenth sooner."
+    },
+    {
+      "id": "timerMode",
+      "label": "Wave timer",
+      "type": "choice",
+      "value": "off",
+      "help": "Which wave countdowns the timer settings below apply to. Off writes no timer rule at all.",
+      "options": [
+        { "value": "off", "label": "Off - leave the countdown alone" },
+        { "value": "scaleAll", "label": "Scale every wave" },
+        { "value": "fixed", "label": "Pin every wave to a fixed number of seconds" }
+      ]
+    },
+    {
+      "id": "timerFactor",
+      "label": "Timer multiplier",
+      "type": "number",
+      "unit": "x",
+      "value": 2,
+      "min": 1,
+      "max": 100,
+      "step": 1,
+      "help": "Used by Scale every wave."
+    },
+    {
+      "id": "timerFixed",
+      "label": "Timer fixed value",
+      "type": "number",
+      "unit": "s",
+      "value": 900,
+      "min": 1,
+      "max": 65535,
+      "step": 30,
+      "help": "Used by Pin every wave. The game refuses a countdown above 65535."
+    },
+    {
+      "id": "drops",
+      "label": "Enemies drop items",
+      "type": "switch",
+      "value": true,
+      "help": "Off sets every enemy drop quantity to 0, which is the quickest way to watch the switch change which rule runs."
+    },
+    {
+      "id": "loot",
+      "label": "Loot quantity",
+      "type": "number",
+      "unit": "x",
+      "value": 1,
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "help": "How much of each item an enemy drops. The chance of dropping at all is not changed, so this multiplies what already drops."
+    }
+  ],
+  "targets": [
+    {
+      "files": [ "App/zh/rom/gm_param.properties" ],
+      "rules": [
+        {
+          "id": "skill-reload",
+          "pattern": "^(?<head>[ \\t]*gm_param\\.skill_reload_\\d+[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "scale",
+          "factor": "{skillCooldown}",
+          "min": 1
+        }
+      ]
+    },
+    {
+      "files": [ "App/zh/rom/single/quest_prop_*.txt" ],
+      "rules": [
+        {
+          "id": "timer-scale-all",
+          "when": { "timerMode": "scaleAll" },
+          "pattern": "^(?<head>[ \\t]*battle\\.\\d+\\.battle_time[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "scale",
+          "factor": "{timerFactor}",
+          "min": 1,
+          "max": 65535
+        },
+        {
+          "id": "timer-fixed",
+          "when": { "timerMode": "fixed" },
+          "pattern": "^(?<head>[ \\t]*battle\\.\\d+\\.battle_time[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "set",
+          "value": "{timerFixed}",
+          "min": 1,
+          "max": 65535
+        },
+        {
+          "id": "drops-on",
+          "when": { "drops": "true" },
+          "pattern": "^(?<head>[ \\t]*enemy\\.\\d+\\.drop\\.\\d+-\\d+\\.num[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "scale",
+          "factor": "{loot}",
+          "min": 1
+        },
+        {
+          "id": "drops-off",
+          "when": { "drops": "false" },
+          "pattern": "^(?<head>[ \\t]*enemy\\.\\d+\\.drop\\.\\d+-\\d+\\.num[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "set",
+          "value": 0,
+          "min": 0
+        }
+      ]
+    }
+  ]
+}

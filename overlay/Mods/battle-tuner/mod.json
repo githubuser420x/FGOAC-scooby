@@ -1,0 +1,314 @@
+{
+  "id": "battle-tuner",
+  "name": "Battle Tuner",
+  "version": "1.0.0",
+  "description": "One bundle for the numbers that shape a battle: the wave countdown, the command-skill cooldown, Noble Phantasm gain from an Arts chain and from criticals, the penalty frames a botched Noble Phantasm costs, the quantity of every enemy drop, the bond a solo quest pays out, and the HP and attack of both Servants and enemies. Each number is a knob on the Battle Tuner tab, and the value that means 'leave it alone' is the game's own: a cooldown factor of 1, a drop multiplier of 1, a bond multiplier of 1. Set the wave timer to Off to leave the countdown untouched. The three timer shapes are mutually exclusive - scale every wave, scale only the first wave, or pin every wave to one number of seconds - and only the chosen one is written. Two files carry the same numbers for a reason: App/rom/single is what the server reads to award the quest result, and App/zh/rom/single is the English-patched copy the client itself reads through the zh overlay, so a value changed in one place only would disagree on screen. The HP and attack figures are the exception: they live in the packed master tables under App/zh/rom/mst_data, which only the game reads, so the server never sees them, and each pair is scaled base and max together so the growth curve keeps its shape. The bond ceiling, Grail War and coop-event bond, and the quest rewards that are not drops are not touched, because none of them has a knob here. Turning everything back to its default writes the game's original numbers, which is the same as removing the mod.",
+  "parameters": [
+    {
+      "id": "timerMode",
+      "label": "Wave timer",
+      "type": "choice",
+      "value": "scaleAll",
+      "help": "Which wave countdowns the timer settings below apply to. Off leaves every countdown as the game shipped it.",
+      "options": [
+        { "value": "off", "label": "Off - leave the countdown alone" },
+        { "value": "scaleAll", "label": "Scale every wave" },
+        { "value": "scaleWave1", "label": "Scale the first wave only" },
+        { "value": "fixed", "label": "Pin every wave to a fixed number of seconds" }
+      ]
+    },
+    {
+      "id": "timerFactor",
+      "label": "Timer multiplier",
+      "type": "number",
+      "unit": "x",
+      "value": 10,
+      "min": 1,
+      "max": 100,
+      "step": 1,
+      "help": "Used by Scale every wave and Scale the first wave only."
+    },
+    {
+      "id": "timerFixed",
+      "label": "Timer fixed value",
+      "type": "number",
+      "unit": "s",
+      "value": 900,
+      "min": 1,
+      "max": 65535,
+      "step": 30,
+      "help": "Used by Pin every wave. The game refuses anything above 65535."
+    },
+    {
+      "id": "skillCooldown",
+      "label": "Skill cooldown",
+      "type": "number",
+      "unit": "x",
+      "value": 0.9,
+      "min": 0.1,
+      "max": 1,
+      "step": 0.05,
+      "help": "1 leaves the command-skill cooldowns alone; 0.9 brings them back about a tenth sooner."
+    },
+    {
+      "id": "artsChainNp",
+      "label": "Arts chain NP gain",
+      "type": "number",
+      "unit": "x",
+      "value": 1.2,
+      "min": 0,
+      "max": 5,
+      "step": 0.05,
+      "help": "Noble Phantasm gauge gained by an Arts chain. 1 leaves it alone."
+    },
+    {
+      "id": "critNp",
+      "label": "Critical NP gain",
+      "type": "number",
+      "unit": "x",
+      "value": 1.2,
+      "min": 0,
+      "max": 5,
+      "step": 0.05,
+      "help": "Noble Phantasm gauge gained from criticals. 1 leaves it alone."
+    },
+    {
+      "id": "npPenalty",
+      "label": "NP penalty frames",
+      "type": "number",
+      "unit": "x",
+      "value": 0.75,
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "help": "The wait charged when a Noble Phantasm is fired with no target or is interrupted. 0.75 makes a botched one cost a quarter less. 1 leaves it alone."
+    },
+    {
+      "id": "loot",
+      "label": "Loot quantity",
+      "type": "number",
+      "unit": "x",
+      "value": 5,
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "help": "How much of each item an enemy drops. The chance of dropping at all is not changed, so this multiplies what already drops. 1 leaves it alone."
+    },
+    {
+      "id": "bond",
+      "label": "Bond gain",
+      "type": "number",
+      "unit": "x",
+      "value": 3,
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "help": "Bond experience a solo quest pays out. It does not raise a Servant's bond ceiling, so extra bond past the cap is discarded. 1 leaves it alone."
+    },
+    {
+      "id": "servantHp",
+      "label": "Servant HP",
+      "type": "number",
+      "unit": "x",
+      "value": 1.5,
+      "min": 1,
+      "max": 10,
+      "step": 0.05,
+      "help": "Scales a Servant's level-1 and max-level HP together, so the growth curve keeps its shape. 1 leaves it alone. Client-side: the server never reads these fields."
+    },
+    {
+      "id": "servantAtk",
+      "label": "Servant attack",
+      "type": "number",
+      "unit": "x",
+      "value": 1.2,
+      "min": 1,
+      "max": 10,
+      "step": 0.05,
+      "help": "Scales a Servant's level-1 and max-level attack together. 1 leaves it alone."
+    },
+    {
+      "id": "enemyHp",
+      "label": "Enemy HP",
+      "type": "number",
+      "unit": "x",
+      "value": 2,
+      "min": 1,
+      "max": 10,
+      "step": 0.05,
+      "help": "Scales an enemy's level-1 and max-level HP together. 1 leaves it alone. A boss built from Servant data shares the Servant table, so it takes the Servant figure once rather than both."
+    },
+    {
+      "id": "enemyAtk",
+      "label": "Enemy attack",
+      "type": "number",
+      "unit": "x",
+      "value": 1.1,
+      "min": 1,
+      "max": 10,
+      "step": 0.05,
+      "help": "Scales an enemy's level-1 and max-level attack together. 1 leaves it alone. Defense is a letter grade, not a number, so it has no knob here."
+    }
+  ],
+  "targets": [
+    {
+      "files": [ "App/zh/rom/single/quest_prop_*.txt" ],
+      "rules": [
+        {
+          "id": "timer-scale-all",
+          "when": { "timerMode": "scaleAll" },
+          "pattern": "^(?<head>[ \\t]*battle\\.\\d+\\.battle_time[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "scale",
+          "factor": "{timerFactor}",
+          "min": 1,
+          "max": 65535
+        },
+        {
+          "id": "timer-scale-wave1",
+          "when": { "timerMode": "scaleWave1" },
+          "pattern": "^(?<head>[ \\t]*battle\\.1\\.battle_time[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "scale",
+          "factor": "{timerFactor}",
+          "min": 1,
+          "max": 65535
+        },
+        {
+          "id": "timer-fixed",
+          "when": { "timerMode": "fixed" },
+          "pattern": "^(?<head>[ \\t]*battle\\.\\d+\\.battle_time[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "set",
+          "value": "{timerFixed}",
+          "min": 1,
+          "max": 65535
+        },
+        {
+          "id": "loot-quantity",
+          "pattern": "^(?<head>[ \\t]*enemy\\.\\d+\\.drop\\.\\d+-\\d+\\.num[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "scale",
+          "factor": "{loot}",
+          "min": 1
+        },
+        {
+          "id": "bond-exp-client",
+          "pattern": "^(?<head>[ \\t]*svt_bond_exp[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "scale",
+          "factor": "{bond}",
+          "min": 1
+        }
+      ]
+    },
+    {
+      "files": [ "App/rom/single/quest_prop_*.txt" ],
+      "rules": [
+        {
+          "id": "bond-exp-server",
+          "pattern": "^(?<head>[ \\t]*svt_bond_exp[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "scale",
+          "factor": "{bond}",
+          "min": 1
+        }
+      ]
+    },
+    {
+      "files": [ "App/zh/rom/gm_param.properties" ],
+      "rules": [
+        {
+          "id": "skill-reload",
+          "pattern": "^(?<head>[ \\t]*gm_param\\.skill_reload_\\d[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "scale",
+          "factor": "{skillCooldown}",
+          "min": 1
+        },
+        {
+          "id": "arts-chain-np",
+          "pattern": "^(?<head>[ \\t]*gm_param\\.arts_chain_np[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "scale",
+          "factor": "{artsChainNp}",
+          "min": 0
+        },
+        {
+          "id": "critical-np-ratio",
+          "pattern": "^(?<head>[ \\t]*gm_param\\.critical_np_ratio[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "scale",
+          "factor": "{critNp}",
+          "min": 0
+        },
+        {
+          "id": "noble-charge-penalty",
+          "pattern": "^(?<head>[ \\t]*gm_param\\.noble_charge_default_penalty_frame[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+                    "operation": "scale",
+          "factor": "{npPenalty}",
+          "min": 0
+        }
+      ]
+    },
+    {
+      "files": [ "App/zh/rom/mst_data/arms_mst_svt.farc" ],
+      "farc": { "member": "arms_mst_svt_limit.bin" },
+      "rules": [
+        {
+          "id": "svt-hp-base",
+          "pattern": "^(?<head>[ \\t]*svt_limit\\.\\d+\\.hp_base[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "scale",
+          "factor": "{servantHp}",
+          "min": 1
+        },
+        {
+          "id": "svt-hp-max",
+          "pattern": "^(?<head>[ \\t]*svt_limit\\.\\d+\\.hp_max[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "scale",
+          "factor": "{servantHp}",
+          "min": 1
+        },
+        {
+          "id": "svt-atk-base",
+          "pattern": "^(?<head>[ \\t]*svt_limit\\.\\d+\\.atk_base[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "scale",
+          "factor": "{servantAtk}",
+          "min": 1
+        },
+        {
+          "id": "svt-atk-max",
+          "pattern": "^(?<head>[ \\t]*svt_limit\\.\\d+\\.atk_max[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "scale",
+          "factor": "{servantAtk}",
+          "min": 1
+        }
+      ]
+    },
+    {
+      "files": [ "App/zh/rom/mst_data/arms_mst_enemy.farc" ],
+      "farc": { "member": "arms_mst_ene_limit.bin" },
+      "rules": [
+        {
+          "id": "ene-hp-base",
+          "pattern": "^(?<head>[ \\t]*ene_limit\\.\\d+\\.hp_base[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "scale",
+          "factor": "{enemyHp}",
+          "min": 1
+        },
+        {
+          "id": "ene-hp-max",
+          "pattern": "^(?<head>[ \\t]*ene_limit\\.\\d+\\.hp_max[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "scale",
+          "factor": "{enemyHp}",
+          "min": 1
+        },
+        {
+          "id": "ene-atk-base",
+          "pattern": "^(?<head>[ \\t]*ene_limit\\.\\d+\\.atk_base[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "scale",
+          "factor": "{enemyAtk}",
+          "min": 1
+        },
+        {
+          "id": "ene-atk-max",
+          "pattern": "^(?<head>[ \\t]*ene_limit\\.\\d+\\.atk_max[ \\t]*=[ \\t]*)(?<value>\\d+)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "scale",
+          "factor": "{enemyAtk}",
+          "min": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "id": "overlay",
+  "name": "Whole-file example - a prepared volume profile",
+  "version": "1.0.0",
+  "description": "Copies a prepared App/audio-volume.ini over the game's, setting background music to 80 and leaving voice and effects at 100. An overlay ships the whole file rather than rewriting a line, which is the only way to change an asset that is not text at all: the bytes come from files\\App\\audio-volume.ini inside this mod's own folder and are copied over the install's copy. The file has to already exist in the install, because an overlay copies over a file and cannot create one. The original is captured before the first write and restored on removal. Worth knowing when reading this one: the launcher's Audio page writes this same file, so a change made there appears on Verify as drift and Repair puts this copy back.",
+  "overlay": [ "App/audio-volume.ini" ]
+}

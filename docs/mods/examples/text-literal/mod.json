@@ -1,0 +1,19 @@
+{
+  "id": "text-literal",
+  "name": "Text literal example - unlimited currency balances",
+  "version": "1.0.0",
+  "description": "Sets unlimited_balances to True in Server/artemis/config/fgo.yaml, so an account is no longer held to the amount of currency the platform hands out. One literal line is replaced and the line count is unchanged. The server reads this file at startup, so the platform has to be restarted before the change reaches anyone. This is the example for a value that is not a number: the operation is replace, which writes text and does no arithmetic. Uninstalling puts the original bytes back.",
+  "targets": [
+    {
+      "files": [ "Server/artemis/config/fgo.yaml" ],
+      "rules": [
+        {
+          "id": "unlimited-balances",
+          "pattern": "^(?<head>[ \\t]*)(?<value>unlimited_balances:[ \\t]*False)(?<tail>[ \\t]*(?:\\r?\\n|$))",
+          "operation": "replace",
+          "value": "unlimited_balances: True"
+        }
+      ]
+    }
+  ]
+}

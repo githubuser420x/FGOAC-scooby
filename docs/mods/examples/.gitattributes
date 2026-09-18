@@ -1,0 +1,5 @@
+# These manifests and the file the overlay example ships are read as bytes and compared as bytes,
+# so keep every one exactly as written: no end-of-line conversion, no encoding conversion. A real
+# mod that ships a file whose exact contents matter needs the same line beside that file, because
+# the repository root has "* text=auto eol=crlf" and would otherwise rewrite it on checkout.
+* -text
