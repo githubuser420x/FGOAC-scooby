@@ -676,6 +676,9 @@
                   <local:CursorSettingsView Margin="28" />
                 </ScrollViewer>
               </TabItem>
+              <TabItem Header="Banners">
+                <local:BannerSettingsView />
+              </TabItem>
               <TabItem Header="Debug">
                 <local:DebugSettingsView />
               </TabItem>

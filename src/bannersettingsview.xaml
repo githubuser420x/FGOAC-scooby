@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="FGOLocalPlatform.BannerSettingsView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:fgolocalplatform="clr-namespace:FGOLocalPlatform;assembly=FGOLocalPlatform">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="28" MaxWidth="900" HorizontalAlignment="Left">
+      <TextBlock Text="Limited Time Events" Style="{StaticResource SectionTitleStyle}" Margin="0,0,0,10" />
+      <StackPanel>
+      <TextBlock Text="Allows the player to hide Limited Time Event Banners from the Terminal Page, use the Checkbox to decide what banners should appear. Once a box is ticked, only the selected banners will appear. Selecting none will make all banners appear." Style="{StaticResource HelpTextStyle}" Margin="0,0,0,12" />
+      <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="1" Background="{StaticResource PlateBrush}" Padding="12" Margin="0,0,0,18">
+        <TextBlock Text="Changes to the server files must be made to allow these options to work. Use the Button below to apply the changes to these files first" TextWrapping="Wrap" Foreground="{StaticResource TextBrush}" />
+      </Border>
+      <WrapPanel Margin="0,18,0,12">
+      <Button Content="Apply FGO Event Toggle Patch" Width="240" HorizontalAlignment="Left" Margin="0,0,0,12" Click="ApplyEventPatch_OnClick" />
+      <TextBlock Name="PatchStatusText" Style="{StaticResource HelpTextStyle}"/>
+      </WrapPanel>
+
+            <CheckBox Name="LTE8008" Content="Gudaguda Honnoji Temple" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8010" Content="The Garden of Order - Revival" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8011" Content="600,000 Master Celebration" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8012" Content="Prisma Codes" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8013" Content="Material Exchange Ticket Celebration" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8014" Content="2nd Anniversary" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8015" Content="Da Vinci Enhancement" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8016" Content="Chaldea Battle Summer League" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8017" Content="Summer Warrior Vacation Training" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8018" Content="Suzuka Gozen's Happy Merry Love Christmas!" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8019" Content="Elena's Christmas Present Recapture Operation" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8020" Content="Setanta's Trials" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8021" Content="Prisma Codes - Revival" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8022" Content="Lady Reines' Case Files" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />            
+            <CheckBox Name="LTE8023" Content="Summer Warrior Vacation Training - Revival" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8025" Content="Servant Boot Camp! Mysterious Strict Instructor" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8027" Content="Lady Reines' Case Files - Revival" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8028" Content="Suzuka Gozen's Happy Merry Love Christmas! - Revival" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8029" Content="Santa Fran's Christmas Present!" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8030" Content="Setanta's Trials - Revival" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8031" Content="Invitation from BB" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8032" Content="Challenge to the Heights of Conquest!" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8033" Content="Dream Journey ~A Dreamland of Mystery and Terror~" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8034" Content="Servant Boot Camp! Mysterious Strict Instructor - Revival" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8035" Content="Chaldea Summer Garden! The Visitor from the Other Side" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8036" Content="Demon Beast Calamity Time Trial" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8038" Content="Freezing Order! Goddess of Ice and Snow Descending on a Moonlit Night" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8039" Content="Demon Beast Calamity Time Trial II" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8040" Content="Invitation from BB - Revival" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8041" Content="Lovely Duty! End of Year Struggles of the Maid of Love" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8042" Content="Santa Fran's Christmas Present! - Revival" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8043" Content="NFF Premium Tour Invitation! Heroic Spirit Traveling Tour" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8044" Content="Suzuka Gozen's Happy Merry Love Christmas! - Revival II" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8045" Content="Destiny-Dividing: The Red Beast and the Flame's Mission" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8046" Content="Demon Beast Calamity Time Trial V" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8047" Content="Setanta's Trials - Revival II" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8048" Content="Chaldea Battle Summer League - Revival" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+            <CheckBox Name="LTE8049" Content="Santa Fran's Christmas Present! - Revival II" Margin="0,8" Checked="Option_OnChanged" Unchecked="Option_OnChanged" />
+      </StackPanel>
+      <WrapPanel Margin="0,18,0,12">
+        <Button Content="Save" Width="150" Height="30" Margin="0,0,8,0" Click="Save_OnClick" />
+        <Button Content="Turn All Off" Width="150" Height="30" Click="DisableAll_OnClick" />
+      </WrapPanel>
+      <TextBlock Name="StatusText" Style="{StaticResource HelpTextStyle}" />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

@@ -1,0 +1,15 @@
+{
+  "marker": "fgo_event_toggles_v1",
+  "edits": [
+    {
+      "file": "config.py",
+      "anchor_old": "    @property\n    def loglevel(self) -> int:",
+      "anchor_new": "    @property\n    def enabled_singularity_ids(self) -> list | None:\n        # None (key absent) means no filter. A list, including an empty list,\n        # enables an allowlist for the event catalog and its derived banners.\n        value = CoreConfig.get_config_field(\n            self.__config, \"fgo\", \"server\", \"enabled_singularity_ids\", default=None\n        )\n        return value if isinstance(value, list) else None\n\n    @property\n    def loglevel(self) -> int:"
+    },
+    {
+      "file": "index.py",
+      "anchor_old": "        result = []\n        for priority, catalog_row in enumerate(\n            sorted(\n                (\n                    row\n                    for row in self._story_tlf_catalog()\n                    if int(row[\"tlf_scenario_id\"])\n                    not in extra_interlude_scenario_ids\n                ),\n                key=lambda row: int(row[\"tlf_scenario_id\"]),\n            ),\n            start=1,\n        ):\n            tlf_scenario_id = int(catalog_row[\"tlf_scenario_id\"])",
+      "anchor_new": "        # fgo_event_toggles_v1: None preserves original behavior exactly.\n        enabled_singularity_ids = self.game_cfg.server.enabled_singularity_ids\n        catalog_rows = list(self._story_tlf_catalog())\n        result = []\n        for priority, catalog_row in enumerate(\n            sorted(\n                (\n                    row\n                    for row in catalog_rows\n                    if int(row[\"tlf_scenario_id\"])\n                    not in extra_interlude_scenario_ids\n                    and (\n                        enabled_singularity_ids is None\n                        or int(row[\"singularity_id\"]) in enabled_singularity_ids\n                    )\n                ),\n                key=lambda row: int(row[\"tlf_scenario_id\"]),\n            ),\n            start=1,\n        ):\n            tlf_scenario_id = int(catalog_row[\"tlf_scenario_id\"])"
+    }
+  ]
+}

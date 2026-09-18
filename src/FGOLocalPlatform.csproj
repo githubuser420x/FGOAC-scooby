@@ -39,6 +39,7 @@
   <ItemGroup>
     <ApplicationDefinition Include="app.xaml" />
     <Page Include="audiosettingsview.xaml" />
+    <Page Include="bannersettingsview.xaml" />
     <Page Include="cardquantitywindow.xaml" />
     <Page Include="cardvariantswindow.xaml" />
     <Page Include="controlsettingsview.xaml" />
@@ -59,6 +60,7 @@
   <ItemGroup>
     <EmbeddedResource Include="FGOLocalPlatform.CardNames.json" LogicalName="FGOLocalPlatform.CardNames.json" />
     <EmbeddedResource Include="FGOLocalPlatform.CraftEffects.json" LogicalName="FGOLocalPlatform.CraftEffects.json" />
+    <EmbeddedResource Include="FGOLocalPlatform.EventTogglePatch.json" LogicalName="FGOLocalPlatform.EventTogglePatch.json" />
   </ItemGroup>
   <ItemGroup>
     <!-- The author's build references a copy of this assembly beside the game. The package is
