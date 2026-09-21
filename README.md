@@ -48,6 +48,11 @@ Already installed? The Play page shows a bar when a newer version is out; **Inst
 it, applies it and restarts the launcher, and a short window lists what changed. Your accounts, decks,
 settings and graphics layer stay as they are. Unzipping a newer release over the folder does the same.
 
+**On Linux, this is not the path to use.** Wine cannot run the launcher's PowerShell flows and the
+content hook it relies on does not load there. [`docs/WINE.md`](docs/WINE.md) is the Wine install
+guide: a single `play-fgo` script that brings up the server, applies the equivalent patches natively
+and launches the game, with the touch shim that makes clicks work.
+
 [`docs/GUIDE_EN.pdf`](docs/GUIDE_EN.pdf) is the full player guide: getting Servants, controls, a
 sortie step by step, the exchange shops and troubleshooting.
 
