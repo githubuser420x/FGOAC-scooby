@@ -7,7 +7,7 @@
 [![Latest release](https://img.shields.io/github/v/release/githubuser420x/FGOAC-scooby?label=latest%20release)](https://github.com/githubuser420x/FGOAC-scooby/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/githubuser420x/FGOAC-scooby/total?label=downloads)](https://github.com/githubuser420x/FGOAC-scooby/releases)
 [![Licence](https://img.shields.io/badge/licence-MIT-blue)](LICENSE)
-[![Discord](https://img.shields.io/badge/discord-join-5865F2?logo=discord&logoColor=white)](https://discord.gg/RNT6KzEgk)
+[![Discord](https://img.shields.io/badge/discord-join-5865F2?logo=discord&logoColor=white)](https://discord.gg/zXUYN3zZYC)
 
 ![The Play page](docs/screenshots/play.png)
 
